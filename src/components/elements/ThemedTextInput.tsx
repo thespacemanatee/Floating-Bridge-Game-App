@@ -5,7 +5,7 @@ import { SPACING } from "../../resources/dimens";
 
 type ThemedTextInputProps = {
   placeholder?: string;
-  onChangeText?: ((text: string) => void);
+  onChangeText?: (text: string) => void;
   value?: string;
   style?: StyleProp<TextStyle>;
 };
@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
   input: {
     height: SPACING.spacing_48,
     padding: SPACING.spacing_12,
-    margin: SPACING.spacing_4,
     borderRadius: SPACING.spacing_4,
     borderWidth: 1,
+    backgroundColor: "#00000010",
   },
 });

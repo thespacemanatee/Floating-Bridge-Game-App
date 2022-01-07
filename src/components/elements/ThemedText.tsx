@@ -14,6 +14,6 @@ export default ThemedText;
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: "bold",
+    fontFamily: "regular",
   },
 });

@@ -15,7 +15,7 @@ const Main = () => {
   useEffect(() => {
     // TODO: Remove hardcoded values
     const channel = pusher.subscribe("private-game-channel");
-    channel.bind("game-event", (data) => {
+    channel.bind("game-event", (data: any) => {
       alert(JSON.stringify(data));
     });
   }, []);
