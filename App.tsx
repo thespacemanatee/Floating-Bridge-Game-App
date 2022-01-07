@@ -1,20 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { useFonts } from "expo-font";
+
+import Main from "./src/Main";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [loaded] = useFonts({
+    black: require("./assets/fonts/Poppins-Black.ttf"),
+    blackItalic: require("./assets/fonts/Poppins-BlackItalic.ttf"),
+    bold: require("./assets/fonts/Poppins-Bold.ttf"),
+    boldItalic: require("./assets/fonts/Poppins-BoldItalic.ttf"),
+    extraBold: require("./assets/fonts/Poppins-ExtraBold.ttf"),
+    extraBoldItalic: require("./assets/fonts/Poppins-ExtraBoldItalic.ttf"),
+    extraLight: require("./assets/fonts/Poppins-ExtraLight.ttf"),
+    extraLightItalic: require("./assets/fonts/Poppins-ExtraLightItalic.ttf"),
+    italic: require("./assets/fonts/Poppins-Italic.ttf"),
+    light: require("./assets/fonts/Poppins-Light.ttf"),
+    lightItalic: require("./assets/fonts/Poppins-LightItalic.ttf"),
+    medium: require("./assets/fonts/Poppins-Medium.ttf"),
+    mediumItalic: require("./assets/fonts/Poppins-MediumItalic.ttf"),
+    regular: require("./assets/fonts/Poppins-Regular.ttf"),
+    semiBold: require("./assets/fonts/Poppins-SemiBold.ttf"),
+    semiBoldItalic: require("./assets/fonts/Poppins-SemiBoldItalic.ttf"),
+    thin: require("./assets/fonts/Poppins-Thin.ttf"),
+    thinItalic: require("./assets/fonts/Poppins-ThinItalic.ttf"),
+  });
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  if (!loaded) return null;
+
+  return <Main />;
+}
