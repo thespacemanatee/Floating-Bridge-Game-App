@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Singaporean-Bridge-App",
-    "slug": "Singaporean-Bridge-App",
+    "name": "Floating-Bridge-Game-App",
+    "slug": "Floating-Bridge-Game-App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,14 +18,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.thespacemanatee.SingaporeanBridgeApp"
+      "bundleIdentifier": "com.thespacemanatee.FloatingBridgeGame"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.thespacemanatee.SingaporeanBridgeApp"
+      "package": "com.thespacemanatee.FloatingBridgeGame"
     },
     "web": {
       "favicon": "./assets/favicon.png"

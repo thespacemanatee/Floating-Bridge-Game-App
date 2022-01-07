@@ -1,2 +1,2 @@
-# Singaporean-Bridge-App
-The first ever online Singaporean Bridge game!
+# Floating-Bridge-Game-App
+The first ever online Floating Bridge Game!

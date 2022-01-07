@@ -24,7 +24,7 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
     <View style={styles.container}>
       <HeroImage />
       <ThemedText style={styles.titleText}>
-        Welcome to Singaporean Bridge!
+        Welcome to Floating Bridge!
       </ThemedText>
       <ThemedTextInput
         placeholder="Enter your username"
