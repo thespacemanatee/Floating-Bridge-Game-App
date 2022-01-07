@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFonts } from "expo-font";
+import Pusher from "pusher-js/react-native";
+import { HOST, AUTH_ENDPOINT, PUSHER_KEY, PUSHER_CLUSTER } from "@env";
 
 import Main from "./src/Main";
+import { pusherRef } from "./src/utils/PusherHelper";
 
 export default function App() {
   const [loaded] = useFonts({
@@ -24,6 +27,13 @@ export default function App() {
     thin: require("./assets/fonts/Poppins-Thin.ttf"),
     thinItalic: require("./assets/fonts/Poppins-ThinItalic.ttf"),
   });
+
+  useEffect(() => {
+    pusherRef.current = new Pusher(PUSHER_KEY, {
+      authEndpoint: HOST + AUTH_ENDPOINT,
+      cluster: PUSHER_CLUSTER,
+    });
+  }, []);
 
   if (!loaded) return null;
 

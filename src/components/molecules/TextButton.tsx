@@ -21,6 +21,7 @@ const TextButton = ({ onPress, text, size, type, style }: TextButtonProps) => {
   return (
     <ThemedButton onPress={onPress} type={type} style={style}>
       <ThemedText
+        selectable={false}
         style={[{ fontSize: textSize[size || "default"] }, styles.text]}
       >
         {text}

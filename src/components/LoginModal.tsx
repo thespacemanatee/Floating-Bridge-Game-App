@@ -1,9 +1,9 @@
+import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../resources/dimens";
 import HeroImage from "./elements/HeroImage";
-import ThemedButton from "./elements/ThemedButton";
 import ThemedText from "./elements/ThemedText";
 import ThemedTextInput from "./elements/ThemedTextInput";
 import TextButton from "./molecules/TextButton";
@@ -12,6 +12,10 @@ const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
   const [name, setName] = useState("");
   const [gameId, setGameId] = useState("");
+
+  const generateGameId = () => {
+    setGameId(nanoid(8));
+  };
 
   return (
     <Modal
@@ -43,6 +47,7 @@ const LoginModal = () => {
               style={styles.input}
             />
             <TextButton
+              onPress={generateGameId}
               text="Generate"
               type="outlined"
               size="tiny"
