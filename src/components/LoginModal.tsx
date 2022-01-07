@@ -1,17 +1,36 @@
-import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
+import { nanoid } from "nanoid";
+import Pusher from "pusher-js/react-native";
+import { HOST, AUTH_ENDPOINT, PUSHER_KEY, PUSHER_CLUSTER } from "@env";
 
 import { FONT_SIZE, SPACING } from "../resources/dimens";
 import HeroImage from "./elements/HeroImage";
 import ThemedText from "./elements/ThemedText";
 import ThemedTextInput from "./elements/ThemedTextInput";
 import TextButton from "./molecules/TextButton";
+import { pusherRef } from "../utils/PusherHelper";
 
 const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [gameId, setGameId] = useState("");
+
+  const enterRoom = () => {
+    pusherRef.current = new Pusher(PUSHER_KEY, {
+      auth: {
+        params: {
+          username: username,
+        },
+      },
+      authEndpoint: HOST + AUTH_ENDPOINT,
+      cluster: PUSHER_CLUSTER,
+    });
+    const channel = pusherRef.current?.subscribe(`presence-${gameId}`);
+    channel?.bind("game-event", (data: any) => {
+      alert(JSON.stringify(data));
+    });
+  };
 
   const generateGameId = () => {
     setGameId(nanoid(8));
@@ -34,9 +53,9 @@ const LoginModal = () => {
             Welcome to Singaporean Bridge!
           </ThemedText>
           <ThemedTextInput
-            placeholder="Enter your name"
-            onChangeText={setName}
-            value={name}
+            placeholder="Enter your username"
+            onChangeText={setUsername}
+            value={username}
             style={styles.input}
           />
           <View style={styles.gameIdInputContainer}>
@@ -55,9 +74,7 @@ const LoginModal = () => {
             />
           </View>
           <TextButton
-            onPress={() => {
-              setModalVisible(false);
-            }}
+            onPress={enterRoom}
             text="Enter Room"
             style={styles.loginButton}
           />
