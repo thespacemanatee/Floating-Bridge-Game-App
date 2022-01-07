@@ -11,6 +11,7 @@ import { SPACING } from "../../resources/dimens";
 export interface ThemedButtonProps {
   children?: JSX.Element;
   onPress?: ((event: GestureResponderEvent) => void) | null;
+  disabled?: boolean | null;
   type?: "outlined" | "default";
   style?: StyleProp<ViewStyle>;
 }
@@ -26,13 +27,14 @@ const outlinedColors: ButtonColors = {
 };
 
 const defaultColors: ButtonColors = {
-  pressed: "#5ce4ff",
-  default: "#00d5ff",
+  pressed: "#00d000",
+  default: "#00b000",
 };
 
 const ThemedButton = ({
   children,
   onPress,
+  disabled,
   type,
   style,
 }: ThemedButtonProps) => {
@@ -50,9 +52,12 @@ const ThemedButton = ({
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         {
-          backgroundColor: pressed
+          backgroundColor: disabled
+            ? "grey"
+            : pressed
             ? buttonColors.pressed
             : buttonColors.default,
           borderWidth: type === "outlined" ? 1 : 0,

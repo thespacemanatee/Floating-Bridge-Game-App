@@ -6,11 +6,30 @@ import { HOST, AUTH_ENDPOINT, PUSHER_KEY, PUSHER_CLUSTER } from "@env";
 import { channelRef, pusherRef } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import LobbyPage from "./elements/login_pages/LobbyPage";
+import WaitingRoomPage from "./elements/login_pages/WaitingRoomPage";
+
+export type Member = {
+  id: string;
+  info: {
+    username: string;
+    color: string;
+  };
+};
 
 const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
+  const [username, setUsername] = useState("");
+  const [gameId, setGameId] = useState("");
+  const [entered, setEntered] = useState(false);
+  const [users, setUsers] = useState<Member[]>([]);
 
   const enterRoom = (username: string, gameId: string) => {
+    if (!username || !gameId) {
+      alert("Please enter the missing information!");
+      return;
+    }
+    setUsername(username);
+    setGameId(gameId);
     pusherRef.current = new Pusher(PUSHER_KEY, {
       auth: {
         params: {
@@ -21,15 +40,26 @@ const LoginModal = () => {
       cluster: PUSHER_CLUSTER,
     });
     channelRef.current = pusherRef.current?.subscribe(`presence-${gameId}`);
-    channelRef.current?.bind("game-event", (data: any) => {
-      alert(JSON.stringify(data));
+    channelRef.current.bind("pusher:subscription_succeeded", () => {
+      channelRef.current?.members.each((member: Member) => {
+        setUsers((old) => [...old, member]);
+      });
     });
+    channelRef.current.bind("pusher:member_added", (member: Member) => {
+      setUsers((old) => [...old, member]);
+    });
+    channelRef.current.bind("pusher:member_removed", (member: Member) => {
+      setUsers((old) => old.filter((e) => e.id !== member.id));
+    });
+    setEntered(true);
   };
+
+  const startGame = () => {};
 
   return (
     <Modal
       animationType="fade"
-      transparent={true}
+      transparent
       visible={modalVisible}
       onRequestClose={() => {
         alert("Modal has been closed.");
@@ -38,7 +68,16 @@ const LoginModal = () => {
     >
       <View style={styles.container}>
         <View style={styles.modalView}>
-          <LobbyPage onEnterRoom={enterRoom} />
+          {entered ? (
+            <WaitingRoomPage
+              currentUsername={username}
+              gameId={gameId}
+              users={users}
+              onStartGame={startGame}
+            />
+          ) : (
+            <LobbyPage onEnterRoom={enterRoom} />
+          )}
         </View>
       </View>
     </Modal>
@@ -57,7 +96,6 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: "white",
     borderRadius: SPACING.spacing_12,
-    padding: SPACING.spacing_48,
     alignItems: "center",
   },
 });

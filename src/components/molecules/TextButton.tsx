@@ -7,6 +7,7 @@ import ThemedText from "../elements/ThemedText";
 
 interface TextButtonProps extends ThemedButtonProps {
   text: string;
+  textColor?: string;
   size?: "tiny" | "small" | "default" | "large";
 }
 
@@ -17,12 +18,31 @@ const textSize = {
   large: FONT_SIZE.large,
 };
 
-const TextButton = ({ onPress, text, size, type, style }: TextButtonProps) => {
+const TextButton = ({
+  onPress,
+  disabled,
+  text,
+  textColor,
+  size,
+  type,
+  style,
+}: TextButtonProps) => {
   return (
-    <ThemedButton onPress={onPress} type={type} style={style}>
+    <ThemedButton
+      onPress={onPress}
+      disabled={disabled}
+      type={type}
+      style={style}
+    >
       <ThemedText
         selectable={false}
-        style={[{ fontSize: textSize[size || "default"] }, styles.text]}
+        style={[
+          {
+            fontSize: textSize[size || "default"],
+            color: textColor || "white",
+          },
+          styles.text,
+        ]}
       >
         {text}
       </ThemedText>

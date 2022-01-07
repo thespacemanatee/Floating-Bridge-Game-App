@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { nanoid } from "nanoid";
+import { nanoid } from "nanoid/non-secure";
 
 import { FONT_SIZE, SPACING } from "../../../resources/dimens";
 import TextButton from "../../molecules/TextButton";
@@ -21,7 +21,7 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <HeroImage />
       <ThemedText style={styles.titleText}>
         Welcome to Singaporean Bridge!
@@ -42,6 +42,7 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
         <TextButton
           onPress={generateGameId}
           text="Generate"
+          textColor="black"
           type="outlined"
           size="tiny"
           style={styles.generateButton}
@@ -59,6 +60,11 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
 export default LobbyPage;
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: SPACING.spacing_32,
+  },
   titleText: {
     fontFamily: "bold",
     fontSize: FONT_SIZE.title3,
