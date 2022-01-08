@@ -30,6 +30,7 @@ const LoginModal = () => {
     }
     setUsername(username);
     setGameId(gameId);
+
     pusherRef.current = new Pusher(PUSHER_KEY, {
       auth: {
         params: {

@@ -16,7 +16,7 @@ const LobbyUserEntry = ({ currentUsername, member }: LobbyUserEntryProps) => {
     <View style={styles.userContainer}>
       <View style={[{ backgroundColor: color }, styles.orbContainer]}>
         <ThemedText selectable={false} style={styles.orbText}>
-          {username[0]}
+          {username[0]?.toUpperCase()}
         </ThemedText>
       </View>
       <ThemedText style={[{ color }, styles.usernameText]}>
