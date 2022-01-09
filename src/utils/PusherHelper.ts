@@ -23,37 +23,64 @@ export const initPusherClient = (userId: string, username: string) => {
 };
 
 export const subscribeToChannel = (gameId: string) => {
-  channelRef.current = pusherRef.current!.subscribe(`presence-${gameId}`);
+  if (pusherRef.current) {
+    channelRef.current = pusherRef.current.subscribe(`presence-${gameId}`);
+  } else {
+    throw Error("Pusher client not initialised!");
+  }
 };
 
 export const unsubscribeToChannel = (gameId: string) => {
-  pusherRef.current?.unsubscribe(`presence-${gameId}`);
+  if (pusherRef.current) {
+    pusherRef.current.unsubscribe(`presence-${gameId}`);
+  } else {
+    throw Error("Pusher client not initialised!");
+  }
 };
 
 export const bindSubscriptionSucceededEvent = (
   callback: (member: Member) => void
 ) => {
-  channelRef.current?.bind("pusher:subscription_succeeded", () => {
-    channelRef.current?.members.each(callback);
-  });
+  if (channelRef.current) {
+    channelRef.current.bind("pusher:subscription_succeeded", () => {
+      channelRef.current?.members.each(callback);
+    });
+  } else {
+    throw Error("Channel not found!");
+  }
 };
 
 export const bindMemberAddedEvent = (callback: (member: Member) => void) => {
-  channelRef.current?.bind("pusher:member_added", callback);
+  if (channelRef.current) {
+    channelRef.current.bind("pusher:member_added", callback);
+  } else {
+    throw Error("Channel not found!");
+  }
 };
 
 export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
-  channelRef.current?.bind("pusher:member_removed", callback);
+  if (channelRef.current) {
+    channelRef.current.bind("pusher:member_removed", callback);
+  } else {
+    throw Error("Channel not found!");
+  }
 };
 
 export const bindGameEvents = () => {
-  channelRef.current?.bind(
-    "game-status-event",
-    (data: { status: GameStatus }) => {
-      store.dispatch(setGameStatus(data.status));
-    }
-  );
-  channelRef.current?.bind("game-init-event", (data: { hands: GameHand[] }) => {
-    store.dispatch(setGameHands(data.hands));
-  });
+  if (channelRef.current) {
+    channelRef.current?.bind(
+      "game-status-event",
+      (data: { status: GameStatus }) => {
+        store.dispatch(setGameStatus(data.status));
+      }
+    );
+    channelRef.current?.bind(
+      "game-init-event",
+      (data: { hands: GameHand[] }) => {
+        store.dispatch(setGameHands(data.hands));
+      }
+    );
+  } else {
+    throw Error("Channel not found!");
+  }
 };
