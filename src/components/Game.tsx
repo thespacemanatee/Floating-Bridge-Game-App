@@ -33,42 +33,42 @@ export const Game = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Text>Top: {top?.id}</Text>
-        {top?.id === gameUserId && <Text>(You)</Text>}
-      </View>
       <View style={styles.left}>
-        <View style={{ flex: 1 }}>
-          <Text>Left: {left?.id}</Text>
-          {left?.id === gameUserId && <Text>(You)</Text>}
+        <Text>Left: {left?.id}</Text>
+        {left?.id === gameUserId && <Text>(You)</Text>}
+      </View>
+      <View style={styles.middle}>
+        <View style={styles.top}>
+          <Text>Top: {top?.id}</Text>
+          {top?.id === gameUserId && <Text>(You)</Text>}
         </View>
-        <View style={styles.right}>
-          <Text>Right: {right?.id}</Text>
-          {right?.id === gameUserId && <Text>(You)</Text>}
+        <View style={styles.bottom}>
+          <Text>Bottom: {bottom?.id}</Text>
+          {bottom?.id === gameUserId && <Text>(You)</Text>}
+          {bottom?.hand.map((card, index) => {
+            const noOfCards = bottom?.hand.length || HAND_SIZE;
+            const translateX =
+              CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
+            const translateY =
+              CARD_OFFSET_Y * Math.pow(index - Math.floor(noOfCards / 2), 2);
+            const rotate = `${
+              CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards)
+            }rad`;
+            return (
+              <FaceCard
+                key={`${card.suit}${card.value}`}
+                image={deck[`${card.suit}${card.value}`].imageUri}
+                style={{
+                  transform: [{ translateX }, { translateY }, { rotate }],
+                }}
+              />
+            );
+          })}
         </View>
       </View>
-      <View style={styles.bottom}>
-        <Text>Bottom: {bottom?.id}</Text>
-        {bottom?.id === gameUserId && <Text>(You)</Text>}
-        {bottom?.hand.map((card, index) => {
-          const noOfCards = bottom?.hand.length || HAND_SIZE;
-          const translateX =
-            CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
-          const translateY =
-            CARD_OFFSET_Y * Math.pow(index - Math.floor(noOfCards / 2), 2);
-          const rotate = `${
-            CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards)
-          }rad`;
-          return (
-            <FaceCard
-              key={`${card.suit}${card.value}`}
-              image={deck[`${card.suit}${card.value}`].imageUri}
-              style={{
-                transform: [{ translateX }, { translateY }, { rotate }],
-              }}
-            />
-          );
-        })}
+      <View style={styles.right}>
+        <Text>Right: {right?.id}</Text>
+        {right?.id === gameUserId && <Text>(You)</Text>}
       </View>
     </View>
   );
@@ -77,25 +77,25 @@ export const Game = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "row",
     backgroundColor: "green",
     overflow: "hidden",
+  },
+  left: {
+    justifyContent: "center",
   },
   top: {
     flex: 1,
     alignItems: "center",
   },
-  left: {
+  middle: {
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  right: {
-    flex: 1,
-    alignItems: "flex-end",
   },
   bottom: {
     flex: 1,
     alignItems: "center",
+  },
+  right: {
+    justifyContent: "center",
   },
 });

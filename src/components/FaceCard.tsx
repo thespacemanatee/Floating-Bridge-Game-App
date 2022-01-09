@@ -2,8 +2,8 @@ import React from "react";
 import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View, Image } from "react-native";
 
-const CARD_WIDTH = 180;
-const CARD_HEIGHT = 250;
+const CARD_WIDTH = 216;
+const CARD_HEIGHT = 300;
 
 type FaceCardProps = {
   image: ImageSourcePropType;
