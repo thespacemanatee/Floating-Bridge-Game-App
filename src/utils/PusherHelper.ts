@@ -12,12 +12,10 @@ import { store } from "../store";
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
 
-export const initPusherClient = (username: string) => {
+export const initPusherClient = (userId: string, username: string) => {
   pusherRef.current = new Pusher(PUSHER_KEY, {
     auth: {
-      params: {
-        username: username,
-      },
+      params: { userId, username },
     },
     authEndpoint: HOST + AUTH_ENDPOINT,
     cluster: PUSHER_CLUSTER,
