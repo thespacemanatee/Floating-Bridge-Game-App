@@ -28,6 +28,10 @@ export const subscribeToChannel = (gameId: string) => {
   channelRef.current = pusherRef.current!.subscribe(`presence-${gameId}`);
 };
 
+export const unsubscribeToChannel = (gameId: string) => {
+  pusherRef.current?.unsubscribe(`presence-${gameId}`);
+};
+
 export const bindSubscriptionSucceededEvent = (
   callback: (member: Member) => void
 ) => {

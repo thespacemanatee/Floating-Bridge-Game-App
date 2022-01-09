@@ -30,13 +30,18 @@ export const LoginModal = () => {
     }
   }, [gameStatus]);
 
-  const enterRoom = (username: string, roomId: string) => {
-    if (!username || !roomId) {
-      alert("Please enter the missing information!");
-      return;
+  useEffect(() => {
+    console.log(gameRoomId, gameUsername);
+
+    if (gameUsername && gameRoomId) {
+      enterRoom(gameUsername, gameRoomId);
     }
+  }, [gameRoomId, gameUsername]);
+
+  const enterRoom = (username: string, roomId: string) => {
     initPusherClient(username);
     subscribeToChannel(roomId);
+    setUsers([]);
     bindSubscriptionSucceededEvent((member: Member) => {
       setUsers((old) =>
         old.some((e) => e.id === member.id) ? old : [...old, member]
@@ -73,7 +78,7 @@ export const LoginModal = () => {
           {gameUsername && gameRoomId ? (
             <WaitingRoomPage users={users} onStartGame={startGame} />
           ) : (
-            <LobbyPage onEnterRoom={enterRoom} />
+            <LobbyPage />
           )}
         </View>
       </View>

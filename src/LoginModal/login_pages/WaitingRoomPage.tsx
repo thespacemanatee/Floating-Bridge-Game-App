@@ -1,12 +1,15 @@
 import React, { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import type { Member } from "../../types";
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
 import { TextButton } from "../../components/molecules/TextButton";
 import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
 import { ThemedText } from "../../components/elements/ThemedText";
-import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { resetGame } from "../../store/features/game/gameSlice";
+import { unsubscribeToChannel } from "../../utils/PusherHelper";
 
 type WaitingRoomPageProps = {
   users: Member[];
@@ -20,12 +23,24 @@ export const WaitingRoomPage = ({
   const username = useAppSelector((state) => state.game.username);
   const roomId = useAppSelector((state) => state.game.roomId);
 
+  const dispatch = useAppDispatch();
+
   const roomReady = useMemo(() => {
     return users.length === 4 ? true : false;
   }, [users]);
 
+  const leaveRoom = () => {
+    if (roomId) {
+      unsubscribeToChannel(roomId);
+    }
+    dispatch(resetGame());
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={leaveRoom}>
+        <Ionicons name="close-outline" size={32} color="black" />
+      </TouchableOpacity>
       <ThemedText
         style={styles.titleText}
       >{`Waiting Room (ID: ${roomId})`}</ThemedText>

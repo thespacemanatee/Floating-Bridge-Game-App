@@ -2,9 +2,10 @@ import React from "react";
 import { Provider } from "react-redux";
 import { registerRootComponent } from "expo";
 import { useFonts } from "expo-font";
+import { PersistGate } from "redux-persist/integration/react";
 
 import { Main } from "./Main";
-import { store } from "./store";
+import { store, persistor } from "./store";
 
 export const App = () => {
   const [loaded] = useFonts({
@@ -34,7 +35,9 @@ export const App = () => {
 
   return (
     <Provider store={store}>
-      <Main />
+      <PersistGate loading={null} persistor={persistor}>
+        <Main />
+      </PersistGate>
     </Provider>
   );
 };

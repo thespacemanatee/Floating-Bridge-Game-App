@@ -40,10 +40,21 @@ const gameSlice = createSlice({
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
     },
+    resetGame(state: GameState) {
+      state.username = null;
+      state.roomId = null;
+      state.status = "stopped";
+      state.hands = null;
+    },
   },
 });
 
-export const { setGameUsername, setGameRoomId, setGameStatus, setGameHands } =
-  gameSlice.actions;
+export const {
+  setGameUsername,
+  setGameRoomId,
+  setGameStatus,
+  setGameHands,
+  resetGame,
+} = gameSlice.actions;
 
 export const { reducer } = gameSlice;

@@ -13,11 +13,7 @@ import {
   setGameUsername,
 } from "../../store/features/game/gameSlice";
 
-type LobbyPageProps = {
-  onEnterRoom: (username: string, roomId: string) => void;
-};
-
-export const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
+export const LobbyPage = () => {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
 
@@ -28,9 +24,12 @@ export const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
   };
 
   const enterRoom = () => {
+    if (!username || !roomId) {
+      alert("Please enter the missing information!");
+      return;
+    }
     dispatch(setGameUsername(username));
     dispatch(setGameRoomId(roomId));
-    onEnterRoom(username, roomId);
   };
 
   return (
