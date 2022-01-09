@@ -3,7 +3,13 @@ import { Modal, StyleSheet, View } from "react-native";
 import Pusher from "pusher-js/react-native";
 import { HOST, AUTH_ENDPOINT, PUSHER_KEY, PUSHER_CLUSTER } from "@env";
 
-import { channelRef, pusherRef } from "../utils/PusherHelper";
+import {
+  bindMemberAddedEvent,
+  bindMemberRemovedEvent,
+  bindSubscriptionSucceededEvent,
+  channelRef,
+  pusherRef,
+} from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import LobbyPage from "./elements/login_pages/LobbyPage";
 import WaitingRoomPage from "./elements/login_pages/WaitingRoomPage";
@@ -41,21 +47,25 @@ const LoginModal = () => {
       cluster: PUSHER_CLUSTER,
     });
     channelRef.current = pusherRef.current?.subscribe(`presence-${gameId}`);
-    channelRef.current.bind("pusher:subscription_succeeded", () => {
-      channelRef.current?.members.each((member: Member) => {
-        setUsers((old) => [...old, member]);
-      });
+    bindSubscriptionSucceededEvent((member: Member) => {
+      setUsers((old) =>
+        old.some((e) => e.id === member.id) ? old : [...old, member]
+      );
     });
-    channelRef.current.bind("pusher:member_added", (member: Member) => {
-      setUsers((old) => [...old, member]);
+    bindMemberAddedEvent((member: Member) => {
+      setUsers((old) =>
+        old.some((e) => e.id === member.id) ? old : [...old, member]
+      );
     });
-    channelRef.current.bind("pusher:member_removed", (member: Member) => {
+    bindMemberRemovedEvent((member: Member) => {
       setUsers((old) => old.filter((e) => e.id !== member.id));
     });
     setEntered(true);
   };
 
-  const startGame = () => {};
+  const startGame = () => {
+    setModalVisible(false);
+  };
 
   return (
     <Modal
