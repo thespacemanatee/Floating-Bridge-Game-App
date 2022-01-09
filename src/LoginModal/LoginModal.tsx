@@ -52,9 +52,6 @@ export const LoginModal = () => {
   }, [dispatch, gameUserId]);
 
   useEffect(() => {
-    if (gameStatus === "started") {
-      setModalVisible(false);
-    }
     switch (gameStatus) {
       case "started": {
         setModalVisible(false);
