@@ -1,2 +1,2 @@
 # Floating-Bridge-Game-App
-The first ever online Floating Bridge Game!
+The first ever online Floating Bridge game!
