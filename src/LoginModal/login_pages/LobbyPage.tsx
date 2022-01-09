@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
-import { FONT_SIZE, SPACING } from "../../../resources/dimens";
-import TextButton from "../../molecules/TextButton";
-import HeroImage from "../HeroImage";
-import ThemedText from "../ThemedText";
-import ThemedTextInput from "../ThemedTextInput";
+import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import TextButton from "../../components/molecules/TextButton";
+import HeroImage from "../../components/elements/HeroImage";
+import ThemedText from "../../components/elements/ThemedText";
+import ThemedTextInput from "../../components/elements/ThemedTextInput";
 
 type LobbyPageProps = {
   onEnterRoom: (username: string, gameId: string) => void;

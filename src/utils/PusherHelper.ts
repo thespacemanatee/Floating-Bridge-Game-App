@@ -1,10 +1,28 @@
 import { createRef, MutableRefObject } from "react";
 import Pusher, { Channel } from "pusher-js";
 
-import { Member } from "../components/LoginModal";
+import { Member } from "../types/types";
+import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
+
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
+
+export const initPusherClient = (username: string) => {
+    pusherRef.current = new Pusher(PUSHER_KEY, {
+      auth: {
+        params: {
+          username: username,
+        },
+      },
+      authEndpoint: HOST + AUTH_ENDPOINT,
+      cluster: PUSHER_CLUSTER,
+    });
+}
+
+export const subscribeToChannel = (gameId: string) => {
+  channelRef.current = pusherRef.current!.subscribe(`presence-${gameId}`);
+};
 
 export const bindSubscriptionSucceededEvent = (
   callback: (member: Member) => void

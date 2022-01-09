@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
-import { mockUsers } from "../../../mock/mockData";
 
-import { FONT_SIZE, SPACING } from "../../../resources/dimens";
-import { Member } from "../../LoginModal";
-import TextButton from "../../molecules/TextButton";
-import LobbyUserEntry from "../LobbyUserEntry";
-import ThemedText from "../ThemedText";
+import { mockUsers } from "../../mock/mockData";
+import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { Member } from "../../types/types";
+import TextButton from "../../components/molecules/TextButton";
+import LobbyUserEntry from "../../components/elements/LobbyUserEntry";
+import ThemedText from "../../components/elements/ThemedText";
 
 type WaitingRoomPageProps = {
   currentUsername: string;

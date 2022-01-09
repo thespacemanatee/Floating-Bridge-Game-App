@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { Member } from "../LoginModal";
+import { Member } from "../../types/types";
 import ThemedText from "./ThemedText";
 
 type LobbyUserEntryProps = {

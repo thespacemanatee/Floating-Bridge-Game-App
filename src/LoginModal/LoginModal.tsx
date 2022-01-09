@@ -1,26 +1,17 @@
 import React, { useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
-import Pusher from "pusher-js/react-native";
-import { HOST, AUTH_ENDPOINT, PUSHER_KEY, PUSHER_CLUSTER } from "@env";
 
 import {
   bindMemberAddedEvent,
   bindMemberRemovedEvent,
   bindSubscriptionSucceededEvent,
-  channelRef,
-  pusherRef,
+  initPusherClient,
+  subscribeToChannel,
 } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
-import LobbyPage from "./elements/login_pages/LobbyPage";
-import WaitingRoomPage from "./elements/login_pages/WaitingRoomPage";
-
-export type Member = {
-  id: string;
-  info: {
-    username: string;
-    color: string;
-  };
-};
+import LobbyPage from "./login_pages/LobbyPage";
+import WaitingRoomPage from "./login_pages/WaitingRoomPage";
+import { Member } from "../types/types";
 
 const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -37,16 +28,8 @@ const LoginModal = () => {
     setUsername(username);
     setGameId(gameId);
 
-    pusherRef.current = new Pusher(PUSHER_KEY, {
-      auth: {
-        params: {
-          username: username,
-        },
-      },
-      authEndpoint: HOST + AUTH_ENDPOINT,
-      cluster: PUSHER_CLUSTER,
-    });
-    channelRef.current = pusherRef.current?.subscribe(`presence-${gameId}`);
+    initPusherClient(username);
+    subscribeToChannel(gameId);
     bindSubscriptionSucceededEvent((member: Member) => {
       setUsers((old) =>
         old.some((e) => e.id === member.id) ? old : [...old, member]
