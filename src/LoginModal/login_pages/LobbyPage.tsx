@@ -2,22 +2,34 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
-import { FONT_SIZE, SPACING } from "../../../resources/dimens";
-import TextButton from "../../molecules/TextButton";
-import HeroImage from "../HeroImage";
-import ThemedText from "../ThemedText";
-import ThemedTextInput from "../ThemedTextInput";
+import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { TextButton } from "../../components/molecules/TextButton";
+import HeroImage from "../../components/elements/HeroImage";
+import { ThemedText } from "../../components/elements/ThemedText";
+import { ThemedTextInput } from "../../components/elements/ThemedTextInput";
+import { useAppDispatch } from "../../store/hooks";
+import {
+  setGameRoomId,
+  setGameUsername,
+} from "../../store/features/game/gameSlice";
 
-type LobbyPageProps = {
-  onEnterRoom: (username: string, gameId: string) => void;
-};
-
-const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
+export const LobbyPage = () => {
   const [username, setUsername] = useState("");
-  const [gameId, setGameId] = useState("");
+  const [roomId, setRoomId] = useState("");
+
+  const dispatch = useAppDispatch();
 
   const generateGameId = () => {
-    setGameId(nanoid(8));
+    setRoomId(nanoid(8));
+  };
+
+  const enterRoom = () => {
+    if (!username || !roomId) {
+      alert("Please enter the missing information!");
+      return;
+    }
+    dispatch(setGameUsername(username));
+    dispatch(setGameRoomId(roomId));
   };
 
   return (
@@ -35,8 +47,8 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
       <View style={styles.gameIdInputContainer}>
         <ThemedTextInput
           placeholder="Enter your game room ID"
-          onChangeText={setGameId}
-          value={gameId}
+          onChangeText={setRoomId}
+          value={roomId}
           style={styles.input}
         />
         <TextButton
@@ -49,7 +61,7 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
         />
       </View>
       <TextButton
-        onPress={() => onEnterRoom(username, gameId)}
+        onPress={enterRoom}
         text="Enter Room"
         style={styles.loginButton}
       />
@@ -57,18 +69,16 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
   );
 };
 
-export default LobbyPage;
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    padding: SPACING.spacing_32,
+    padding: SPACING.spacing32,
   },
   titleText: {
     fontFamily: "bold",
     fontSize: FONT_SIZE.title3,
-    margin: SPACING.spacing_12,
+    margin: SPACING.spacing12,
   },
   input: {
     width: "100%",
@@ -77,13 +87,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginVertical: SPACING.spacing_12,
+    marginVertical: SPACING.spacing12,
   },
   generateButton: {
-    marginLeft: SPACING.spacing_8,
+    marginLeft: SPACING.spacing8,
   },
   loginButton: {
-    margin: SPACING.spacing_4,
+    margin: SPACING.spacing4,
     width: "100%",
   },
 });

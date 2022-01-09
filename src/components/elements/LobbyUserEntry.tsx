@@ -1,16 +1,20 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
+import type { Member } from "../../types";
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { Member } from "../LoginModal";
-import ThemedText from "./ThemedText";
+
+import { ThemedText } from "./ThemedText";
 
 type LobbyUserEntryProps = {
   currentUsername: string;
   member: Member;
 };
 
-const LobbyUserEntry = ({ currentUsername, member }: LobbyUserEntryProps) => {
+export const LobbyUserEntry = ({
+  currentUsername,
+  member,
+}: LobbyUserEntryProps) => {
   const { username, color } = member.info;
   return (
     <View style={styles.userContainer}>
@@ -26,21 +30,19 @@ const LobbyUserEntry = ({ currentUsername, member }: LobbyUserEntryProps) => {
   );
 };
 
-export default LobbyUserEntry;
-
 const styles = StyleSheet.create({
   userContainer: {
     flexDirection: "row",
-    paddingVertical: SPACING.spacing_8,
+    paddingVertical: SPACING.spacing8,
     alignItems: "center",
   },
   orbContainer: {
-    height: SPACING.spacing_48,
-    width: SPACING.spacing_48,
+    height: SPACING.spacing48,
+    width: SPACING.spacing48,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: SPACING.spacing_24,
-    marginRight: SPACING.spacing_24,
+    borderRadius: SPACING.spacing24,
+    marginRight: SPACING.spacing24,
   },
   orbText: {
     color: "white",

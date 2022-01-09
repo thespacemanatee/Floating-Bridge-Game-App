@@ -1,5 +1,6 @@
 import React from "react";
-import { StyleProp, StyleSheet, TextInput, TextStyle } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
+import type { StyleProp, TextStyle } from "react-native";
 
 import { SPACING } from "../../resources/dimens";
 
@@ -10,7 +11,7 @@ type ThemedTextInputProps = {
   style?: StyleProp<TextStyle>;
 };
 
-const ThemedTextInput = ({
+export const ThemedTextInput = ({
   placeholder,
   onChangeText,
   value,
@@ -26,13 +27,11 @@ const ThemedTextInput = ({
   );
 };
 
-export default ThemedTextInput;
-
 const styles = StyleSheet.create({
   input: {
-    height: SPACING.spacing_48,
-    padding: SPACING.spacing_12,
-    borderRadius: SPACING.spacing_4,
+    height: SPACING.spacing48,
+    padding: SPACING.spacing12,
+    borderRadius: SPACING.spacing4,
     borderWidth: 1,
     backgroundColor: "#00000010",
   },
