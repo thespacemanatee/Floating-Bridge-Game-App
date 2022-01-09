@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import LoginModal from "./LoginModal/LoginModal";
+import { LoginModal } from "./LoginModal/LoginModal";
 import Game from "./components/Game";
 
-const Main = () => {
+export const Main = () => {
   return (
     <View style={styles.container}>
       <LoginModal />
@@ -12,8 +12,6 @@ const Main = () => {
     </View>
   );
 };
-
-export default Main;
 
 const styles = StyleSheet.create({
   container: {

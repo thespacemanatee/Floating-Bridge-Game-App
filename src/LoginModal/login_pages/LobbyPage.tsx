@@ -3,16 +3,16 @@ import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import TextButton from "../../components/molecules/TextButton";
+import { TextButton } from "../../components/molecules/TextButton";
 import HeroImage from "../../components/elements/HeroImage";
-import ThemedText from "../../components/elements/ThemedText";
-import ThemedTextInput from "../../components/elements/ThemedTextInput";
+import { ThemedText } from "../../components/elements/ThemedText";
+import { ThemedTextInput } from "../../components/elements/ThemedTextInput";
 
 type LobbyPageProps = {
   onEnterRoom: (username: string, gameId: string) => void;
 };
 
-const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
+export const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
   const [username, setUsername] = useState("");
   const [gameId, setGameId] = useState("");
 
@@ -57,18 +57,16 @@ const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
   );
 };
 
-export default LobbyPage;
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    padding: SPACING.spacing_32,
+    padding: SPACING.spacing32,
   },
   titleText: {
     fontFamily: "bold",
     fontSize: FONT_SIZE.title3,
-    margin: SPACING.spacing_12,
+    margin: SPACING.spacing12,
   },
   input: {
     width: "100%",
@@ -77,13 +75,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    marginVertical: SPACING.spacing_12,
+    marginVertical: SPACING.spacing12,
   },
   generateButton: {
-    marginLeft: SPACING.spacing_8,
+    marginLeft: SPACING.spacing8,
   },
   loginButton: {
-    margin: SPACING.spacing_4,
+    margin: SPACING.spacing4,
     width: "100%",
   },
 });

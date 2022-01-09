@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
+import type { Member } from "../../types";
 import { mockUsers } from "../../mock/mockData";
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { Member } from "../../types/types";
-import TextButton from "../../components/molecules/TextButton";
-import LobbyUserEntry from "../../components/elements/LobbyUserEntry";
-import ThemedText from "../../components/elements/ThemedText";
+import { TextButton } from "../../components/molecules/TextButton";
+import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
+import { ThemedText } from "../../components/elements/ThemedText";
 
 type WaitingRoomPageProps = {
   currentUsername: string;
@@ -59,23 +59,23 @@ export default WaitingRoomPage;
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    padding: SPACING.spacing_32,
+    padding: SPACING.spacing32,
   },
   titleText: {
     fontFamily: "bold",
     fontSize: FONT_SIZE.title2,
-    paddingVertical: SPACING.spacing_8,
+    paddingVertical: SPACING.spacing8,
   },
   welcomeText: {
     fontFamily: "semiBold",
     fontSize: FONT_SIZE.title3,
-    paddingVertical: SPACING.spacing_8,
+    paddingVertical: SPACING.spacing8,
   },
   usersContainer: {
-    marginVertical: SPACING.spacing_16,
+    marginVertical: SPACING.spacing16,
   },
   errorText: {
     color: "red",
-    marginBottom: SPACING.spacing_8,
+    marginBottom: SPACING.spacing8,
   },
 });
