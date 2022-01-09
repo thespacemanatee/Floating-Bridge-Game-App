@@ -45,10 +45,13 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 };
 
 export const bindGameEvents = () => {
-  channelRef.current?.bind("game-status-event", (status: GameStatus) => {
-    store.dispatch(setGameStatus(status));
-  });
-  channelRef.current?.bind("game-init-event", (hands: GameHand[]) => {
-    store.dispatch(setGameHands(hands));
+  channelRef.current?.bind(
+    "game-status-event",
+    (data: { status: GameStatus }) => {
+      store.dispatch(setGameStatus(data.status));
+    }
+  );
+  channelRef.current?.bind("game-init-event", (data: { hands: GameHand[] }) => {
+    store.dispatch(setGameHands(data.hands));
   });
 };
