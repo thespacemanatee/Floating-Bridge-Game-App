@@ -2,25 +2,24 @@ import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { Member } from "../../types";
-import { mockUsers } from "../../mock/mockData";
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
 import { TextButton } from "../../components/molecules/TextButton";
 import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
 import { ThemedText } from "../../components/elements/ThemedText";
+import { useAppSelector } from "../../store/hooks";
 
 type WaitingRoomPageProps = {
-  currentUsername: string;
-  gameId: string;
   users: Member[];
   onStartGame: () => void;
 };
 
-const WaitingRoomPage = ({
-  currentUsername,
-  gameId,
+export const WaitingRoomPage = ({
   users,
   onStartGame,
 }: WaitingRoomPageProps) => {
+  const username = useAppSelector((state) => state.game.username);
+  const roomId = useAppSelector((state) => state.game.roomId);
+
   const roomReady = useMemo(() => {
     return users.length === 4 ? true : false;
   }, [users]);
@@ -29,16 +28,16 @@ const WaitingRoomPage = ({
     <View style={styles.container}>
       <ThemedText
         style={styles.titleText}
-      >{`Waiting Room (ID: ${gameId})`}</ThemedText>
+      >{`Waiting Room (ID: ${roomId})`}</ThemedText>
       <ThemedText
         style={styles.welcomeText}
-      >{`Welcome ${currentUsername}!`}</ThemedText>
+      >{`Welcome ${username}!`}</ThemedText>
       <View style={styles.usersContainer}>
         {users.map((member) => {
           return (
             <LobbyUserEntry
               key={member.id}
-              currentUsername={currentUsername}
+              currentUsername={username || ""}
               member={member}
             />
           );
@@ -53,8 +52,6 @@ const WaitingRoomPage = ({
     </View>
   );
 };
-
-export default WaitingRoomPage;
 
 const styles = StyleSheet.create({
   container: {

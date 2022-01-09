@@ -11,11 +11,15 @@ export type GameHand = {
 };
 
 interface GameState {
+  username: string | null;
+  roomId: string | null;
   status: GameStatus;
   hands: GameHand[] | null;
 }
 
 const initialState: GameState = {
+  username: null,
+  roomId: null,
   status: "stopped",
   hands: null,
 };
@@ -24,14 +28,22 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
+    setGameUsername(state: GameState, action: PayloadAction<string>) {
+      state.username = action.payload;
+    },
+    setGameRoomId(state: GameState, action: PayloadAction<string>) {
+      state.roomId = action.payload;
+    },
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
     },
-    setHands(state: GameState, action: PayloadAction<GameHand[]>) {
+    setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
     },
   },
 });
 
-export const { setGameStatus, setHands: setGameHands } = gameSlice.actions;
+export const { setGameUsername, setGameRoomId, setGameStatus, setGameHands } =
+  gameSlice.actions;
+
 export const { reducer } = gameSlice;

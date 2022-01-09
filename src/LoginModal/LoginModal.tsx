@@ -15,15 +15,14 @@ import { initialiseGame } from "../utils/GameHelper";
 import { useAppSelector } from "../store/hooks";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
-import WaitingRoomPage from "./login_pages/WaitingRoomPage";
+import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
 
 export const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
-  const [username, setUsername] = useState("");
-  const [gameId, setGameId] = useState("");
-  const [entered, setEntered] = useState(false);
   const [users, setUsers] = useState<Member[]>([]);
   const gameStatus = useAppSelector((state) => state.game.status);
+  const gameUsername = useAppSelector((state) => state.game.username);
+  const gameRoomId = useAppSelector((state) => state.game.roomId);
 
   useEffect(() => {
     if (gameStatus === "started") {
@@ -31,16 +30,13 @@ export const LoginModal = () => {
     }
   }, [gameStatus]);
 
-  const enterRoom = (username: string, gameId: string) => {
-    if (!username || !gameId) {
+  const enterRoom = (username: string, roomId: string) => {
+    if (!username || !roomId) {
       alert("Please enter the missing information!");
       return;
     }
-    setUsername(username);
-    setGameId(gameId);
-
     initPusherClient(username);
-    subscribeToChannel(gameId);
+    subscribeToChannel(roomId);
     bindSubscriptionSucceededEvent((member: Member) => {
       setUsers((old) =>
         old.some((e) => e.id === member.id) ? old : [...old, member]
@@ -55,11 +51,12 @@ export const LoginModal = () => {
       setUsers((old) => old.filter((e) => e.id !== member.id));
     });
     bindGameEvents();
-    setEntered(true);
   };
 
   const startGame = () => {
-    initialiseGame(gameId);
+    if (gameRoomId) {
+      initialiseGame(gameRoomId);
+    }
   };
 
   return (
@@ -68,19 +65,13 @@ export const LoginModal = () => {
       transparent
       visible={modalVisible}
       onRequestClose={() => {
-        alert("Modal has been closed.");
         setModalVisible(!modalVisible);
       }}
     >
       <View style={styles.container}>
         <View style={styles.modalView}>
-          {entered ? (
-            <WaitingRoomPage
-              currentUsername={username}
-              gameId={gameId}
-              users={users}
-              onStartGame={startGame}
-            />
+          {gameUsername && gameRoomId ? (
+            <WaitingRoomPage users={users} onStartGame={startGame} />
           ) : (
             <LobbyPage onEnterRoom={enterRoom} />
           )}

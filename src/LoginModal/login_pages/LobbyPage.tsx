@@ -7,17 +7,30 @@ import { TextButton } from "../../components/molecules/TextButton";
 import HeroImage from "../../components/elements/HeroImage";
 import { ThemedText } from "../../components/elements/ThemedText";
 import { ThemedTextInput } from "../../components/elements/ThemedTextInput";
+import { useAppDispatch } from "../../store/hooks";
+import {
+  setGameRoomId,
+  setGameUsername,
+} from "../../store/features/game/gameSlice";
 
 type LobbyPageProps = {
-  onEnterRoom: (username: string, gameId: string) => void;
+  onEnterRoom: (username: string, roomId: string) => void;
 };
 
 export const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
   const [username, setUsername] = useState("");
-  const [gameId, setGameId] = useState("");
+  const [roomId, setRoomId] = useState("");
+
+  const dispatch = useAppDispatch();
 
   const generateGameId = () => {
-    setGameId(nanoid(8));
+    setRoomId(nanoid(8));
+  };
+
+  const enterRoom = () => {
+    dispatch(setGameUsername(username));
+    dispatch(setGameRoomId(roomId));
+    onEnterRoom(username, roomId);
   };
 
   return (
@@ -35,8 +48,8 @@ export const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
       <View style={styles.gameIdInputContainer}>
         <ThemedTextInput
           placeholder="Enter your game room ID"
-          onChangeText={setGameId}
-          value={gameId}
+          onChangeText={setRoomId}
+          value={roomId}
           style={styles.input}
         />
         <TextButton
@@ -49,7 +62,7 @@ export const LobbyPage = ({ onEnterRoom }: LobbyPageProps) => {
         />
       </View>
       <TextButton
-        onPress={() => onEnterRoom(username, gameId)}
+        onPress={enterRoom}
         text="Enter Room"
         style={styles.loginButton}
       />
