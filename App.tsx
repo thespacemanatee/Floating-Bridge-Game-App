@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useFonts } from "expo-font";
 
 import Main from "./src/Main";
@@ -24,8 +24,6 @@ export default function App() {
     thin: require("./assets/fonts/Poppins-Thin.ttf"),
     thinItalic: require("./assets/fonts/Poppins-ThinItalic.ttf"),
   });
-
-  useEffect(() => {}, []);
 
   if (!loaded) return null;
 
