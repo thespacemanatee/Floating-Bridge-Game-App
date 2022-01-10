@@ -4,9 +4,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { deck } from "../models/deck";
 import { useAppSelector } from "../store/hooks";
 
-import { FaceCard } from "./FaceCard";
+import { FaceCard } from "./molecules/FaceCard";
 
-const HAND_SIZE = 13;
 const CARD_OFFSET_X = 75;
 const CARD_OFFSET_Y = 2.5;
 const CARD_ROTATION = 0.75;
@@ -27,10 +26,6 @@ export const Game = () => {
     return {};
   }, [gameHands]);
 
-  if (gameHands === null) {
-    return null;
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.left}>
@@ -46,21 +41,21 @@ export const Game = () => {
           <Text>Bottom: {bottom?.id}</Text>
           {bottom?.id === gameUserId && <Text>(You)</Text>}
           {bottom?.hand.map((card, index) => {
-            const noOfCards = bottom?.hand.length || HAND_SIZE;
+            const noOfCards = bottom?.hand.length;
             const translateX =
               CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
             const translateY =
               CARD_OFFSET_Y * Math.pow(index - Math.floor(noOfCards / 2), 2);
-            const rotate = `${
-              CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards)
-            }rad`;
+            const rotate =
+              CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards);
             return (
               <FaceCard
+                index={index}
                 key={`${card.suit}${card.value}`}
                 image={deck[`${card.suit}${card.value}`].imageUri}
-                style={{
-                  transform: [{ translateX }, { translateY }, { rotate }],
-                }}
+                offsetX={translateX}
+                offsetY={translateY}
+                offsetRotate={rotate}
               />
             );
           })}
@@ -94,6 +89,7 @@ const styles = StyleSheet.create({
   bottom: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-end",
   },
   right: {
     justifyContent: "center",
