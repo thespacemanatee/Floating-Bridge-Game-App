@@ -16,7 +16,6 @@ import { getHandPositions } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
-import { ThemedText } from "../components/elements/ThemedText";
 
 import { Floor } from "./Floor";
 
@@ -47,9 +46,7 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = (position: number, cardIndex: number) => {
-    if (userId) {
-      dispatch(playCardFromHand({ userId, position, cardIndex }));
-    }
+    dispatch(playCardFromHand({ userId, position, cardIndex }));
   };
 
   const leaveRoom = () => {
@@ -61,7 +58,7 @@ export const Game = () => {
   };
 
   const renderBackCards = (gameHand: GameHand) => {
-    return gameHand?.hand.map((card, index, hand) => {
+    return gameHand.hand.map((card, index, hand) => {
       const noOfCards = hand.length;
       const translateX =
         BACK_CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
@@ -86,19 +83,9 @@ export const Game = () => {
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
-      <View style={styles.left}>
-        {left.hand && renderBackCards(left.hand)}
-        {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
-          <ThemedText>{`Position: ${left.position}`}</ThemedText>
-        </View> */}
-      </View>
+      <View style={styles.left}>{left.hand && renderBackCards(left.hand)}</View>
       <View style={styles.middle}>
-        <View style={styles.top}>
-          {top.hand && renderBackCards(top.hand)}
-          {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
-            <ThemedText>{`Position: ${top.position}`}</ThemedText>
-          </View> */}
-        </View>
+        <View style={styles.top}>{top.hand && renderBackCards(top.hand)}</View>
         <Floor players={players} playedCards={playedCards} />
         <View style={styles.bottom}>
           {bottom.hand?.hand.map((card, index, hand) => {
@@ -118,20 +105,16 @@ export const Game = () => {
                 offsetY={translateY}
                 offsetRotate={rotate}
                 enabled={gameUserPosition === gameCurrentPosition}
-                onSnapToMiddle={(cardIdx) => playCard(bottom.position, cardIdx)}
+                onSnapToMiddle={(cardIdx) =>
+                  playCard(gameCurrentPosition, cardIdx)
+                }
               />
             );
           })}
-          {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
-            <ThemedText>{`Position: ${bottom.position}`}</ThemedText>
-          </View> */}
         </View>
       </View>
       <View style={styles.right}>
         {right.hand && renderBackCards(right.hand)}
-        {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
-          <ThemedText>{`Position: ${right.position}`}</ThemedText>
-        </View> */}
       </View>
     </View>
   );
@@ -161,7 +144,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
-
     elevation: 24,
   },
   left: {
