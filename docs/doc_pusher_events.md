@@ -1,15 +1,44 @@
-# Joining A Room
+# Subscription succeeded
 
-**Event** : `client-joined`
+**Event** : `pusher:subscription_succeeded`
 
-**Payload** : Incoming user's metadata
+**Payload** : `Channel` information
+# Member added
+
+**Event** : `pusher:member_added`
+
+**Payload** : `Member`
 
 **Content examples**
 
-For a User with username `brucewayne`
+For a `Member` with username `brucewayne`
 
 ```json
 {
-    "username": "brucewayne",
+    "id": "user-abcd",
+    "info": {
+        "username": "brucewayne",
+        "color": "blue"
+    }
+}
+```
+**Payload** : `Channel` information
+# Member removed
+
+**Event** : `pusher:member_added`
+
+**Payload** : `Member`
+
+**Content examples**
+
+For a `Member` with username `brucewayne`
+
+```json
+{
+    "id": "user-abcd",
+    "info": {
+        "username": "brucewayne",
+        "color": "blue"
+    }
 }
 ```

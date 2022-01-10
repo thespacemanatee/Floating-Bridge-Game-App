@@ -1,11 +1,6 @@
 import React, { useMemo } from "react";
-import {
-  GestureResponderEvent,
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from "react-native";
+import type { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 
 import { SPACING } from "../../resources/dimens";
 export interface ThemedButtonProps {
@@ -31,7 +26,7 @@ const defaultColors: ButtonColors = {
   default: "#00b000",
 };
 
-const ThemedButton = ({
+export const ThemedButton = ({
   children,
   onPress,
   disabled,
@@ -55,6 +50,7 @@ const ThemedButton = ({
       disabled={disabled}
       style={({ pressed }) => [
         {
+          // eslint-disable-next-line no-nested-ternary
           backgroundColor: disabled
             ? "grey"
             : pressed
@@ -71,12 +67,10 @@ const ThemedButton = ({
   );
 };
 
-export default ThemedButton;
-
 const styles = StyleSheet.create({
   button: {
-    padding: SPACING.spacing_12,
-    borderRadius: SPACING.spacing_8,
+    padding: SPACING.spacing12,
+    borderRadius: SPACING.spacing8,
     justifyContent: "center",
     alignItems: "center",
   },

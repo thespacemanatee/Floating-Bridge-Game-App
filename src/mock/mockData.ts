@@ -1,4 +1,4 @@
-import { Member } from "../components/LoginModal";
+import type { Member } from "../types/types";
 
 export const mockUsers: Member[] = [
   {

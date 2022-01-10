@@ -2,8 +2,9 @@ import React from "react";
 import { StyleSheet } from "react-native";
 
 import { FONT_SIZE } from "../../resources/dimens";
-import ThemedButton, { ThemedButtonProps } from "../elements/ThemedButton";
-import ThemedText from "../elements/ThemedText";
+import type { ThemedButtonProps } from "../elements/ThemedButton";
+import { ThemedButton } from "../elements/ThemedButton";
+import { ThemedText } from "../elements/ThemedText";
 
 interface TextButtonProps extends ThemedButtonProps {
   text: string;
@@ -18,7 +19,7 @@ const textSize = {
   large: FONT_SIZE.large,
 };
 
-const TextButton = ({
+export const TextButton = ({
   onPress,
   disabled,
   text,
@@ -49,8 +50,6 @@ const TextButton = ({
     </ThemedButton>
   );
 };
-
-export default TextButton;
 
 const styles = StyleSheet.create({
   text: {
