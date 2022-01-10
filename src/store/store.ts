@@ -12,8 +12,10 @@ import {
 import storage from "redux-persist/lib/storage";
 
 import { reducer as gameReducer } from "./features/game";
+import { reducer as roomReducer } from "./features/room";
 
 const rootReducer = combineReducers({
+  room: roomReducer,
   game: gameReducer,
 });
 

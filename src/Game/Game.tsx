@@ -1,16 +1,19 @@
 import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { deck } from "../models/deck";
-import { SPACING } from "../resources/dimens";
-import type { GameHand } from "../store/features/game/gameSlice";
+import { GameHand, resetGame } from "../store/features/game/gameSlice";
 import { playCardFromHand } from "../store/features/game/gameSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { PlayingCard } from "../components/elements/PlayingCard";
-import { ThemedText } from "../components/elements/ThemedText";
 import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
 import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
+import { getHandPositions } from "../utils/GameHelper";
+import { resetRoom } from "../store/features/room/roomSlice";
+import { unsubscribeToChannel } from "../utils/PusherHelper";
+
 import { Floor } from "./Floor";
+import { SPACING } from "../resources/dimens";
 
 const CARD_OFFSET_X = 75;
 const BACK_CARD_OFFSET_X = 50;
@@ -18,21 +21,14 @@ const CARD_OFFSET_Y = 2.5;
 const CARD_ROTATION = 0.75;
 
 export const Game = () => {
-  const userId = useAppSelector((state) => state.game.userId);
-  const players = useAppSelector((state) => state.game.players);
+  const userId = useAppSelector((state) => state.room.userId);
+  const roomId = useAppSelector((state) => state.room.roomId);
+  const players = useAppSelector((state) => state.room.players);
   const gameHands = useAppSelector((state) => state.game.hands);
   const playedCards = useAppSelector((state) => state.game.playedCards);
-  const { top, left, right, bottom } = useMemo(
-    () =>
-      gameHands
-        ? {
-            top: gameHands[0],
-            left: gameHands[1],
-            right: gameHands[2],
-            bottom: gameHands[3],
-          }
-        : {},
-    [gameHands]
+  const { top, left, right, bottom, currentPosition } = useMemo(
+    () => getHandPositions(userId, gameHands),
+    [gameHands, userId]
   );
 
   const dispatch = useAppDispatch();
@@ -41,6 +37,14 @@ export const Game = () => {
     if (userId) {
       dispatch(playCardFromHand({ userId, position, cardIndex }));
     }
+  };
+
+  const leaveRoom = () => {
+    if (roomId) {
+      unsubscribeToChannel(roomId);
+    }
+    dispatch(resetRoom());
+    dispatch(resetGame());
   };
 
   const renderBackCards = (gameHand: GameHand) => {
@@ -66,6 +70,9 @@ export const Game = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
+        <Ionicons name="close-outline" size={32} color="black" />
+      </TouchableOpacity>
       <View style={styles.left}>
         <Text>Left: {left?.id}</Text>
         {left && renderBackCards(left)}
@@ -94,7 +101,7 @@ export const Game = () => {
                 offsetX={translateX}
                 offsetY={translateY}
                 offsetRotate={rotate}
-                onSnapToMiddle={(cardIdx) => playCard(3, cardIdx)}
+                onSnapToMiddle={(cardIdx) => playCard(currentPosition, cardIdx)}
               />
             );
           })}
@@ -115,7 +122,19 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     overflow: "hidden",
   },
+  closeButton: {
+    position: "absolute",
+    height: SPACING.spacing48,
+    width: SPACING.spacing48,
+    borderRadius: SPACING.spacing24,
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: SPACING.spacing16,
+    zIndex: 1,
+  },
   left: {
+    alignItems: "center",
     justifyContent: "center",
     transform: [{ rotate: "270deg" }],
   },
@@ -132,6 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   right: {
+    alignItems: "center",
     justifyContent: "center",
     transform: [{ rotate: "90deg" }],
   },

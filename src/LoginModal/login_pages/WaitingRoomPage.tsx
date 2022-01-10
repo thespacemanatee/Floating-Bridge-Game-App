@@ -8,8 +8,8 @@ import { TextButton } from "../../components/molecules/TextButton";
 import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
 import { ThemedText } from "../../components/elements/ThemedText";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { resetGame } from "../../store/features/game/gameSlice";
 import { unsubscribeToChannel } from "../../utils/PusherHelper";
+import { resetRoom } from "../../store/features/room/roomSlice";
 
 type WaitingRoomPageProps = {
   players: Member[];
@@ -20,8 +20,8 @@ export const WaitingRoomPage = ({
   players,
   onStartGame,
 }: WaitingRoomPageProps) => {
-  const username = useAppSelector((state) => state.game.username);
-  const roomId = useAppSelector((state) => state.game.roomId);
+  const username = useAppSelector((state) => state.room.username);
+  const roomId = useAppSelector((state) => state.room.roomId);
 
   const dispatch = useAppDispatch();
 
@@ -33,7 +33,7 @@ export const WaitingRoomPage = ({
     if (roomId) {
       unsubscribeToChannel(roomId);
     }
-    dispatch(resetGame());
+    dispatch(resetRoom());
   };
 
   return (

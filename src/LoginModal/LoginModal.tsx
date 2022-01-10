@@ -19,18 +19,19 @@ import {
   removePlayer,
   resetPlayers,
   setGameUserId,
-} from "../store/features/game/gameSlice";
+  setIsAdmin,
+} from "../store/features/room/roomSlice";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
 import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
 
 export const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
+  const gameUserId = useAppSelector((state) => state.room.userId);
+  const gameUsername = useAppSelector((state) => state.room.username);
+  const gameRoomId = useAppSelector((state) => state.room.roomId);
+  const players = useAppSelector((state) => state.room.players);
   const gameStatus = useAppSelector((state) => state.game.status);
-  const gameUserId = useAppSelector((state) => state.game.userId);
-  const gameUsername = useAppSelector((state) => state.game.username);
-  const gameRoomId = useAppSelector((state) => state.game.roomId);
-  const players = useAppSelector((state) => state.game.players);
 
   const dispatch = useAppDispatch();
 
@@ -52,6 +53,12 @@ export const LoginModal = () => {
     },
     [dispatch]
   );
+
+  useEffect(() => {
+    if (players[1]?.id === gameUserId) {
+      dispatch(setIsAdmin(true));
+    }
+  }, [dispatch, gameUserId, players]);
 
   useEffect(() => {
     if (!gameUserId) {

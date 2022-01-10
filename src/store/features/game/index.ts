@@ -1,3 +1,1 @@
-import { reducer } from "./gameSlice";
-
-export { reducer };
+export { reducer } from "./gameSlice";
