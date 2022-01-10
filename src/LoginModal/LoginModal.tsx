@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
@@ -14,36 +14,44 @@ import type { Member } from "../types";
 import { SPACING } from "../resources/dimens";
 import { initialiseGame } from "../utils/GameHelper";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { setGameUserId } from "../store/features/game/gameSlice";
+import {
+  addPlayer,
+  removePlayer,
+  resetPlayers,
+  setGameUserId,
+} from "../store/features/game/gameSlice";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
 import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
 
 export const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
-  const [users, setUsers] = useState<Member[]>([]);
   const gameStatus = useAppSelector((state) => state.game.status);
   const gameUserId = useAppSelector((state) => state.game.userId);
   const gameUsername = useAppSelector((state) => state.game.username);
   const gameRoomId = useAppSelector((state) => state.game.roomId);
+  const players = useAppSelector((state) => state.game.players);
 
   const dispatch = useAppDispatch();
 
-  const enterRoom = (userId: string, username: string, roomId: string) => {
-    initPusherClient(userId, username);
-    subscribeToChannel(roomId);
-    setUsers([]);
-    bindSubscriptionSucceededEvent((member: Member) => {
-      setUsers((old) => [...old, member]);
-    });
-    bindMemberAddedEvent((member: Member) => {
-      setUsers((old) => [...old, member]);
-    });
-    bindMemberRemovedEvent((member: Member) => {
-      setUsers((old) => old.filter((e) => e.id !== member.id));
-    });
-    bindGameEvents();
-  };
+  const enterRoom = useCallback(
+    (userId: string, username: string, roomId: string) => {
+      initPusherClient(userId, username);
+      subscribeToChannel(roomId);
+      dispatch(resetPlayers());
+      bindSubscriptionSucceededEvent((member: Member) => {
+        dispatch(addPlayer(member));
+      });
+      bindMemberAddedEvent((member: Member) => {
+        dispatch(addPlayer(member));
+      });
+      bindMemberRemovedEvent((member: Member) => {
+        dispatch(removePlayer(member));
+      });
+      bindGameEvents();
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (!gameUserId) {
@@ -68,7 +76,7 @@ export const LoginModal = () => {
     if (gameUserId && gameUsername && gameRoomId) {
       enterRoom(gameUserId, gameUsername, gameRoomId);
     }
-  }, [gameUserId, gameUsername, gameRoomId]);
+  }, [gameUserId, gameUsername, gameRoomId, enterRoom]);
 
   const startGame = () => {
     if (gameRoomId) {
@@ -88,7 +96,7 @@ export const LoginModal = () => {
       <View style={styles.container}>
         <View style={styles.modalView}>
           {gameUserId && gameUsername && gameRoomId ? (
-            <WaitingRoomPage users={users} onStartGame={startGame} />
+            <WaitingRoomPage players={players} onStartGame={startGame} />
           ) : (
             <LobbyPage />
           )}

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import type { Card } from "../../../models";
 import type { PlayedCard } from "../../../models/deck";
+import type { Member } from "../../../types";
 
 export type GameStatus = "started" | "stopped";
 
@@ -23,6 +24,7 @@ interface GameState {
   username: string | null;
   roomId: string | null;
   status: GameStatus;
+  players: Member[];
   hands: GameHand[];
   playedCards: PlayedCards;
 }
@@ -32,6 +34,7 @@ const initialState: GameState = {
   username: null,
   roomId: null,
   status: "stopped",
+  players: [],
   hands: [],
   playedCards: [],
 };
@@ -51,6 +54,17 @@ const gameSlice = createSlice({
     },
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
+    },
+    addPlayer(state: GameState, action: PayloadAction<Member>) {
+      state.players.push(action.payload);
+    },
+    removePlayer(state: GameState, action: PayloadAction<Member>) {
+      state.players = state.players.filter(
+        (player) => player.id !== action.payload.id
+      );
+    },
+    resetPlayers(state: GameState) {
+      state.players = [];
     },
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
@@ -83,6 +97,7 @@ const gameSlice = createSlice({
       state.username = null;
       state.roomId = null;
       state.status = "stopped";
+      state.players = [];
       state.hands = [];
       state.playedCards = [];
     },
@@ -94,6 +109,9 @@ export const {
   setGameUsername,
   setGameRoomId,
   setGameStatus,
+  addPlayer,
+  removePlayer,
+  resetPlayers,
   setGameHands,
   playCardFromHand,
   resetGame,

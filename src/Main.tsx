@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { LoginModal } from "./LoginModal/LoginModal";
-import { Game } from "./components/Game";
+import { Game } from "./Game/Game";
 
 export const Main = () => {
   return (

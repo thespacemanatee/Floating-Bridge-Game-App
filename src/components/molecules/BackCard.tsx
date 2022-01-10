@@ -1,31 +1,25 @@
 import React from "react";
-import type { ViewStyle, StyleProp } from "react-native";
-import { StyleSheet, View, Image } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
-const CARD_WIDTH = 180;
-const CARD_HEIGHT = 250;
+import { SPACING } from "../../resources/dimens";
+import { PlayingCard } from "../elements/PlayingCard";
 
-type BackCardProps = {
-  style: StyleProp<ViewStyle>;
-};
+export interface BackCardProps {
+  style?: StyleProp<ViewStyle>;
+}
 
 export const BackCard = ({ style }: BackCardProps) => {
   return (
-    <View style={[styles.container, style]}>
-      <View style={styles.card}>
-        <Image
-          source={require("../../../assets/images/cards/BACK.svg")}
-          style={{
-            width: CARD_WIDTH,
-            height: CARD_HEIGHT,
-          }}
-        />
-      </View>
-    </View>
+    <PlayingCard
+      image={require("../../../assets/images/cards/BACK.svg")}
+      style={[style, styles.container]}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  card: {},
+  container: {
+    borderRadius: SPACING.spacing20,
+  },
 });

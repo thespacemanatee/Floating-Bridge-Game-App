@@ -2,17 +2,24 @@ import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { deck } from "../models/deck";
+import { SPACING } from "../resources/dimens";
+import type { GameHand } from "../store/features/game/gameSlice";
 import { playCardFromHand } from "../store/features/game/gameSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-
-import { FaceCard } from "./molecules/FaceCard";
+import { PlayingCard } from "../components/elements/PlayingCard";
+import { ThemedText } from "../components/elements/ThemedText";
+import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
+import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
+import { Floor } from "./Floor";
 
 const CARD_OFFSET_X = 75;
+const BACK_CARD_OFFSET_X = 50;
 const CARD_OFFSET_Y = 2.5;
 const CARD_ROTATION = 0.75;
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.game.userId);
+  const players = useAppSelector((state) => state.game.players);
   const gameHands = useAppSelector((state) => state.game.hands);
   const playedCards = useAppSelector((state) => state.game.playedCards);
   const { top, left, right, bottom } = useMemo(
@@ -28,33 +35,51 @@ export const Game = () => {
     [gameHands]
   );
 
-  console.log(playedCards);
-
   const dispatch = useAppDispatch();
 
   const playCard = (position: number, cardIndex: number) => {
-    console.log(`Removing card: ${position}:${cardIndex}`);
     if (userId) {
       dispatch(playCardFromHand({ userId, position, cardIndex }));
     }
+  };
+
+  const renderBackCards = (gameHand: GameHand) => {
+    return gameHand?.hand.map((card, index, hand) => {
+      const noOfCards = hand.length;
+      const translateX =
+        BACK_CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
+      const translateY =
+        -CARD_OFFSET_Y * Math.pow(index - Math.floor(noOfCards / 2), 2);
+      const rotate =
+        -CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards);
+      return (
+        <AnimatedBackCard
+          key={`${card.suit}${card.value}`}
+          index={index}
+          offsetX={translateX}
+          offsetY={translateY}
+          offsetRotate={rotate}
+        />
+      );
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.left}>
         <Text>Left: {left?.id}</Text>
-        {left?.id === userId && <Text>(You)</Text>}
+        {left && renderBackCards(left)}
       </View>
       <View style={styles.middle}>
         <View style={styles.top}>
           <Text>Top: {top?.id}</Text>
-          {top?.id === userId && <Text>(You)</Text>}
+          {top && renderBackCards(top)}
         </View>
+        <Floor players={players} playedCards={playedCards} />
         <View style={styles.bottom}>
           <Text>Bottom: {bottom?.id}</Text>
-          {bottom?.id === userId && <Text>(You)</Text>}
-          {bottom?.hand.map((card, index) => {
-            const noOfCards = bottom?.hand.length;
+          {bottom?.hand.map((card, index, hand) => {
+            const noOfCards = hand.length;
             const translateX =
               CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
             const translateY =
@@ -62,7 +87,7 @@ export const Game = () => {
             const rotate =
               CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards);
             return (
-              <FaceCard
+              <AnimatedFaceCard
                 index={index}
                 key={`${card.suit}${card.value}`}
                 image={deck[`${card.suit}${card.value}`].imageUri}
@@ -77,7 +102,7 @@ export const Game = () => {
       </View>
       <View style={styles.right}>
         <Text>Right: {right?.id}</Text>
-        {right?.id === userId && <Text>(You)</Text>}
+        {right && renderBackCards(right)}
       </View>
     </View>
   );
@@ -92,6 +117,7 @@ const styles = StyleSheet.create({
   },
   left: {
     justifyContent: "center",
+    transform: [{ rotate: "270deg" }],
   },
   top: {
     flex: 1,
@@ -107,5 +133,6 @@ const styles = StyleSheet.create({
   },
   right: {
     justifyContent: "center",
+    transform: [{ rotate: "90deg" }],
   },
 });

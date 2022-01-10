@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
-import { useWindowDimensions, View, StyleSheet, Image } from "react-native";
+import { useWindowDimensions, StyleSheet } from "react-native";
 import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
@@ -14,36 +13,34 @@ import Animated, {
 } from "react-native-reanimated";
 import { snapPoint } from "react-native-redash";
 
-const CARD_WIDTH = 144;
-const CARD_HEIGHT = 200;
+import type { PlayingCardProps } from "../elements/PlayingCard";
+import { PlayingCard } from "../elements/PlayingCard";
+
 const DURATION = 150;
 
-type FaceCardProps = {
+interface AnimatedFaceCardProps extends PlayingCardProps {
   index: number;
-  image: ImageSourcePropType;
   offsetX: number;
   offsetY: number;
   offsetRotate: number;
   onSnapToMiddle: (index: number) => void;
-  style?: StyleProp<ViewStyle>;
-};
+}
 
-export const FaceCard = ({
+export const AnimatedFaceCard = ({
   index,
   image,
   offsetX,
   offsetY,
   offsetRotate,
   onSnapToMiddle,
-  style,
-}: FaceCardProps) => {
+}: AnimatedFaceCardProps) => {
   const { height } = useWindowDimensions();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(-height);
   const scale = useSharedValue(1);
   const rotate = useSharedValue(0);
   const zIndex = useSharedValue(0);
-  const midY = useMemo(() => -CARD_HEIGHT * 1.25, []);
+  const midY = useMemo(() => -height / 2, [height]);
   const snapPointsY = useMemo(() => [midY, offsetY], [midY, offsetY]);
   const delay = useMemo(() => index * DURATION, [index]);
 
@@ -123,13 +120,7 @@ export const FaceCard = ({
         style={[styles.card, animatedStyle]}
         pointerEvents="box-none"
       >
-        <Image
-          source={image}
-          style={{
-            width: CARD_WIDTH,
-            height: CARD_HEIGHT,
-          }}
-        />
+        <PlayingCard image={image} />
       </Animated.View>
     </PanGestureHandler>
   );
@@ -138,15 +129,5 @@ export const FaceCard = ({
 const styles = StyleSheet.create({
   card: {
     position: "absolute",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
-    borderRadius: 8,
-    pointer: "cursor",
   },
 });

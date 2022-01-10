@@ -12,12 +12,12 @@ import { resetGame } from "../../store/features/game/gameSlice";
 import { unsubscribeToChannel } from "../../utils/PusherHelper";
 
 type WaitingRoomPageProps = {
-  users: Member[];
+  players: Member[];
   onStartGame: () => void;
 };
 
 export const WaitingRoomPage = ({
-  users,
+  players,
   onStartGame,
 }: WaitingRoomPageProps) => {
   const username = useAppSelector((state) => state.game.username);
@@ -26,8 +26,8 @@ export const WaitingRoomPage = ({
   const dispatch = useAppDispatch();
 
   const roomReady = useMemo(() => {
-    return users.length === 4 ? true : false;
-  }, [users]);
+    return players.length === 4 ? true : false;
+  }, [players]);
 
   const leaveRoom = () => {
     if (roomId) {
@@ -48,7 +48,7 @@ export const WaitingRoomPage = ({
         style={styles.welcomeText}
       >{`Welcome ${username}!`}</ThemedText>
       <View style={styles.usersContainer}>
-        {users.map((member) => {
+        {players.map((member) => {
           return (
             <LobbyUserEntry
               key={member.id}
@@ -58,7 +58,7 @@ export const WaitingRoomPage = ({
           );
         })}
       </View>
-      {users.length !== 4 && (
+      {players.length !== 4 && (
         <ThemedText style={styles.errorText}>
           Need exactly 4 players to start the game!
         </ThemedText>
