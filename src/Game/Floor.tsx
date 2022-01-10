@@ -17,16 +17,28 @@ export const Floor = ({ players, playedCards }: FloorProps) => {
   return (
     <View style={styles.container}>
       {playedCards.map((card) => {
+        const currPlayer = players.find(
+          (player) => player.id === card.playedBy
+        );
         return (
-          <View key={`${card.suit}${card.value}`} style={styles.cardContainer}>
-            <PlayingCard image={deck[`${card.suit}${card.value}`].imageUri} />
-            <ThemedText>
-              {
-                players.find((player) => player.id === card.playedBy)?.info
-                  .username
-              }
-            </ThemedText>
-          </View>
+          currPlayer && (
+            <View
+              key={`${card.suit}${card.value}`}
+              style={styles.cardContainer}
+            >
+              <PlayingCard image={deck[`${card.suit}${card.value}`].imageUri} />
+              <View
+                style={[
+                  { backgroundColor: currPlayer?.info.color || "white" },
+                  styles.nameContainer,
+                ]}
+              >
+                <ThemedText style={styles.nameText}>
+                  {currPlayer?.info.username}
+                </ThemedText>
+              </View>
+            </View>
+          )
         );
       })}
     </View>
@@ -40,5 +52,23 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     marginHorizontal: SPACING.spacing8,
+  },
+  nameContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: SPACING.spacing8,
+    padding: SPACING.spacing8,
+    borderRadius: SPACING.spacing8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+  },
+  nameText: {
+    fontFamily: "semiBold",
   },
 });

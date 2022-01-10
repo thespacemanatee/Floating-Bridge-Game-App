@@ -44,10 +44,14 @@ export const Game = () => {
     dispatch(setGameUserPosition(userPosition));
   }, [dispatch, userPosition]);
 
-  const playCard = (position: number, cardIndex: number) => {
+  const playCard = (cardIndex: number) => {
     triggerNextTurnEvent(
       roomId,
-      { userId, position, cardIndex },
+      {
+        userId,
+        position: gameCurrentPosition,
+        cardIndex,
+      },
       gameCurrentPosition
     );
   };
@@ -108,9 +112,7 @@ export const Game = () => {
                 offsetY={translateY}
                 offsetRotate={rotate}
                 enabled={gameUserPosition === gameCurrentPosition}
-                onSnapToMiddle={(cardIdx) =>
-                  playCard(gameCurrentPosition, cardIdx)
-                }
+                onSnapToMiddle={playCard}
               />
             );
           })}
