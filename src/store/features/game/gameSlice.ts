@@ -20,12 +20,16 @@ export type PlayCardPayload = {
 };
 interface GameState {
   status: GameStatus;
+  userPosition: number;
+  currentPosition: number;
   hands: GameHand[];
   playedCards: PlayedCards;
 }
 
 const initialState: GameState = {
   status: "stopped",
+  userPosition: 0,
+  currentPosition: 0,
   hands: [],
   playedCards: [],
 };
@@ -36,6 +40,12 @@ const gameSlice = createSlice({
   reducers: {
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
+    },
+    setGameUserPosition(state: GameState, action: PayloadAction<number>) {
+      state.userPosition = action.payload;
+    },
+    setGameCurrentPosition(state: GameState, action: PayloadAction<number>) {
+      state.currentPosition = action.payload;
     },
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
@@ -65,13 +75,21 @@ const gameSlice = createSlice({
     },
     resetGame(state: GameState) {
       state.status = "stopped";
+      state.userPosition = 0;
+      state.currentPosition = 0;
       state.hands = [];
       state.playedCards = [];
     },
   },
 });
 
-export const { setGameStatus, setGameHands, playCardFromHand, resetGame } =
-  gameSlice.actions;
+export const {
+  setGameStatus,
+  setGameUserPosition,
+  setGameCurrentPosition,
+  setGameHands,
+  playCardFromHand,
+  resetGame,
+} = gameSlice.actions;
 
 export const { reducer } = gameSlice;

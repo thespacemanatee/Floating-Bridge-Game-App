@@ -6,7 +6,11 @@ import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 
 import type { Member } from "../types";
 import type { GameHand, GameStatus } from "../store/features/game/gameSlice";
-import { setGameHands, setGameStatus } from "../store/features/game/gameSlice";
+import {
+  setGameCurrentPosition,
+  setGameHands,
+  setGameStatus,
+} from "../store/features/game/gameSlice";
 import { store } from "../store";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
@@ -68,16 +72,21 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 
 export const bindGameEvents = () => {
   if (channelRef.current) {
-    channelRef.current?.bind(
+    channelRef.current.bind(
       "game-status-event",
       (data: { status: GameStatus }) => {
         store.dispatch(setGameStatus(data.status));
       }
     );
-    channelRef.current?.bind(
+    channelRef.current.bind(
       "game-init-event",
-      (data: { hands: GameHand[] }) => {
+      (data: { startUserId: string; hands: GameHand[] }) => {
         store.dispatch(setGameHands(data.hands));
+        store.dispatch(
+          setGameCurrentPosition(
+            data.hands.findIndex((e) => e.id === data.startUserId)
+          )
+        );
       }
     );
   } else {

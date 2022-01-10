@@ -23,6 +23,7 @@ interface AnimatedFaceCardProps extends PlayingCardProps {
   offsetX: number;
   offsetY: number;
   offsetRotate: number;
+  enabled?: boolean;
   onSnapToMiddle: (index: number) => void;
 }
 
@@ -32,6 +33,7 @@ export const AnimatedFaceCard = ({
   offsetX,
   offsetY,
   offsetRotate,
+  enabled = true,
   onSnapToMiddle,
 }: AnimatedFaceCardProps) => {
   const { height } = useWindowDimensions();
@@ -115,7 +117,11 @@ export const AnimatedFaceCard = ({
     };
   });
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent} minDist={0}>
+    <PanGestureHandler
+      onGestureEvent={onGestureEvent}
+      minDist={0}
+      enabled={enabled}
+    >
       <Animated.View
         style={[styles.card, animatedStyle]}
         pointerEvents="box-none"

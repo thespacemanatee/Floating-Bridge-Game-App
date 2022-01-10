@@ -55,7 +55,7 @@ export const LoginModal = () => {
   );
 
   useEffect(() => {
-    if (players[1]?.id === gameUserId) {
+    if (players[0]?.id === gameUserId) {
       dispatch(setIsAdmin(true));
     }
   }, [dispatch, gameUserId, players]);
@@ -87,7 +87,7 @@ export const LoginModal = () => {
 
   const startGame = () => {
     if (gameRoomId) {
-      initialiseGame(gameRoomId);
+      initialiseGame(gameUserId, gameRoomId);
     }
   };
 

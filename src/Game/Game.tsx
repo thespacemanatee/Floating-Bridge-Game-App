@@ -1,19 +1,24 @@
-import React, { useMemo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { deck } from "../models/deck";
-import { GameHand, resetGame } from "../store/features/game/gameSlice";
-import { playCardFromHand } from "../store/features/game/gameSlice";
+import type { GameHand } from "../store/features/game/gameSlice";
+import {
+  setGameUserPosition,
+  resetGame,
+  playCardFromHand,
+} from "../store/features/game/gameSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
 import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
 import { getHandPositions } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
+import { SPACING } from "../resources/dimens";
+import { ThemedText } from "../components/elements/ThemedText";
 
 import { Floor } from "./Floor";
-import { SPACING } from "../resources/dimens";
 
 const CARD_OFFSET_X = 75;
 const BACK_CARD_OFFSET_X = 50;
@@ -24,14 +29,22 @@ export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
   const players = useAppSelector((state) => state.room.players);
+  const gameUserPosition = useAppSelector((state) => state.game.userPosition);
+  const gameCurrentPosition = useAppSelector(
+    (state) => state.game.currentPosition
+  );
   const gameHands = useAppSelector((state) => state.game.hands);
   const playedCards = useAppSelector((state) => state.game.playedCards);
-  const { top, left, right, bottom, currentPosition } = useMemo(
+  const { top, left, right, bottom, userPosition } = useMemo(
     () => getHandPositions(userId, gameHands),
     [gameHands, userId]
   );
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setGameUserPosition(userPosition));
+  }, [dispatch, userPosition]);
 
   const playCard = (position: number, cardIndex: number) => {
     if (userId) {
@@ -74,18 +87,21 @@ export const Game = () => {
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
       <View style={styles.left}>
-        <Text>Left: {left?.id}</Text>
-        {left && renderBackCards(left)}
+        {left.hand && renderBackCards(left.hand)}
+        <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+          <ThemedText>{`Position: ${left.position}`}</ThemedText>
+        </View>
       </View>
       <View style={styles.middle}>
         <View style={styles.top}>
-          <Text>Top: {top?.id}</Text>
-          {top && renderBackCards(top)}
+          {top.hand && renderBackCards(top.hand)}
+          <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+            <ThemedText>{`Position: ${top.position}`}</ThemedText>
+          </View>
         </View>
         <Floor players={players} playedCards={playedCards} />
         <View style={styles.bottom}>
-          <Text>Bottom: {bottom?.id}</Text>
-          {bottom?.hand.map((card, index, hand) => {
+          {bottom.hand?.hand.map((card, index, hand) => {
             const noOfCards = hand.length;
             const translateX =
               CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
@@ -101,15 +117,21 @@ export const Game = () => {
                 offsetX={translateX}
                 offsetY={translateY}
                 offsetRotate={rotate}
-                onSnapToMiddle={(cardIdx) => playCard(currentPosition, cardIdx)}
+                enabled={gameUserPosition === gameCurrentPosition}
+                onSnapToMiddle={(cardIdx) => playCard(userPosition, cardIdx)}
               />
             );
           })}
+          <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+            <ThemedText>{`Position: ${bottom.position}`}</ThemedText>
+          </View>
         </View>
       </View>
       <View style={styles.right}>
-        <Text>Right: {right?.id}</Text>
-        {right && renderBackCards(right)}
+        {right.hand && renderBackCards(right.hand)}
+        <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+          <ThemedText>{`Position: ${right.position}`}</ThemedText>
+        </View>
       </View>
     </View>
   );
@@ -132,8 +154,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: SPACING.spacing16,
     zIndex: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+
+    elevation: 24,
   },
   left: {
+    flex: 0.1,
     alignItems: "center",
     justifyContent: "center",
     transform: [{ rotate: "270deg" }],
@@ -143,7 +175,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   middle: {
-    flex: 1,
+    flex: 0.8,
   },
   bottom: {
     flex: 1,
@@ -151,6 +183,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   right: {
+    flex: 0.1,
     alignItems: "center",
     justifyContent: "center",
     transform: [{ rotate: "90deg" }],

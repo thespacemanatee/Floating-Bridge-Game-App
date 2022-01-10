@@ -3,8 +3,9 @@ import { HOST } from "@env";
 
 import type { GameHand } from "../store/features/game/gameSlice";
 
-export const initialiseGame = (gameId: string) => {
+export const initialiseGame = (userId: string, gameId: string) => {
   axios.post(HOST + "/game/init", {
+    userId,
     channelName: `presence-${gameId}`,
   });
 };
@@ -18,10 +19,22 @@ export const getHandPositions = (userId: string, hands: GameHand[]) => {
     }
   }
   return {
-    bottom: hands[currentUserIdx++ % hands.length],
-    left: hands[currentUserIdx++ % hands.length],
-    top: hands[currentUserIdx++ % hands.length],
-    right: hands[currentUserIdx++ % hands.length],
-    currentPosition: currentUserIdx % hands.length,
+    bottom: {
+      position: currentUserIdx++ % hands.length,
+      hand: hands[currentUserIdx % hands.length],
+    },
+    left: {
+      position: currentUserIdx++ % hands.length,
+      hand: hands[currentUserIdx % hands.length],
+    },
+    top: {
+      position: currentUserIdx++ % hands.length,
+      hand: hands[currentUserIdx % hands.length],
+    },
+    right: {
+      position: currentUserIdx++ % hands.length,
+      hand: hands[currentUserIdx % hands.length],
+    },
+    userPosition: currentUserIdx % hands.length,
   };
 };

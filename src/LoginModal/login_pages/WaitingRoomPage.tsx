@@ -22,6 +22,7 @@ export const WaitingRoomPage = ({
 }: WaitingRoomPageProps) => {
   const username = useAppSelector((state) => state.room.username);
   const roomId = useAppSelector((state) => state.room.roomId);
+  const isAdmin = useAppSelector((state) => state.room.isAdmin);
 
   const dispatch = useAppDispatch();
 
@@ -63,7 +64,11 @@ export const WaitingRoomPage = ({
           Need exactly 4 players to start the game!
         </ThemedText>
       )}
-      <TextButton text="Start!" onPress={onStartGame} disabled={!roomReady} />
+      <TextButton
+        text="Start!"
+        onPress={onStartGame}
+        disabled={!roomReady || !isAdmin}
+      />
     </View>
   );
 };
