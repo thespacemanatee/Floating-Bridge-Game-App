@@ -11,7 +11,7 @@ import { useAppDispatch } from "../../store/hooks";
 import {
   setGameRoomId,
   setGameUsername,
-} from "../../store/features/game/gameSlice";
+} from "../../store/features/room/roomSlice";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");

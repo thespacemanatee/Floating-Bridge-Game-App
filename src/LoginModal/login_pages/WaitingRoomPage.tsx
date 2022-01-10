@@ -8,32 +8,33 @@ import { TextButton } from "../../components/molecules/TextButton";
 import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
 import { ThemedText } from "../../components/elements/ThemedText";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { resetGame } from "../../store/features/game/gameSlice";
 import { unsubscribeToChannel } from "../../utils/PusherHelper";
+import { resetRoom } from "../../store/features/room/roomSlice";
 
 type WaitingRoomPageProps = {
-  users: Member[];
+  players: Member[];
   onStartGame: () => void;
 };
 
 export const WaitingRoomPage = ({
-  users,
+  players,
   onStartGame,
 }: WaitingRoomPageProps) => {
-  const username = useAppSelector((state) => state.game.username);
-  const roomId = useAppSelector((state) => state.game.roomId);
+  const username = useAppSelector((state) => state.room.username);
+  const roomId = useAppSelector((state) => state.room.roomId);
+  const isAdmin = useAppSelector((state) => state.room.isAdmin);
 
   const dispatch = useAppDispatch();
 
   const roomReady = useMemo(() => {
-    return users.length === 4 ? true : false;
-  }, [users]);
+    return players.length === 4 ? true : false;
+  }, [players]);
 
   const leaveRoom = () => {
     if (roomId) {
       unsubscribeToChannel(roomId);
     }
-    dispatch(resetGame());
+    dispatch(resetRoom());
   };
 
   return (
@@ -48,7 +49,7 @@ export const WaitingRoomPage = ({
         style={styles.welcomeText}
       >{`Welcome ${username}!`}</ThemedText>
       <View style={styles.usersContainer}>
-        {users.map((member) => {
+        {players.map((member) => {
           return (
             <LobbyUserEntry
               key={member.id}
@@ -58,12 +59,16 @@ export const WaitingRoomPage = ({
           );
         })}
       </View>
-      {users.length !== 4 && (
+      {players.length !== 4 && (
         <ThemedText style={styles.errorText}>
           Need exactly 4 players to start the game!
         </ThemedText>
       )}
-      <TextButton text="Start!" onPress={onStartGame} disabled={!roomReady} />
+      <TextButton
+        text="Start!"
+        onPress={onStartGame}
+        disabled={!roomReady || !isAdmin}
+      />
     </View>
   );
 };
