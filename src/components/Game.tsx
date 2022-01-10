@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { deck } from "../models/deck";
-import { useAppSelector } from "../store/hooks";
+import { playCardFromHand } from "../store/features/game/gameSlice";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 import { FaceCard } from "./molecules/FaceCard";
 
@@ -11,35 +12,47 @@ const CARD_OFFSET_Y = 2.5;
 const CARD_ROTATION = 0.75;
 
 export const Game = () => {
-  const gameUserId = useAppSelector((state) => state.game.userId);
+  const userId = useAppSelector((state) => state.game.userId);
   const gameHands = useAppSelector((state) => state.game.hands);
+  const playedCards = useAppSelector((state) => state.game.playedCards);
+  const { top, left, right, bottom } = useMemo(
+    () =>
+      gameHands
+        ? {
+            top: gameHands[0],
+            left: gameHands[1],
+            right: gameHands[2],
+            bottom: gameHands[3],
+          }
+        : {},
+    [gameHands]
+  );
 
-  const { top, left, right, bottom } = useMemo(() => {
-    if (gameHands) {
-      return {
-        top: gameHands[0],
-        left: gameHands[1],
-        right: gameHands[2],
-        bottom: gameHands[3],
-      };
+  console.log(playedCards);
+
+  const dispatch = useAppDispatch();
+
+  const playCard = (position: number, cardIndex: number) => {
+    console.log(`Removing card: ${position}:${cardIndex}`);
+    if (userId) {
+      dispatch(playCardFromHand({ userId, position, cardIndex }));
     }
-    return {};
-  }, [gameHands]);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.left}>
         <Text>Left: {left?.id}</Text>
-        {left?.id === gameUserId && <Text>(You)</Text>}
+        {left?.id === userId && <Text>(You)</Text>}
       </View>
       <View style={styles.middle}>
         <View style={styles.top}>
           <Text>Top: {top?.id}</Text>
-          {top?.id === gameUserId && <Text>(You)</Text>}
+          {top?.id === userId && <Text>(You)</Text>}
         </View>
         <View style={styles.bottom}>
           <Text>Bottom: {bottom?.id}</Text>
-          {bottom?.id === gameUserId && <Text>(You)</Text>}
+          {bottom?.id === userId && <Text>(You)</Text>}
           {bottom?.hand.map((card, index) => {
             const noOfCards = bottom?.hand.length;
             const translateX =
@@ -56,6 +69,7 @@ export const Game = () => {
                 offsetX={translateX}
                 offsetY={translateY}
                 offsetRotate={rotate}
+                onSnapToMiddle={(cardIdx) => playCard(3, cardIdx)}
               />
             );
           })}
@@ -63,7 +77,7 @@ export const Game = () => {
       </View>
       <View style={styles.right}>
         <Text>Right: {right?.id}</Text>
-        {right?.id === gameUserId && <Text>(You)</Text>}
+        {right?.id === userId && <Text>(You)</Text>}
       </View>
     </View>
   );

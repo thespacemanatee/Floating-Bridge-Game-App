@@ -2,6 +2,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
 import type { Card } from "../../../models";
+import type { PlayedCard } from "../../../models/deck";
 
 export type GameStatus = "started" | "stopped";
 
@@ -10,12 +11,20 @@ export type GameHand = {
   hand: Card[];
 };
 
+export type PlayedCards = PlayedCard[];
+
+export type PlayCardPayload = {
+  userId: string;
+  position: number;
+  cardIndex: number;
+};
 interface GameState {
   userId: string | null;
   username: string | null;
   roomId: string | null;
   status: GameStatus;
-  hands: GameHand[] | null;
+  hands: GameHand[];
+  playedCards: PlayedCards;
 }
 
 const initialState: GameState = {
@@ -23,7 +32,8 @@ const initialState: GameState = {
   username: null,
   roomId: null,
   status: "stopped",
-  hands: null,
+  hands: [],
+  playedCards: [],
 };
 
 const gameSlice = createSlice({
@@ -45,12 +55,36 @@ const gameSlice = createSlice({
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
     },
+    playCardFromHand(state: GameState, action: PayloadAction<PlayCardPayload>) {
+      const { userId, position, cardIndex } = action.payload;
+      state.hands = state.hands?.map((hand, handIdx) => {
+        if (handIdx === position) {
+          return {
+            id: hand.id,
+            hand: hand.hand.filter((card, cardIdx) => {
+              if (cardIdx === cardIndex) {
+                state.playedCards = [
+                  ...state.playedCards,
+                  {
+                    ...card,
+                    playedBy: userId,
+                  },
+                ];
+              }
+              return cardIdx !== cardIndex;
+            }),
+          };
+        }
+        return hand;
+      });
+    },
     resetGame(state: GameState) {
       state.userId = null;
       state.username = null;
       state.roomId = null;
       state.status = "stopped";
-      state.hands = null;
+      state.hands = [];
+      state.playedCards = [];
     },
   },
 });
@@ -61,6 +95,7 @@ export const {
   setGameRoomId,
   setGameStatus,
   setGameHands,
+  playCardFromHand,
   resetGame,
 } = gameSlice.actions;
 

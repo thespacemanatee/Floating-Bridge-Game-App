@@ -15,11 +15,15 @@ export type CardValue =
   | "k"
   | "a";
 
-export type Card = {
+export interface Card {
   suit: CardSuit;
   value: CardValue;
   imageUri: string;
-};
+}
+
+export interface PlayedCard extends Card {
+  playedBy: string;
+}
 
 export const deck = {
   c2: {
@@ -135,7 +139,7 @@ export const deck = {
   dj: {
     suit: "d",
     value: "j",
-    imageUri:require( "../../assets/images/cards/DIAMOND-11-JACK.svg"),
+    imageUri: require("../../assets/images/cards/DIAMOND-11-JACK.svg"),
   },
   dq: {
     suit: "d",

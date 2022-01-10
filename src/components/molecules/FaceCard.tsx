@@ -14,8 +14,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { snapPoint } from "react-native-redash";
 
-const CARD_WIDTH = 180;
-const CARD_HEIGHT = 250;
+const CARD_WIDTH = 144;
+const CARD_HEIGHT = 200;
 const DURATION = 150;
 
 type FaceCardProps = {
@@ -24,6 +24,7 @@ type FaceCardProps = {
   offsetX: number;
   offsetY: number;
   offsetRotate: number;
+  onSnapToMiddle: (index: number) => void;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -33,6 +34,7 @@ export const FaceCard = ({
   offsetX,
   offsetY,
   offsetRotate,
+  onSnapToMiddle,
   style,
 }: FaceCardProps) => {
   const { height } = useWindowDimensions();
@@ -40,6 +42,7 @@ export const FaceCard = ({
   const translateY = useSharedValue(-height);
   const scale = useSharedValue(1);
   const rotate = useSharedValue(0);
+  const zIndex = useSharedValue(0);
   const midY = useMemo(() => -CARD_HEIGHT * 1.25, []);
   const snapPointsY = useMemo(() => [midY, offsetY], [midY, offsetY]);
   const delay = useMemo(() => index * DURATION, [index]);
@@ -80,6 +83,7 @@ export const FaceCard = ({
       ctx.y = translateY.value;
       scale.value = withTiming(1.25);
       rotate.value = withTiming(0);
+      zIndex.value = 1;
     },
     onActive: ({ translationX, translationY }, ctx) => {
       translateX.value = ctx.x + translationX;
@@ -88,6 +92,7 @@ export const FaceCard = ({
     onEnd: ({ velocityX, velocityY }) => {
       const destY = snapPoint(translateY.value, velocityY, snapPointsY);
       if (destY === midY) {
+        onSnapToMiddle(index);
         translateX.value = withSpring(0, { velocity: velocityX });
         rotate.value = withTiming(-1 + Math.random() * 2);
       } else {
@@ -96,6 +101,7 @@ export const FaceCard = ({
       }
       translateY.value = withSpring(destY, { velocity: velocityY });
       scale.value = withTiming(1);
+      zIndex.value = 0;
     },
   });
 
@@ -108,31 +114,28 @@ export const FaceCard = ({
         { rotate: `${rotate.value}rad` },
         { scale: scale.value },
       ],
+      zIndex: zIndex.value,
     };
   });
   return (
-    <View style={[styles.container, style]} pointerEvents="box-none">
-      <PanGestureHandler onGestureEvent={onGestureEvent} minDist={0}>
-        <Animated.View style={[styles.card, animatedStyle]}>
-          <Image
-            source={image}
-            style={{
-              width: CARD_WIDTH,
-              height: CARD_HEIGHT,
-            }}
-          />
-        </Animated.View>
-      </PanGestureHandler>
-    </View>
+    <PanGestureHandler onGestureEvent={onGestureEvent} minDist={0}>
+      <Animated.View
+        style={[styles.card, animatedStyle]}
+        pointerEvents="box-none"
+      >
+        <Image
+          source={image}
+          style={{
+            width: CARD_WIDTH,
+            height: CARD_HEIGHT,
+          }}
+        />
+      </Animated.View>
+    </PanGestureHandler>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    cursor: "pointer",
-  },
   card: {
     position: "absolute",
     shadowColor: "#000",
@@ -144,5 +147,6 @@ const styles = StyleSheet.create({
     shadowRadius: 16.0,
     elevation: 24,
     borderRadius: 8,
+    pointer: "cursor",
   },
 });
