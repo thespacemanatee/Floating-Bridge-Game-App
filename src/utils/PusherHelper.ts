@@ -5,8 +5,13 @@ import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 
 import type { Member } from "../types";
-import type { GameHand, GameStatus } from "../store/features/game/gameSlice";
+import type {
+  GameHand,
+  GameStatus,
+  PlayCardPayload,
+} from "../store/features/game/gameSlice";
 import {
+  playCardFromHand,
   setGameCurrentPosition,
   setGameHands,
   setGameStatus,
@@ -87,6 +92,13 @@ export const bindGameEvents = () => {
             data.hands.findIndex((e) => e.id === data.startUserId)
           )
         );
+      }
+    );
+    channelRef.current.bind(
+      "game-turn-event",
+      (data: { playCardPayload: PlayCardPayload; nextPosition: number }) => {
+        store.dispatch(setGameCurrentPosition(data.nextPosition));
+        store.dispatch(playCardFromHand(data.playCardPayload));
       }
     );
   } else {

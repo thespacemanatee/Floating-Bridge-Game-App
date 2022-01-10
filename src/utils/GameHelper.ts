@@ -1,12 +1,27 @@
 import axios from "axios";
 import { HOST } from "@env";
 
-import type { GameHand } from "../store/features/game/gameSlice";
+import type {
+  GameHand,
+  PlayCardPayload,
+} from "../store/features/game/gameSlice";
 
 export const initialiseGame = (userId: string, gameId: string) => {
   axios.post(HOST + "/game/init", {
     userId,
     channelName: `presence-${gameId}`,
+  });
+};
+
+export const triggerNextTurnEvent = (
+  roomId: string,
+  playCardPayload: PlayCardPayload,
+  currentPosition: number
+) => {
+  axios.post(HOST + "/game/turn", {
+    channelName: `presence-${roomId}`,
+    playCardPayload,
+    currentPosition,
   });
 };
 

@@ -7,12 +7,11 @@ import type { GameHand } from "../store/features/game/gameSlice";
 import {
   setGameUserPosition,
   resetGame,
-  playCardFromHand,
 } from "../store/features/game/gameSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
 import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
-import { getHandPositions } from "../utils/GameHelper";
+import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
@@ -46,7 +45,11 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = (position: number, cardIndex: number) => {
-    dispatch(playCardFromHand({ userId, position, cardIndex }));
+    triggerNextTurnEvent(
+      roomId,
+      { userId, position, cardIndex },
+      gameCurrentPosition
+    );
   };
 
   const leaveRoom = () => {
