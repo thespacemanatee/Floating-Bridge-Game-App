@@ -35,7 +35,7 @@ export const Game = () => {
   );
   const gameHands = useAppSelector((state) => state.game.hands);
   const playedCards = useAppSelector((state) => state.game.playedCards);
-  const { top, left, right, bottom, userPosition } = useMemo(
+  const { userPosition, top, left, right, bottom } = useMemo(
     () => getHandPositions(userId, gameHands),
     [gameHands, userId]
   );
@@ -88,16 +88,16 @@ export const Game = () => {
       </TouchableOpacity>
       <View style={styles.left}>
         {left.hand && renderBackCards(left.hand)}
-        <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+        {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
           <ThemedText>{`Position: ${left.position}`}</ThemedText>
-        </View>
+        </View> */}
       </View>
       <View style={styles.middle}>
         <View style={styles.top}>
           {top.hand && renderBackCards(top.hand)}
-          <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+          {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
             <ThemedText>{`Position: ${top.position}`}</ThemedText>
-          </View>
+          </View> */}
         </View>
         <Floor players={players} playedCards={playedCards} />
         <View style={styles.bottom}>
@@ -118,20 +118,20 @@ export const Game = () => {
                 offsetY={translateY}
                 offsetRotate={rotate}
                 enabled={gameUserPosition === gameCurrentPosition}
-                onSnapToMiddle={(cardIdx) => playCard(userPosition, cardIdx)}
+                onSnapToMiddle={(cardIdx) => playCard(bottom.position, cardIdx)}
               />
             );
           })}
-          <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+          {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
             <ThemedText>{`Position: ${bottom.position}`}</ThemedText>
-          </View>
+          </View> */}
         </View>
       </View>
       <View style={styles.right}>
         {right.hand && renderBackCards(right.hand)}
-        <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
+        {/* <View style={{ padding: 50, backgroundColor: "white", zIndex: 1 }}>
           <ThemedText>{`Position: ${right.position}`}</ThemedText>
-        </View>
+        </View> */}
       </View>
     </View>
   );

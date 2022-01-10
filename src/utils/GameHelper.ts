@@ -19,22 +19,22 @@ export const getHandPositions = (userId: string, hands: GameHand[]) => {
     }
   }
   return {
+    userPosition: currentUserIdx % hands.length,
     bottom: {
-      position: currentUserIdx++ % hands.length,
-      hand: hands[currentUserIdx % hands.length],
+      position: currentUserIdx % hands.length,
+      hand: hands[currentUserIdx++ % hands.length],
     },
     left: {
-      position: currentUserIdx++ % hands.length,
-      hand: hands[currentUserIdx % hands.length],
+      position: currentUserIdx % hands.length,
+      hand: hands[currentUserIdx++ % hands.length],
     },
     top: {
-      position: currentUserIdx++ % hands.length,
-      hand: hands[currentUserIdx % hands.length],
+      position: currentUserIdx % hands.length,
+      hand: hands[currentUserIdx++ % hands.length],
     },
     right: {
-      position: currentUserIdx++ % hands.length,
-      hand: hands[currentUserIdx % hands.length],
+      position: currentUserIdx % hands.length,
+      hand: hands[currentUserIdx++ % hands.length],
     },
-    userPosition: currentUserIdx % hands.length,
   };
 };
