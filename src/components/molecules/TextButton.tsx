@@ -53,6 +53,6 @@ export const TextButton = ({
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: "regular",
+    fontFamily: "semiBold",
   },
 });

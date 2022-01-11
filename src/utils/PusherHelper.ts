@@ -6,11 +6,15 @@ import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 
 import type { Member } from "../types";
 import type {
+  Bid,
   GameHand,
   GameStatus,
   PlayCardPayload,
 } from "../store/features/game/gameSlice";
 import {
+  setGameIsBidding,
+  setGameBidSequence,
+  setGameStartPosition,
   playCardFromHand,
   setGameCurrentPosition,
   setGameHands,
@@ -85,13 +89,28 @@ export const bindGameEvents = () => {
     );
     channelRef.current.bind(
       "game-init-event",
-      (data: { startUserId: string; hands: GameHand[] }) => {
+      (data: {
+        startUserId: string;
+        hands: GameHand[];
+        isBidding: boolean;
+      }) => {
+        const startPos = data.hands.findIndex((e) => e.id === data.startUserId);
         store.dispatch(setGameHands(data.hands));
-        store.dispatch(
-          setGameCurrentPosition(
-            data.hands.findIndex((e) => e.id === data.startUserId)
-          )
-        );
+        store.dispatch(setGameStartPosition(startPos));
+        store.dispatch(setGameCurrentPosition(startPos));
+        store.dispatch(setGameIsBidding(data.isBidding));
+      }
+    );
+    channelRef.current.bind(
+      "game-bid-event",
+      (data: {
+        bidSequence: Bid[];
+        nextPosition: number;
+        isBidding: boolean;
+      }) => {
+        store.dispatch(setGameBidSequence(data.bidSequence));
+        store.dispatch(setGameCurrentPosition(data.nextPosition));
+        store.dispatch(setGameIsBidding(data.isBidding));
       }
     );
     channelRef.current.bind(

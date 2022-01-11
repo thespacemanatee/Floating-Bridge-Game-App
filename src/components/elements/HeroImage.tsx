@@ -4,7 +4,7 @@ import { Image } from "react-native";
 const IMAGE_HEIGHT = 250;
 const IMAGE_WIDTH = 300;
 
-const HeroImage = () => {
+export const HeroImage = () => {
   return (
     <Image
       source={require("../../../assets/images/cards.png")}
@@ -13,4 +13,3 @@ const HeroImage = () => {
   );
 };
 
-export default HeroImage;
