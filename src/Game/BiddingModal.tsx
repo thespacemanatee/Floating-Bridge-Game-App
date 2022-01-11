@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
 import { LevelButton } from "../components/elements/LevelButton";
@@ -26,6 +26,7 @@ export const BiddingModal = () => {
   const userPosition = useAppSelector((state) => state.game.userPosition);
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const bidSequence = useAppSelector((state) => state.game.bidSequence);
+  const isBidding = useAppSelector((state) => state.game.isBidding);
   const latestBid = useMemo(() => {
     for (let i = bidSequence.length - 1; i >= 0; i--) {
       if (bidSequence[i]?.level && bidSequence[i]?.suit) {
@@ -34,6 +35,10 @@ export const BiddingModal = () => {
     }
     return;
   }, [bidSequence]);
+
+  useEffect(() => {
+    setBiddingModalVisible(isBidding);
+  }, [isBidding]);
 
   const selectLevel = (level: BidLevel) => {
     setSelectedLevel(level);
