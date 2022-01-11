@@ -4,7 +4,7 @@ import { nanoid } from "nanoid/non-secure";
 
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
 import { TextButton } from "../../components/molecules/TextButton";
-import HeroImage from "../../components/elements/HeroImage";
+import { HeroImage } from "../../components/elements/HeroImage";
 import { ThemedText } from "../../components/elements/ThemedText";
 import { ThemedTextInput } from "../../components/elements/ThemedTextInput";
 import { useAppDispatch } from "../../store/hooks";

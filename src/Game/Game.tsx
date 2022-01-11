@@ -8,7 +8,11 @@ import {
   resetGame,
 } from "../store/features/game/gameSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
+import {
+  findCardFromHand,
+  getHandPositions,
+  triggerNextTurnEvent,
+} from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
@@ -16,11 +20,6 @@ import { SPACING } from "../resources/dimens";
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
 import { OpponentHand } from "./OpponentHand";
-
-export const CARD_OFFSET_X = 75;
-export const BACK_CARD_OFFSET_X = 50;
-export const CARD_OFFSET_Y = 2.5;
-export const CARD_ROTATION = 0.75;
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
@@ -44,6 +43,12 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = (cardIndex: number) => {
+    console.log(playedCards.length);
+    if (playedCards.length !== 0) {
+      const card = findCardFromHand(gameHands, gameCurrentPosition, cardIndex);
+      return;
+    }
+
     const payload: PlayCardPayload = {
       userId,
       position: gameCurrentPosition,

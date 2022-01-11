@@ -5,6 +5,7 @@ import type {
   GameHand,
   PlayCardPayload,
 } from "../store/features/game/gameSlice";
+import type { Card } from "../models";
 
 export const initialiseGame = (userId: string, gameId: string) => {
   axios.post(HOST + "/game/init", {
@@ -52,4 +53,18 @@ export const getHandPositions = (userId: string, hands: GameHand[]) => {
       hand: hands[currentUserIdx++ % hands.length],
     },
   };
+};
+
+export const findCardFromHand = (
+  gameHands: GameHand[],
+  position: number,
+  cardIndex: number
+) => {
+  let card: Card | undefined;
+  gameHands.forEach((hand, handIdx) => {
+    if (handIdx === position) {
+      card = hand.hand.find((_, cardIdx) => cardIdx === cardIndex);
+    }
+  });
+  return card;
 };

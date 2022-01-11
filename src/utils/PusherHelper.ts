@@ -94,6 +94,9 @@ export const bindGameEvents = () => {
         );
       }
     );
+    channelRef.current.bind("game-bid-event", (data) => {
+      // TODO: Implement bidding payload
+    });
     channelRef.current.bind(
       "game-turn-event",
       (data: { playCardPayload: PlayCardPayload; nextPosition: number }) => {

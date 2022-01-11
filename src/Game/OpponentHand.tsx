@@ -1,9 +1,12 @@
 import React from "react";
 
 import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
+import {
+  BACK_CARD_OFFSET_X,
+  CARD_OFFSET_Y,
+  CARD_ROTATION,
+} from "../config/Constants";
 import type { GameHand } from "../store/features/game/gameSlice";
-
-import { BACK_CARD_OFFSET_X, CARD_OFFSET_Y, CARD_ROTATION } from "./Game";
 
 type OpponentHandProps = {
   gameHand: GameHand;

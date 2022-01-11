@@ -1,8 +1,7 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { Card } from "../../../models";
-import type { PlayedCard } from "../../../models/deck";
+import type { Card, CardSuit, PlayedCard } from "../../../models";
 
 export type GameStatus = "started" | "stopped";
 
@@ -20,6 +19,8 @@ export type PlayCardPayload = {
 };
 interface GameState {
   status: GameStatus;
+  trump: CardSuit | null;
+  level: number;
   userPosition: number;
   currentPosition: number;
   hands: GameHand[];
@@ -28,6 +29,8 @@ interface GameState {
 
 const initialState: GameState = {
   status: "stopped",
+  trump: null,
+  level: 0,
   userPosition: 0,
   currentPosition: 0,
   hands: [],
@@ -52,29 +55,30 @@ const gameSlice = createSlice({
     },
     playCardFromHand(state: GameState, action: PayloadAction<PlayCardPayload>) {
       const { userId, position, cardIndex } = action.payload;
-      state.hands = state.hands?.map((hand, handIdx) => {
+      state.hands = state.hands.map((hand, handIdx) => {
         if (handIdx === position) {
-          return {
+          const newHand: GameHand = {
             id: hand.id,
             hand: hand.hand.filter((card, cardIdx) => {
               if (cardIdx === cardIndex) {
-                state.playedCards = [
-                  ...state.playedCards,
-                  {
-                    ...card,
-                    playedBy: userId,
-                  },
-                ];
+                const playedCard: PlayedCard = {
+                  ...card,
+                  playedBy: userId,
+                };
+                state.playedCards = [...state.playedCards, playedCard];
               }
               return cardIdx !== cardIndex;
             }),
           };
+          return newHand;
         }
         return hand;
       });
     },
     resetGame(state: GameState) {
       state.status = "stopped";
+      state.trump = null;
+      state.level = 0;
       state.userPosition = 0;
       state.currentPosition = 0;
       state.hands = [];

@@ -1,10 +1,13 @@
 import React from "react";
 
 import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
-import { deck } from "../models/deck";
+import {
+  CARD_OFFSET_X,
+  CARD_OFFSET_Y,
+  CARD_ROTATION,
+} from "../config/Constants";
+import { deck } from "../models";
 import type { GameHand } from "../store/features/game/gameSlice";
-
-import { CARD_OFFSET_X, CARD_OFFSET_Y, CARD_ROTATION } from "./Game";
 
 type CurrentPlayerHandProps = {
   gameHand: GameHand;
