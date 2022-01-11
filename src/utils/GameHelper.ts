@@ -2,15 +2,31 @@ import axios from "axios";
 import { HOST } from "@env";
 
 import type {
+  Bid,
   GameHand,
   PlayCardPayload,
 } from "../store/features/game/gameSlice";
 import type { Card } from "../models";
+import { store } from "../store";
 
-export const initialiseGame = (userId: string, gameId: string) => {
+export const initialiseGame = (userId: string, roomId: string) => {
   axios.post(HOST + "/game/init", {
     userId,
-    channelName: `presence-${gameId}`,
+    channelName: `presence-${roomId}`,
+  });
+};
+
+export const triggerNextBidEvent = (
+  roomId: string,
+  bid: Bid,
+  currentPosition: number
+) => {
+  const { bidSequence } = store.getState().game;
+  axios.post(HOST + "/game/bid", {
+    channelName: `presence-${roomId}`,
+    bid,
+    bidSequence,
+    currentPosition,
   });
 };
 

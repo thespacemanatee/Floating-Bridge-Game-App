@@ -20,6 +20,7 @@ import { SPACING } from "../resources/dimens";
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
 import { OpponentHand } from "./OpponentHand";
+import { BiddingModal } from "./BiddingModal";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
@@ -44,7 +45,7 @@ export const Game = () => {
 
   const playCard = (cardIndex: number) => {
     console.log(playedCards.length);
-    if (playedCards.length !== 0) {
+    if (playedCards.length > 0) {
       const card = findCardFromHand(gameHands, gameCurrentPosition, cardIndex);
       return;
     }
@@ -76,6 +77,7 @@ export const Game = () => {
           {top.hand && <OpponentHand gameHand={top.hand} />}
         </View>
         <Floor players={players} playedCards={playedCards} />
+        <BiddingModal />
         <View style={styles.bottom}>
           {bottom.hand && (
             <CurrentPlayerHand

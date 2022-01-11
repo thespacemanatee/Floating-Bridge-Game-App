@@ -1,7 +1,7 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { Card, CardSuit, PlayedCard } from "../../../models";
+import type { Card, PlayedCard } from "../../../models";
 
 export type GameStatus = "started" | "stopped";
 
@@ -17,22 +17,39 @@ export type PlayCardPayload = {
   position: number;
   cardIndex: number;
 };
+
+export type TrumpSuit = "c" | "d" | "h" | "s" | "n";
+
+export type BidLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export type Bid = {
+  userId: string;
+  suit?: TrumpSuit;
+  level?: BidLevel;
+};
+
 interface GameState {
   status: GameStatus;
-  trump: CardSuit | null;
-  level: number;
+  trump: TrumpSuit;
+  level: BidLevel;
+  startPosition: number;
   userPosition: number;
   currentPosition: number;
+  bidSequence: Bid[];
+  isBidding: boolean;
   hands: GameHand[];
   playedCards: PlayedCards;
 }
 
 const initialState: GameState = {
   status: "stopped",
-  trump: null,
-  level: 0,
+  trump: "n",
+  level: 1,
+  startPosition: 0,
   userPosition: 0,
   currentPosition: 0,
+  bidSequence: [],
+  isBidding: false,
   hands: [],
   playedCards: [],
 };
@@ -44,11 +61,20 @@ const gameSlice = createSlice({
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
     },
+    setGameStartPosition(state: GameState, action: PayloadAction<number>) {
+      state.startPosition = action.payload;
+    },
     setGameUserPosition(state: GameState, action: PayloadAction<number>) {
       state.userPosition = action.payload;
     },
     setGameCurrentPosition(state: GameState, action: PayloadAction<number>) {
       state.currentPosition = action.payload;
+    },
+    setGameBidSequence(state: GameState, action: PayloadAction<Bid[]>) {
+      state.bidSequence = action.payload;
+    },
+    setGameIsBidding(state: GameState, action: PayloadAction<boolean>) {
+      state.isBidding = action.payload;
     },
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
@@ -77,10 +103,12 @@ const gameSlice = createSlice({
     },
     resetGame(state: GameState) {
       state.status = "stopped";
-      state.trump = null;
-      state.level = 0;
+      state.trump = "n";
+      state.level = 1;
+      state.startPosition = 0;
       state.userPosition = 0;
       state.currentPosition = 0;
+      state.bidSequence = [];
       state.hands = [];
       state.playedCards = [];
     },
@@ -89,8 +117,11 @@ const gameSlice = createSlice({
 
 export const {
   setGameStatus,
+  setGameStartPosition,
   setGameUserPosition,
   setGameCurrentPosition,
+  setGameBidSequence,
+  setGameIsBidding,
   setGameHands,
   playCardFromHand,
   resetGame,
