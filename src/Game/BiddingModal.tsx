@@ -94,19 +94,19 @@ export const BiddingModal = () => {
             <View style={styles.topContainer}>
               <View>
                 <ThemedText style={styles.biddingTitleText}>
-                  {`Welcome Player ${userPosition}`}
+                  {`Welcome Player ${userPosition + 1}`}
                 </ThemedText>
                 <ThemedText style={styles.biddingPlayerText}>
-                  {`Player ${currentPosition} is bidding...`}
+                  {`Player ${currentPosition + 1} is bidding...`}
                 </ThemedText>
               </View>
               <View>
-                <ThemedText
-                  style={styles.bidText}
-                >{`Level: ${latestBid?.level}`}</ThemedText>
-                <ThemedText
-                  style={styles.bidText}
-                >{`Suit: ${latestBid?.suit}`}</ThemedText>
+                <ThemedText style={styles.bidText}>{`Level: ${
+                  latestBid?.level || "N/A"
+                }`}</ThemedText>
+                <ThemedText style={styles.bidText}>{`Suit: ${
+                  latestBid?.suit || "N/A"
+                }`}</ThemedText>
               </View>
             </View>
             <View style={styles.bidButtonsContainer}>

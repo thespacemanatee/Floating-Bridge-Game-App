@@ -12,6 +12,8 @@ import type {
   PlayCardPayload,
 } from "../store/features/game/gameSlice";
 import {
+  setGameLevel,
+  setGameTrump,
   setGameIsBidding,
   setGameBidSequence,
   setGameStartPosition,
@@ -107,10 +109,20 @@ export const bindGameEvents = () => {
         bidSequence: Bid[];
         nextPosition: number;
         isBidding: boolean;
+        winningBid?: Bid;
       }) => {
         store.dispatch(setGameBidSequence(data.bidSequence));
         store.dispatch(setGameCurrentPosition(data.nextPosition));
         store.dispatch(setGameIsBidding(data.isBidding));
+        if (data.winningBid) {
+          const { userId, suit, level } = data.winningBid;
+          const { hands } = store.getState().game;
+          const startPos =
+            (hands.findIndex((e) => e.id === userId) + 1) % hands.length;
+          store.dispatch(setGameCurrentPosition(startPos));
+          store.dispatch(setGameTrump(suit!));
+          store.dispatch(setGameLevel(level!));
+        }
       }
     );
     channelRef.current.bind(

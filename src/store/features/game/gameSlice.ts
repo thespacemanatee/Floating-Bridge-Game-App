@@ -61,6 +61,12 @@ const gameSlice = createSlice({
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
     },
+    setGameTrump(state: GameState, action: PayloadAction<TrumpSuit>) {
+      state.trump = action.payload;
+    },
+    setGameLevel(state: GameState, action: PayloadAction<BidLevel>) {
+      state.level = action.payload;
+    },
     setGameStartPosition(state: GameState, action: PayloadAction<number>) {
       state.startPosition = action.payload;
     },
@@ -117,6 +123,8 @@ const gameSlice = createSlice({
 
 export const {
   setGameStatus,
+  setGameTrump,
+  setGameLevel,
   setGameStartPosition,
   setGameUserPosition,
   setGameCurrentPosition,
