@@ -10,9 +10,9 @@ import type { Card } from "../models";
 import { store } from "../store";
 
 export const initialiseGame = (userId: string, roomId: string) => {
-  axios.post(HOST + "/game/init", {
+  axios.post(HOST + "/games/init", {
     userId,
-    channelName: `presence-${roomId}`,
+    roomId,
   });
 };
 
@@ -22,8 +22,8 @@ export const triggerNextBidEvent = (
   currentPosition: number
 ) => {
   const { bidSequence } = store.getState().game;
-  axios.post(HOST + "/game/bid", {
-    channelName: `presence-${roomId}`,
+  axios.post(HOST + "/games/bid", {
+    roomId,
     bid,
     bidSequence,
     currentPosition,
@@ -35,8 +35,8 @@ export const triggerNextTurnEvent = (
   playCardPayload: PlayCardPayload,
   currentPosition: number
 ) => {
-  axios.post(HOST + "/game/turn", {
-    channelName: `presence-${roomId}`,
+  axios.post(HOST + "/games/turn", {
+    roomId,
     playCardPayload,
     currentPosition,
   });
@@ -45,7 +45,7 @@ export const triggerNextTurnEvent = (
 export const getHandPositions = (userId: string, hands: GameHand[]) => {
   let currentUserIdx = 0;
   for (let i = 0; i < hands.length; i++) {
-    if (hands[i]?.id === userId) {
+    if (hands[i]?.userId === userId) {
       currentUserIdx = i;
       break;
     }

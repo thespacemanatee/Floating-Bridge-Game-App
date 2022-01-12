@@ -6,11 +6,9 @@ import type { Card, PlayedCard } from "../../../models";
 export type GameStatus = "started" | "stopped";
 
 export type GameHand = {
-  id: string;
+  userId: string;
   hand: Card[];
 };
-
-export type PlayedCards = PlayedCard[];
 
 export type PlayCardPayload = {
   userId: string;
@@ -29,23 +27,22 @@ export type Bid = {
 };
 
 interface GameState {
+  gameId?: string;
   status: GameStatus;
   trump: TrumpSuit;
   level: BidLevel;
-  startPosition: number;
   userPosition: number;
   currentPosition: number;
   bidSequence: Bid[];
   isBidding: boolean;
   hands: GameHand[];
-  playedCards: PlayedCards;
+  playedCards: PlayedCard[];
 }
 
 const initialState: GameState = {
   status: "stopped",
-  trump: "n",
+  trump: "c",
   level: 1,
-  startPosition: 0,
   userPosition: 0,
   currentPosition: 0,
   bidSequence: [],
@@ -58,6 +55,9 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
+    setGameId(state: GameState, action: PayloadAction<string>) {
+      state.gameId = action.payload;
+    },
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
     },
@@ -66,9 +66,6 @@ const gameSlice = createSlice({
     },
     setGameLevel(state: GameState, action: PayloadAction<BidLevel>) {
       state.level = action.payload;
-    },
-    setGameStartPosition(state: GameState, action: PayloadAction<number>) {
-      state.startPosition = action.payload;
     },
     setGameUserPosition(state: GameState, action: PayloadAction<number>) {
       state.userPosition = action.payload;
@@ -85,12 +82,15 @@ const gameSlice = createSlice({
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
     },
+    setGamePlayedCards(state: GameState, action: PayloadAction<PlayedCard[]>) {
+      state.playedCards = action.payload;
+    },
     playCardFromHand(state: GameState, action: PayloadAction<PlayCardPayload>) {
       const { userId, position, cardIndex } = action.payload;
       state.hands = state.hands.map((hand, handIdx) => {
         if (handIdx === position) {
           const newHand: GameHand = {
-            id: hand.id,
+            userId: hand.userId,
             hand: hand.hand.filter((card, cardIdx) => {
               if (cardIdx === cardIndex) {
                 const playedCard: PlayedCard = {
@@ -108,10 +108,10 @@ const gameSlice = createSlice({
       });
     },
     resetGame(state: GameState) {
+      state.gameId = undefined;
       state.status = "stopped";
       state.trump = "n";
       state.level = 1;
-      state.startPosition = 0;
       state.userPosition = 0;
       state.currentPosition = 0;
       state.bidSequence = [];
@@ -122,15 +122,16 @@ const gameSlice = createSlice({
 });
 
 export const {
+  setGameId,
   setGameStatus,
   setGameTrump,
   setGameLevel,
-  setGameStartPosition,
   setGameUserPosition,
   setGameCurrentPosition,
   setGameBidSequence,
   setGameIsBidding,
   setGameHands,
+  setGamePlayedCards,
   playCardFromHand,
   resetGame,
 } = gameSlice.actions;

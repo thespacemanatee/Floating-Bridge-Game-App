@@ -7,22 +7,26 @@ import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 import type { Member } from "../types";
 import type {
   Bid,
+  BidLevel,
   GameHand,
   GameStatus,
   PlayCardPayload,
+  TrumpSuit,
 } from "../store/features/game/gameSlice";
 import {
+  setGameId,
+  setGamePlayedCards,
   setGameLevel,
   setGameTrump,
   setGameIsBidding,
   setGameBidSequence,
-  setGameStartPosition,
   playCardFromHand,
   setGameCurrentPosition,
   setGameHands,
   setGameStatus,
 } from "../store/features/game/gameSlice";
 import { store } from "../store";
+import type { PlayedCard } from "../models";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
@@ -81,28 +85,33 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
   }
 };
 
+type GameData = {
+  gameId: string;
+  roomId: string;
+  status: GameStatus;
+  currentPosition: number;
+  trump: TrumpSuit;
+  level: BidLevel;
+  bidSequence: Bid[];
+  isBidding: boolean;
+  hands: GameHand[];
+  playedCards: PlayedCard[];
+};
+
 export const bindGameEvents = () => {
   if (channelRef.current) {
-    channelRef.current.bind(
-      "game-status-event",
-      (data: { status: GameStatus }) => {
-        store.dispatch(setGameStatus(data.status));
-      }
-    );
-    channelRef.current.bind(
-      "game-init-event",
-      (data: {
-        startUserId: string;
-        hands: GameHand[];
-        isBidding: boolean;
-      }) => {
-        const startPos = data.hands.findIndex((e) => e.id === data.startUserId);
-        store.dispatch(setGameHands(data.hands));
-        store.dispatch(setGameStartPosition(startPos));
-        store.dispatch(setGameCurrentPosition(startPos));
-        store.dispatch(setGameIsBidding(data.isBidding));
-      }
-    );
+    channelRef.current.bind("game-init-event", (data: GameData) => {
+      console.log(data, data.gameId);
+      store.dispatch(setGameId(data.gameId));
+      store.dispatch(setGameStatus(data.status));
+      store.dispatch(setGameCurrentPosition(data.currentPosition));
+      store.dispatch(setGameTrump(data.trump));
+      store.dispatch(setGameLevel(data.level));
+      store.dispatch(setGameBidSequence(data.bidSequence));
+      store.dispatch(setGameIsBidding(data.isBidding));
+      store.dispatch(setGameHands(data.hands));
+      store.dispatch(setGamePlayedCards(data.playedCards));
+    });
     channelRef.current.bind(
       "game-bid-event",
       (data: {
@@ -118,7 +127,7 @@ export const bindGameEvents = () => {
           const { userId, suit, level } = data.winningBid;
           const { hands } = store.getState().game;
           const startPos =
-            (hands.findIndex((e) => e.id === userId) + 1) % hands.length;
+            (hands.findIndex((e) => e.userId === userId) + 1) % hands.length;
           store.dispatch(setGameCurrentPosition(startPos));
           store.dispatch(setGameTrump(suit!));
           store.dispatch(setGameLevel(level!));
