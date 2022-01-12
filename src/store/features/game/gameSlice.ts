@@ -6,11 +6,9 @@ import type { Card, PlayedCard } from "../../../models";
 export type GameStatus = "started" | "stopped";
 
 export type GameHand = {
-  id: string;
+  userId: string;
   hand: Card[];
 };
-
-export type PlayedCards = PlayedCard[];
 
 export type PlayCardPayload = {
   userId: string;
@@ -24,30 +22,32 @@ export type BidLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type Bid = {
   userId: string;
-  suit?: TrumpSuit;
-  level?: BidLevel;
+  suit: TrumpSuit;
+  level: BidLevel;
 };
 
 interface GameState {
+  gameId: string | null;
   status: GameStatus;
   trump: TrumpSuit;
   level: BidLevel;
-  startPosition: number;
   userPosition: number;
   currentPosition: number;
+  latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
   hands: GameHand[];
-  playedCards: PlayedCards;
+  playedCards: PlayedCard[];
 }
 
 const initialState: GameState = {
+  gameId: null,
   status: "stopped",
-  trump: "n",
+  trump: "c",
   level: 1,
-  startPosition: 0,
   userPosition: 0,
   currentPosition: 0,
+  latestBid: null,
   bidSequence: [],
   isBidding: false,
   hands: [],
@@ -58,17 +58,26 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
+    setGameId(state: GameState, action: PayloadAction<string>) {
+      state.gameId = action.payload;
+    },
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
     },
-    setGameStartPosition(state: GameState, action: PayloadAction<number>) {
-      state.startPosition = action.payload;
+    setGameTrump(state: GameState, action: PayloadAction<TrumpSuit>) {
+      state.trump = action.payload;
+    },
+    setGameLevel(state: GameState, action: PayloadAction<BidLevel>) {
+      state.level = action.payload;
     },
     setGameUserPosition(state: GameState, action: PayloadAction<number>) {
       state.userPosition = action.payload;
     },
     setGameCurrentPosition(state: GameState, action: PayloadAction<number>) {
       state.currentPosition = action.payload;
+    },
+    setGameLatestBid(state: GameState, action: PayloadAction<Bid | null>) {
+      state.latestBid = action.payload;
     },
     setGameBidSequence(state: GameState, action: PayloadAction<Bid[]>) {
       state.bidSequence = action.payload;
@@ -79,12 +88,15 @@ const gameSlice = createSlice({
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
     },
+    setGamePlayedCards(state: GameState, action: PayloadAction<PlayedCard[]>) {
+      state.playedCards = action.payload;
+    },
     playCardFromHand(state: GameState, action: PayloadAction<PlayCardPayload>) {
       const { userId, position, cardIndex } = action.payload;
       state.hands = state.hands.map((hand, handIdx) => {
         if (handIdx === position) {
           const newHand: GameHand = {
-            id: hand.id,
+            userId: hand.userId,
             hand: hand.hand.filter((card, cardIdx) => {
               if (cardIdx === cardIndex) {
                 const playedCard: PlayedCard = {
@@ -102,13 +114,15 @@ const gameSlice = createSlice({
       });
     },
     resetGame(state: GameState) {
+      state.gameId = null;
       state.status = "stopped";
       state.trump = "n";
       state.level = 1;
-      state.startPosition = 0;
       state.userPosition = 0;
       state.currentPosition = 0;
+      state.latestBid = null;
       state.bidSequence = [];
+      state.isBidding = false;
       state.hands = [];
       state.playedCards = [];
     },
@@ -116,13 +130,17 @@ const gameSlice = createSlice({
 });
 
 export const {
+  setGameId,
   setGameStatus,
-  setGameStartPosition,
+  setGameTrump,
+  setGameLevel,
   setGameUserPosition,
   setGameCurrentPosition,
+  setGameLatestBid,
   setGameBidSequence,
   setGameIsBidding,
   setGameHands,
+  setGamePlayedCards,
   playCardFromHand,
   resetGame,
 } = gameSlice.actions;

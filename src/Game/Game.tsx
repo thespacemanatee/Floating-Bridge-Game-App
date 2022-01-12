@@ -43,7 +43,7 @@ export const Game = () => {
     dispatch(setGameUserPosition(userPosition));
   }, [dispatch, userPosition]);
 
-  const playCard = (cardIndex: number) => {
+  const playCard = async (cardIndex: number) => {
     console.log(playedCards.length);
     if (playedCards.length > 0) {
       const card = findCardFromHand(gameHands, gameCurrentPosition, cardIndex);
@@ -55,7 +55,11 @@ export const Game = () => {
       position: gameCurrentPosition,
       cardIndex,
     };
-    triggerNextTurnEvent(roomId, payload, gameCurrentPosition);
+    try {
+      await triggerNextTurnEvent(roomId, payload, gameCurrentPosition);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const leaveRoom = () => {

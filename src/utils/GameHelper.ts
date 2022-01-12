@@ -7,45 +7,34 @@ import type {
   PlayCardPayload,
 } from "../store/features/game/gameSlice";
 import type { Card } from "../models";
-import { store } from "../store";
 
-export const initialiseGame = (userId: string, roomId: string) => {
-  axios.post(HOST + "/game/init", {
+export const initialiseGame = async (userId: string, roomId: string) =>
+  await axios.post(HOST + "/games/init", {
     userId,
-    channelName: `presence-${roomId}`,
+    roomId,
   });
-};
 
-export const triggerNextBidEvent = (
-  roomId: string,
-  bid: Bid,
-  currentPosition: number
-) => {
-  const { bidSequence } = store.getState().game;
-  axios.post(HOST + "/game/bid", {
-    channelName: `presence-${roomId}`,
+export const triggerNextBidEvent = async (gameId: string, bid?: Bid) =>
+  await axios.post(HOST + "/games/bid", {
+    gameId,
     bid,
-    bidSequence,
-    currentPosition,
   });
-};
 
-export const triggerNextTurnEvent = (
+export const triggerNextTurnEvent = async (
   roomId: string,
   playCardPayload: PlayCardPayload,
   currentPosition: number
-) => {
-  axios.post(HOST + "/game/turn", {
-    channelName: `presence-${roomId}`,
+) =>
+  await axios.post(HOST + "/games/turn", {
+    roomId,
     playCardPayload,
     currentPosition,
   });
-};
 
 export const getHandPositions = (userId: string, hands: GameHand[]) => {
   let currentUserIdx = 0;
   for (let i = 0; i < hands.length; i++) {
-    if (hands[i]?.id === userId) {
+    if (hands[i]?.userId === userId) {
       currentUserIdx = i;
       break;
     }
