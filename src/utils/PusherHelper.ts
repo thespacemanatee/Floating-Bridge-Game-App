@@ -14,6 +14,7 @@ import type {
   TrumpSuit,
 } from "../store/features/game/gameSlice";
 import {
+  setGameLatestBid,
   setGameId,
   setGamePlayedCards,
   setGameLevel,
@@ -88,10 +89,10 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 type GameData = {
   gameId: string;
   roomId: string;
-  status: GameStatus;
   currentPosition: number;
   trump: TrumpSuit;
   level: BidLevel;
+  latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
   hands: GameHand[];
@@ -100,13 +101,18 @@ type GameData = {
 
 export const bindGameEvents = () => {
   if (channelRef.current) {
+    channelRef.current.bind(
+      "game-status-event",
+      (data: { status: GameStatus }) => {
+        store.dispatch(setGameStatus(data.status));
+      }
+    );
     channelRef.current.bind("game-init-event", (data: GameData) => {
-      console.log(data, data.gameId);
       store.dispatch(setGameId(data.gameId));
-      store.dispatch(setGameStatus(data.status));
       store.dispatch(setGameCurrentPosition(data.currentPosition));
       store.dispatch(setGameTrump(data.trump));
       store.dispatch(setGameLevel(data.level));
+      store.dispatch(setGameLatestBid(data.latestBid));
       store.dispatch(setGameBidSequence(data.bidSequence));
       store.dispatch(setGameIsBidding(data.isBidding));
       store.dispatch(setGameHands(data.hands));
@@ -114,24 +120,17 @@ export const bindGameEvents = () => {
     });
     channelRef.current.bind(
       "game-bid-event",
-      (data: {
-        bidSequence: Bid[];
-        nextPosition: number;
-        isBidding: boolean;
-        winningBid?: Bid;
-      }) => {
-        store.dispatch(setGameBidSequence(data.bidSequence));
-        store.dispatch(setGameCurrentPosition(data.nextPosition));
-        store.dispatch(setGameIsBidding(data.isBidding));
-        if (data.winningBid) {
-          const { userId, suit, level } = data.winningBid;
-          const { hands } = store.getState().game;
-          const startPos =
-            (hands.findIndex((e) => e.userId === userId) + 1) % hands.length;
-          store.dispatch(setGameCurrentPosition(startPos));
-          store.dispatch(setGameTrump(suit!));
-          store.dispatch(setGameLevel(level!));
-        }
+      (data: { gameData: GameData; winningBid?: Bid }) => {
+        console.log(data);
+
+        store.dispatch(setGameCurrentPosition(data.gameData.currentPosition));
+        store.dispatch(setGameTrump(data.gameData.trump));
+        store.dispatch(setGameLevel(data.gameData.level));
+        store.dispatch(setGameBidSequence(data.gameData.bidSequence));
+        store.dispatch(setGameLatestBid(data.gameData.latestBid));
+        store.dispatch(setGameIsBidding(data.gameData.isBidding));
+        store.dispatch(setGameHands(data.gameData.hands));
+        store.dispatch(setGamePlayedCards(data.gameData.playedCards));
       }
     );
     channelRef.current.bind(

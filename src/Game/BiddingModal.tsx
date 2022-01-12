@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
 import { LevelButton } from "../components/elements/LevelButton";
@@ -22,19 +22,11 @@ export const BiddingModal = () => {
   const [selectedLevel, setSelectedLevel] = useState<BidLevel>();
   const [selectedSuit, setSelectedSuit] = useState<TrumpSuit>();
   const userId = useAppSelector((state) => state.room.userId);
-  const roomId = useAppSelector((state) => state.room.roomId);
+  const gameId = useAppSelector((state) => state.game.gameId);
   const userPosition = useAppSelector((state) => state.game.userPosition);
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
-  const bidSequence = useAppSelector((state) => state.game.bidSequence);
+  const latestBid = useAppSelector((state) => state.game.latestBid);
   const isBidding = useAppSelector((state) => state.game.isBidding);
-  const latestBid = useMemo(() => {
-    for (let i = bidSequence.length - 1; i >= 0; i--) {
-      if (bidSequence[i]?.level && bidSequence[i]?.suit) {
-        return bidSequence[i];
-      }
-    }
-    return;
-  }, [bidSequence]);
 
   useEffect(() => {
     setBiddingModalVisible(isBidding);
@@ -48,9 +40,9 @@ export const BiddingModal = () => {
     setSelectedSuit(suit);
   };
 
-  const confirmBid = () => {
+  const confirmBid = async () => {
     if (selectedLevel && selectedSuit) {
-      if (latestBid?.level && latestBid?.suit) {
+      if (latestBid) {
         const { level, suit } = latestBid;
         if (
           selectedLevel < level ||
@@ -66,17 +58,26 @@ export const BiddingModal = () => {
         suit: selectedSuit,
         level: selectedLevel,
       };
-      triggerNextBidEvent(roomId, bid, currentPosition);
+      if (gameId) {
+        try {
+          await triggerNextBidEvent(gameId, bid);
+        } catch (err) {
+          console.error(err);
+        }
+      }
     } else {
       alert("Please select your bid!");
     }
   };
 
-  const passBid = () => {
-    const bid: Bid = {
-      userId,
-    };
-    triggerNextBidEvent(roomId, bid, currentPosition);
+  const passBid = async () => {
+    if (gameId) {
+      try {
+        await triggerNextBidEvent(gameId);
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   return (

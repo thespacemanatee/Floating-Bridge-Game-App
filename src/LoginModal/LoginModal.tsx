@@ -85,9 +85,9 @@ export const LoginModal = () => {
     }
   }, [gameUserId, gameUsername, gameRoomId, enterRoom]);
 
-  const startGame = () => {
+  const startGame = async () => {
     if (gameRoomId) {
-      initialiseGame(gameUserId, gameRoomId);
+      await initialiseGame(gameUserId, gameRoomId);
     }
   };
 

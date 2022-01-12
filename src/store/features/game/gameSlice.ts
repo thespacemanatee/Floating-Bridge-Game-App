@@ -22,17 +22,18 @@ export type BidLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type Bid = {
   userId: string;
-  suit?: TrumpSuit;
-  level?: BidLevel;
+  suit: TrumpSuit;
+  level: BidLevel;
 };
 
 interface GameState {
-  gameId?: string;
+  gameId: string | null;
   status: GameStatus;
   trump: TrumpSuit;
   level: BidLevel;
   userPosition: number;
   currentPosition: number;
+  latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
   hands: GameHand[];
@@ -40,11 +41,13 @@ interface GameState {
 }
 
 const initialState: GameState = {
+  gameId: null,
   status: "stopped",
   trump: "c",
   level: 1,
   userPosition: 0,
   currentPosition: 0,
+  latestBid: null,
   bidSequence: [],
   isBidding: false,
   hands: [],
@@ -72,6 +75,9 @@ const gameSlice = createSlice({
     },
     setGameCurrentPosition(state: GameState, action: PayloadAction<number>) {
       state.currentPosition = action.payload;
+    },
+    setGameLatestBid(state: GameState, action: PayloadAction<Bid | null>) {
+      state.latestBid = action.payload;
     },
     setGameBidSequence(state: GameState, action: PayloadAction<Bid[]>) {
       state.bidSequence = action.payload;
@@ -108,13 +114,15 @@ const gameSlice = createSlice({
       });
     },
     resetGame(state: GameState) {
-      state.gameId = undefined;
+      state.gameId = null;
       state.status = "stopped";
       state.trump = "n";
       state.level = 1;
       state.userPosition = 0;
       state.currentPosition = 0;
+      state.latestBid = null;
       state.bidSequence = [];
+      state.isBidding = false;
       state.hands = [];
       state.playedCards = [];
     },
@@ -128,6 +136,7 @@ export const {
   setGameLevel,
   setGameUserPosition,
   setGameCurrentPosition,
+  setGameLatestBid,
   setGameBidSequence,
   setGameIsBidding,
   setGameHands,

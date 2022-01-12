@@ -7,40 +7,29 @@ import type {
   PlayCardPayload,
 } from "../store/features/game/gameSlice";
 import type { Card } from "../models";
-import { store } from "../store";
 
-export const initialiseGame = (userId: string, roomId: string) => {
-  axios.post(HOST + "/games/init", {
+export const initialiseGame = async (userId: string, roomId: string) =>
+  await axios.post(HOST + "/games/init", {
     userId,
     roomId,
   });
-};
 
-export const triggerNextBidEvent = (
-  roomId: string,
-  bid: Bid,
-  currentPosition: number
-) => {
-  const { bidSequence } = store.getState().game;
-  axios.post(HOST + "/games/bid", {
-    roomId,
+export const triggerNextBidEvent = async (gameId: string, bid?: Bid) =>
+  await axios.post(HOST + "/games/bid", {
+    gameId,
     bid,
-    bidSequence,
-    currentPosition,
   });
-};
 
-export const triggerNextTurnEvent = (
+export const triggerNextTurnEvent = async (
   roomId: string,
   playCardPayload: PlayCardPayload,
   currentPosition: number
-) => {
-  axios.post(HOST + "/games/turn", {
+) =>
+  await axios.post(HOST + "/games/turn", {
     roomId,
     playCardPayload,
     currentPosition,
   });
-};
 
 export const getHandPositions = (userId: string, hands: GameHand[]) => {
   let currentUserIdx = 0;
