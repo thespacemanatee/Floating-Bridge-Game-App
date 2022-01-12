@@ -3,8 +3,8 @@ import { StyleSheet, View } from "react-native";
 
 import { PlayingCard } from "../components/elements/PlayingCard";
 import { ThemedText } from "../components/elements/ThemedText";
-import type { PlayedCard } from "../models/deck";
-import { deck } from "../models/deck";
+import type { PlayedCard } from "../models";
+import { deck } from "../models";
 import { SPACING } from "../resources/dimens";
 import type { Member } from "../types";
 

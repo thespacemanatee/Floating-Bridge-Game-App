@@ -2,26 +2,25 @@ import React, { useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { deck } from "../models/deck";
-import type { GameHand } from "../store/features/game/gameSlice";
+import type { PlayCardPayload } from "../store/features/game/gameSlice";
 import {
   setGameUserPosition,
   resetGame,
 } from "../store/features/game/gameSlice";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
-import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
-import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
+import {
+  findCardFromHand,
+  getHandPositions,
+  triggerNextTurnEvent,
+} from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 
 import { Floor } from "./Floor";
-
-const CARD_OFFSET_X = 75;
-const BACK_CARD_OFFSET_X = 50;
-const CARD_OFFSET_Y = 2.5;
-const CARD_ROTATION = 0.75;
+import { CurrentPlayerHand } from "./CurrentPlayerHand";
+import { OpponentHand } from "./OpponentHand";
+import { BiddingModal } from "./BiddingModal";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
@@ -44,45 +43,29 @@ export const Game = () => {
     dispatch(setGameUserPosition(userPosition));
   }, [dispatch, userPosition]);
 
-  const playCard = (cardIndex: number) => {
-    triggerNextTurnEvent(
-      roomId,
-      {
-        userId,
-        position: gameCurrentPosition,
-        cardIndex,
-      },
-      gameCurrentPosition
-    );
+  const playCard = async (cardIndex: number) => {
+    console.log(playedCards.length);
+    if (playedCards.length > 0) {
+      const card = findCardFromHand(gameHands, gameCurrentPosition, cardIndex);
+      return;
+    }
+
+    const payload: PlayCardPayload = {
+      userId,
+      position: gameCurrentPosition,
+      cardIndex,
+    };
+    try {
+      await triggerNextTurnEvent(roomId, payload, gameCurrentPosition);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const leaveRoom = () => {
-    if (roomId) {
-      unsubscribeToChannel(roomId);
-    }
+    unsubscribeToChannel(roomId);
     dispatch(resetRoom());
     dispatch(resetGame());
-  };
-
-  const renderBackCards = (gameHand: GameHand) => {
-    return gameHand.hand.map((card, index, hand) => {
-      const noOfCards = hand.length;
-      const translateX =
-        BACK_CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
-      const translateY =
-        -CARD_OFFSET_Y * Math.pow(index - Math.floor(noOfCards / 2), 2);
-      const rotate =
-        -CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards);
-      return (
-        <AnimatedBackCard
-          key={`${card.suit}${card.value}`}
-          index={index}
-          offsetX={translateX}
-          offsetY={translateY}
-          offsetRotate={rotate}
-        />
-      );
-    });
   };
 
   return (
@@ -90,36 +73,27 @@ export const Game = () => {
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
-      <View style={styles.left}>{left.hand && renderBackCards(left.hand)}</View>
+      <View style={styles.left}>
+        {left.hand && <OpponentHand gameHand={left.hand} />}
+      </View>
       <View style={styles.middle}>
-        <View style={styles.top}>{top.hand && renderBackCards(top.hand)}</View>
+        <View style={styles.top}>
+          {top.hand && <OpponentHand gameHand={top.hand} />}
+        </View>
         <Floor players={players} playedCards={playedCards} />
+        <BiddingModal />
         <View style={styles.bottom}>
-          {bottom.hand?.hand.map((card, index, hand) => {
-            const noOfCards = hand.length;
-            const translateX =
-              CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
-            const translateY =
-              CARD_OFFSET_Y * Math.pow(index - Math.floor(noOfCards / 2), 2);
-            const rotate =
-              CARD_ROTATION * ((index - Math.floor(noOfCards / 2)) / noOfCards);
-            return (
-              <AnimatedFaceCard
-                index={index}
-                key={`${card.suit}${card.value}`}
-                image={deck[`${card.suit}${card.value}`].imageUri}
-                offsetX={translateX}
-                offsetY={translateY}
-                offsetRotate={rotate}
-                enabled={gameUserPosition === gameCurrentPosition}
-                onSnapToMiddle={playCard}
-              />
-            );
-          })}
+          {bottom.hand && (
+            <CurrentPlayerHand
+              gameHand={bottom.hand}
+              isActive={gameUserPosition === gameCurrentPosition}
+              onPlayCard={playCard}
+            />
+          )}
         </View>
       </View>
       <View style={styles.right}>
-        {right.hand && renderBackCards(right.hand)}
+        {right.hand && <OpponentHand gameHand={right.hand} />}
       </View>
     </View>
   );
