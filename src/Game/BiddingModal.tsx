@@ -72,6 +72,9 @@ export const BiddingModal = () => {
 
   const passBid = async () => {
     if (gameId) {
+      if (!latestBid) {
+        alert("The starting player has to bid!");
+      }
       try {
         await triggerNextBidEvent(gameId);
       } catch (err) {
@@ -98,7 +101,9 @@ export const BiddingModal = () => {
                   {`Welcome Player ${userPosition + 1}`}
                 </ThemedText>
                 <ThemedText style={styles.biddingPlayerText}>
-                  {`Player ${currentPosition + 1} is bidding...`}
+                  {userPosition === currentPosition
+                    ? "Your turn to bid!"
+                    : `Player ${currentPosition + 1} is bidding...`}
                 </ThemedText>
               </View>
               <View>
@@ -146,7 +151,7 @@ export const BiddingModal = () => {
               <TextButton
                 text="Pass"
                 onPress={passBid}
-                disabled={userPosition !== currentPosition}
+                disabled={userPosition !== currentPosition || !latestBid}
               />
             </View>
           </View>

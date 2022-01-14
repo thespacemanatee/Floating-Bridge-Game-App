@@ -19,7 +19,6 @@ import {
   removePlayer,
   resetPlayers,
   setGameUserId,
-  setIsAdmin,
 } from "../store/features/room/roomSlice";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
@@ -53,12 +52,6 @@ export const LoginModal = () => {
     },
     [dispatch]
   );
-
-  useEffect(() => {
-    if (players[0]?.id === gameUserId) {
-      dispatch(setIsAdmin(true));
-    }
-  }, [dispatch, gameUserId, players]);
 
   useEffect(() => {
     if (!gameUserId) {

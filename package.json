@@ -8,7 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "eslint . --ext .ts"
+    "lint": "tslint -c tslint.json -p tsconfig.json --fix",
+    "prettier": "prettier --config .prettierrc.json --write src/**/*.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
@@ -24,7 +25,7 @@
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-dotenv": "^3.3.1",
-    "react-native-gesture-handler": "~2.1.0",
+    "react-native-gesture-handler": "https://github.com/software-mansion/react-native-gesture-handler#62e9eb66bced3b4c55042399d761baee7d961140",
     "react-native-reanimated": "~2.3.1",
     "react-native-redash": "^16.2.3",
     "react-native-web": "0.17.1",
@@ -37,6 +38,8 @@
     "@types/react-native": "~0.64.12",
     "eslint": "^7.32.0",
     "eslint-config-react-native-wcandillon": "^3.7.2",
+    "prettier": "^2.5.1",
+    "tslint": "^6.1.3",
     "typescript": "~4.3.5"
   },
   "private": true
