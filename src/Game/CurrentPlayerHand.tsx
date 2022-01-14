@@ -6,23 +6,24 @@ import {
   CARD_OFFSET_Y,
   CARD_ROTATION,
 } from "../config/Constants";
-import { deck } from "../models";
-import type { GameHand } from "../store/features/game/gameSlice";
+import type { Card } from "../models";
+import { DECK } from "../models";
+import type { PlayerData } from "../store/features/game";
 
 type CurrentPlayerHandProps = {
-  gameHand: GameHand;
+  playerData: PlayerData;
   isActive: boolean;
-  onPlayCard: (index: number) => void;
+  onPlayCard: (card: Card, callback: () => void) => void;
 };
 
 export const CurrentPlayerHand = ({
-  gameHand,
+  playerData,
   isActive,
   onPlayCard,
 }: CurrentPlayerHandProps) => {
   return (
     <>
-      {gameHand.hand.map((card, index, hand) => {
+      {playerData.hand.map((card, index, hand) => {
         const noOfCards = hand.length;
         const translateX = CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
         const translateY =
@@ -33,12 +34,12 @@ export const CurrentPlayerHand = ({
           <AnimatedFaceCard
             index={index}
             key={`${card.suit}${card.value}`}
-            image={deck[`${card.suit}${card.value}`].imageUri}
+            image={DECK[`${card.suit}${card.value}`]!.imageUri}
             offsetX={translateX}
             offsetY={translateY}
             offsetRotate={rotate}
             enabled={isActive}
-            onSnapToMiddle={onPlayCard}
+            onSnapToMiddle={(callback) => onPlayCard(card, callback)}
           />
         );
       })}

@@ -1,21 +1,21 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import type { Member } from "../../types";
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import type { Player } from "../../store/features/game";
 
 import { ThemedText } from "./ThemedText";
 
 type LobbyUserEntryProps = {
   currentUsername: string;
-  member: Member;
+  player: Player;
 };
 
 export const LobbyUserEntry = ({
   currentUsername,
-  member,
+  player,
 }: LobbyUserEntryProps) => {
-  const { username, color } = member.info;
+  const { username, color } = player.info;
   return (
     <View style={styles.userContainer}>
       <View style={[{ backgroundColor: color }, styles.orbContainer]}>

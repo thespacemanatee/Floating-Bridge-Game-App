@@ -2,17 +2,17 @@ import React, { useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { Member } from "../../types";
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { TextButton } from "../../components/molecules/TextButton";
-import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
-import { ThemedText } from "../../components/elements/ThemedText";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { unsubscribeToChannel } from "../../utils/PusherHelper";
-import { resetRoom } from "../../store/features/room/roomSlice";
+import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
+import { TextButton } from "../../../molecules/TextButton";
+import { LobbyUserEntry } from "../../../elements/LobbyUserEntry";
+import { ThemedText } from "../../../elements/ThemedText";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { unsubscribeToChannel } from "../../../../utils/PusherHelper";
+import { resetRoom } from "../../../../store/features/room/roomSlice";
+import type { Player } from "../../../../store/features/game";
 
 type WaitingRoomPageProps = {
-  players: Member[];
+  players: Player[];
   onStartGame: () => void;
 };
 
@@ -22,7 +22,6 @@ export const WaitingRoomPage = ({
 }: WaitingRoomPageProps) => {
   const username = useAppSelector((state) => state.room.username);
   const roomId = useAppSelector((state) => state.room.roomId);
-  const isAdmin = useAppSelector((state) => state.room.isAdmin);
 
   const dispatch = useAppDispatch();
 
@@ -49,12 +48,12 @@ export const WaitingRoomPage = ({
         style={styles.welcomeText}
       >{`Welcome ${username}!`}</ThemedText>
       <View style={styles.usersContainer}>
-        {players.map((member) => {
+        {players.map((player) => {
           return (
             <LobbyUserEntry
-              key={member.id}
+              key={player.id}
               currentUsername={username || ""}
-              member={member}
+              player={player}
             />
           );
         })}
@@ -64,11 +63,7 @@ export const WaitingRoomPage = ({
           Need exactly 4 players to start the game!
         </ThemedText>
       )}
-      <TextButton
-        text="Start!"
-        onPress={onStartGame}
-        disabled={!roomReady || !isAdmin}
-      />
+      <TextButton text="Start!" onPress={onStartGame} disabled={!roomReady} />
     </View>
   );
 };

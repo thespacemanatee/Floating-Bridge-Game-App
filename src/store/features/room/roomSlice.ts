@@ -1,21 +1,19 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { Member } from "../../../types";
+import type { Player } from "../game";
 
 interface RoomState {
   userId: string;
   username: string;
   roomId: string;
-  isAdmin: boolean;
-  players: Member[];
+  players: Player[];
 }
 
 const initialState: RoomState = {
   userId: "",
   username: "",
   roomId: "",
-  isAdmin: false,
   players: [],
 };
 
@@ -32,13 +30,10 @@ const roomSlice = createSlice({
     setGameRoomId(state: RoomState, action: PayloadAction<string>) {
       state.roomId = action.payload;
     },
-    setIsAdmin(state: RoomState, action: PayloadAction<boolean>) {
-      state.isAdmin = action.payload;
-    },
-    addPlayer(state: RoomState, action: PayloadAction<Member>) {
+    addPlayer(state: RoomState, action: PayloadAction<Player>) {
       state.players.push(action.payload);
     },
-    removePlayer(state: RoomState, action: PayloadAction<Member>) {
+    removePlayer(state: RoomState, action: PayloadAction<Player>) {
       state.players = state.players.filter(
         (player) => player.id !== action.payload.id
       );
@@ -50,7 +45,6 @@ const roomSlice = createSlice({
       state.userId = "";
       state.username = "";
       state.roomId = "";
-      state.isAdmin = false;
       state.players = [];
     },
   },
@@ -60,7 +54,6 @@ export const {
   setGameUserId,
   setGameUsername,
   setGameRoomId,
-  setIsAdmin,
   addPlayer,
   removePlayer,
   resetPlayers,

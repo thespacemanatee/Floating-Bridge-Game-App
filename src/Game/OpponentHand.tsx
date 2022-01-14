@@ -6,16 +6,16 @@ import {
   CARD_OFFSET_Y,
   CARD_ROTATION,
 } from "../config/Constants";
-import type { GameHand } from "../store/features/game/gameSlice";
+import type { PlayerData } from "../store/features/game";
 
 type OpponentHandProps = {
-  gameHand: GameHand;
+  playerData: PlayerData;
 };
 
-export const OpponentHand = ({ gameHand }: OpponentHandProps) => {
+export const OpponentHand = ({ playerData }: OpponentHandProps) => {
   return (
     <>
-      {gameHand.hand.map((card, index, hand) => {
+      {playerData.hand.map((card, index, hand) => {
         const noOfCards = hand.length;
         const translateX =
           BACK_CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));

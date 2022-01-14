@@ -5,52 +5,59 @@ import type { Card, PlayedCard } from "../../../models";
 
 export type GameStatus = "started" | "stopped";
 
-export type GameHand = {
-  userId: string;
+export interface Player {
+  id: string;
+  info: {
+    username: string;
+    color: string;
+  };
+}
+
+export interface PlayerData extends Player {
   hand: Card[];
-};
+  sets: PlayedCard[];
+}
 
 export type PlayCardPayload = {
   userId: string;
-  position: number;
-  cardIndex: number;
+  card: Card;
 };
 
-export type TrumpSuit = "c" | "d" | "h" | "s" | "n";
+export type Trump = "c" | "d" | "h" | "s" | "n";
 
 export type BidLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 export type Bid = {
   userId: string;
-  suit: TrumpSuit;
+  trump: Trump;
   level: BidLevel;
 };
 
 interface GameState {
   gameId: string | null;
   status: GameStatus;
-  trump: TrumpSuit;
-  level: BidLevel;
+  players: PlayerData[];
   userPosition: number;
   currentPosition: number;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
-  hands: GameHand[];
+  isPartnerChosen: boolean;
+  isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 }
 
 const initialState: GameState = {
   gameId: null,
   status: "stopped",
-  trump: "c",
-  level: 1,
+  players: [],
   userPosition: 0,
   currentPosition: 0,
   latestBid: null,
   bidSequence: [],
   isBidding: false,
-  hands: [],
+  isPartnerChosen: false,
+  isTrumpBroken: false,
   playedCards: [],
 };
 
@@ -64,11 +71,8 @@ const gameSlice = createSlice({
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
     },
-    setGameTrump(state: GameState, action: PayloadAction<TrumpSuit>) {
-      state.trump = action.payload;
-    },
-    setGameLevel(state: GameState, action: PayloadAction<BidLevel>) {
-      state.level = action.payload;
+    setGamePlayerData(state: GameState, action: PayloadAction<PlayerData[]>) {
+      state.players = action.payload;
     },
     setGameUserPosition(state: GameState, action: PayloadAction<number>) {
       state.userPosition = action.payload;
@@ -85,45 +89,26 @@ const gameSlice = createSlice({
     setGameIsBidding(state: GameState, action: PayloadAction<boolean>) {
       state.isBidding = action.payload;
     },
-    setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
-      state.hands = action.payload;
+    setGameIsPartnerChosen(state: GameState, action: PayloadAction<boolean>) {
+      state.isPartnerChosen = action.payload;
+    },
+    setGameIsTrumpBroken(state: GameState, action: PayloadAction<boolean>) {
+      state.isTrumpBroken = action.payload;
     },
     setGamePlayedCards(state: GameState, action: PayloadAction<PlayedCard[]>) {
       state.playedCards = action.payload;
     },
-    playCardFromHand(state: GameState, action: PayloadAction<PlayCardPayload>) {
-      const { userId, position, cardIndex } = action.payload;
-      state.hands = state.hands.map((hand, handIdx) => {
-        if (handIdx === position) {
-          const newHand: GameHand = {
-            userId: hand.userId,
-            hand: hand.hand.filter((card, cardIdx) => {
-              if (cardIdx === cardIndex) {
-                const playedCard: PlayedCard = {
-                  ...card,
-                  playedBy: userId,
-                };
-                state.playedCards = [...state.playedCards, playedCard];
-              }
-              return cardIdx !== cardIndex;
-            }),
-          };
-          return newHand;
-        }
-        return hand;
-      });
-    },
     resetGame(state: GameState) {
       state.gameId = null;
       state.status = "stopped";
-      state.trump = "n";
-      state.level = 1;
       state.userPosition = 0;
       state.currentPosition = 0;
       state.latestBid = null;
       state.bidSequence = [];
       state.isBidding = false;
-      state.hands = [];
+      state.isPartnerChosen = false;
+      state.isTrumpBroken = false;
+      state.players = [];
       state.playedCards = [];
     },
   },
@@ -132,16 +117,15 @@ const gameSlice = createSlice({
 export const {
   setGameId,
   setGameStatus,
-  setGameTrump,
-  setGameLevel,
+  setGamePlayerData,
   setGameUserPosition,
   setGameCurrentPosition,
   setGameLatestBid,
   setGameBidSequence,
   setGameIsBidding,
-  setGameHands,
+  setGameIsPartnerChosen,
+  setGameIsTrumpBroken,
   setGamePlayedCards,
-  playCardFromHand,
   resetGame,
 } = gameSlice.actions;
 

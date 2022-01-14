@@ -4,23 +4,22 @@ import { nanoid } from "nanoid/non-secure";
 
 import {
   bindGameEvents,
-  bindMemberAddedEvent,
-  bindMemberRemovedEvent,
+  bindPlayerAddedEvent,
+  bindPlayerRemovedEvent,
   bindSubscriptionSucceededEvent,
   initPusherClient,
   subscribeToChannel,
-} from "../utils/PusherHelper";
-import type { Member } from "../types";
-import { SPACING } from "../resources/dimens";
-import { initialiseGame } from "../utils/GameHelper";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+} from "../../../utils/PusherHelper";
+import { SPACING } from "../../../resources/dimens";
+import { initialiseGame } from "../../../utils/GameHelper";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   addPlayer,
   removePlayer,
   resetPlayers,
   setGameUserId,
-  setIsAdmin,
-} from "../store/features/room/roomSlice";
+} from "../../../store/features/room/roomSlice";
+import type { Player } from "../../../store/features/game";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
 import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
@@ -40,25 +39,19 @@ export const LoginModal = () => {
       initPusherClient(userId, username);
       subscribeToChannel(roomId);
       dispatch(resetPlayers());
-      bindSubscriptionSucceededEvent((member: Member) => {
-        dispatch(addPlayer(member));
+      bindSubscriptionSucceededEvent((player: Player) => {
+        dispatch(addPlayer(player));
       });
-      bindMemberAddedEvent((member: Member) => {
-        dispatch(addPlayer(member));
+      bindPlayerAddedEvent((player: Player) => {
+        dispatch(addPlayer(player));
       });
-      bindMemberRemovedEvent((member: Member) => {
-        dispatch(removePlayer(member));
+      bindPlayerRemovedEvent((player: Player) => {
+        dispatch(removePlayer(player));
       });
       bindGameEvents();
     },
     [dispatch]
   );
-
-  useEffect(() => {
-    if (players[0]?.id === gameUserId) {
-      dispatch(setIsAdmin(true));
-    }
-  }, [dispatch, gameUserId, players]);
 
   useEffect(() => {
     if (!gameUserId) {
@@ -87,7 +80,7 @@ export const LoginModal = () => {
 
   const startGame = async () => {
     if (gameRoomId) {
-      await initialiseGame(gameUserId, gameRoomId);
+      await initialiseGame(gameUserId, gameRoomId, players);
     }
   };
 
@@ -124,5 +117,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: SPACING.spacing12,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

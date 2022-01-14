@@ -4,28 +4,24 @@ import type { Channel } from "pusher-js";
 import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 
-import type { Member } from "../types";
 import type {
   Bid,
-  BidLevel,
-  GameHand,
   GameStatus,
-  PlayCardPayload,
-  TrumpSuit,
-} from "../store/features/game/gameSlice";
+  Player,
+  PlayerData,
+} from "../store/features/game";
 import {
+  setGameIsTrumpBroken,
+  setGameIsPartnerChosen,
   setGameLatestBid,
   setGameId,
   setGamePlayedCards,
-  setGameLevel,
-  setGameTrump,
   setGameIsBidding,
   setGameBidSequence,
-  playCardFromHand,
   setGameCurrentPosition,
-  setGameHands,
+  setGamePlayerData,
   setGameStatus,
-} from "../store/features/game/gameSlice";
+} from "../store/features/game";
 import { store } from "../store";
 import type { PlayedCard } from "../models";
 
@@ -59,10 +55,12 @@ export const unsubscribeToChannel = (gameId: string) => {
 };
 
 export const bindSubscriptionSucceededEvent = (
-  callback: (member: Member) => void
+  callback: (player: Player) => void
 ) => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:subscription_succeeded", () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       channelRef.current?.members.each(callback);
     });
   } else {
@@ -70,7 +68,7 @@ export const bindSubscriptionSucceededEvent = (
   }
 };
 
-export const bindMemberAddedEvent = (callback: (member: Member) => void) => {
+export const bindPlayerAddedEvent = (callback: (player: Player) => void) => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:member_added", callback);
   } else {
@@ -78,7 +76,7 @@ export const bindMemberAddedEvent = (callback: (member: Member) => void) => {
   }
 };
 
-export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
+export const bindPlayerRemovedEvent = (callback: (player: Player) => void) => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:member_removed", callback);
   } else {
@@ -87,15 +85,14 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 };
 
 type GameData = {
-  gameId: string;
   roomId: string;
+  players: PlayerData[];
   currentPosition: number;
-  trump: TrumpSuit;
-  level: BidLevel;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
-  hands: GameHand[];
+  isPartnerChosen: boolean;
+  isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 };
 
@@ -107,40 +104,41 @@ export const bindGameEvents = () => {
         store.dispatch(setGameStatus(data.status));
       }
     );
-    channelRef.current.bind("game-init-event", (data: GameData) => {
-      store.dispatch(setGameId(data.gameId));
-      store.dispatch(setGameCurrentPosition(data.currentPosition));
-      store.dispatch(setGameTrump(data.trump));
-      store.dispatch(setGameLevel(data.level));
-      store.dispatch(setGameLatestBid(data.latestBid));
-      store.dispatch(setGameBidSequence(data.bidSequence));
-      store.dispatch(setGameIsBidding(data.isBidding));
-      store.dispatch(setGameHands(data.hands));
-      store.dispatch(setGamePlayedCards(data.playedCards));
-    });
     channelRef.current.bind(
-      "game-bid-event",
-      (data: { gameData: GameData; winningBid?: Bid }) => {
-        console.log(data);
-
-        store.dispatch(setGameCurrentPosition(data.gameData.currentPosition));
-        store.dispatch(setGameTrump(data.gameData.trump));
-        store.dispatch(setGameLevel(data.gameData.level));
-        store.dispatch(setGameBidSequence(data.gameData.bidSequence));
-        store.dispatch(setGameLatestBid(data.gameData.latestBid));
-        store.dispatch(setGameIsBidding(data.gameData.isBidding));
-        store.dispatch(setGameHands(data.gameData.hands));
-        store.dispatch(setGamePlayedCards(data.gameData.playedCards));
+      "game-init-event",
+      (data: { gameId: string; gameData: GameData }) => {
+        store.dispatch(setGameId(data.gameId));
+        setGameData(data.gameData);
       }
     );
     channelRef.current.bind(
       "game-turn-event",
-      (data: { playCardPayload: PlayCardPayload; nextPosition: number }) => {
-        store.dispatch(setGameCurrentPosition(data.nextPosition));
-        store.dispatch(playCardFromHand(data.playCardPayload));
+      (data: { gameData: GameData }) => {
+        setGameData(data.gameData);
       }
     );
   } else {
     throw Error("Channel not found!");
   }
+};
+
+const setGameData = (gameData: GameData) => {
+  const {
+    currentPosition,
+    players,
+    latestBid,
+    bidSequence,
+    isBidding,
+    isPartnerChosen,
+    isTrumpBroken,
+    playedCards,
+  } = gameData;
+  store.dispatch(setGamePlayerData(players));
+  store.dispatch(setGameCurrentPosition(currentPosition));
+  store.dispatch(setGameLatestBid(latestBid));
+  store.dispatch(setGameBidSequence(bidSequence));
+  store.dispatch(setGameIsBidding(isBidding));
+  store.dispatch(setGameIsPartnerChosen(isPartnerChosen));
+  store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
+  store.dispatch(setGamePlayedCards(playedCards));
 };

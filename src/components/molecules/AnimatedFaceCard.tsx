@@ -24,7 +24,7 @@ interface AnimatedFaceCardProps extends PlayingCardProps {
   offsetY: number;
   offsetRotate: number;
   enabled?: boolean;
-  onSnapToMiddle: (index: number) => void;
+  onSnapToMiddle: (callback: () => void) => void;
 }
 
 export const AnimatedFaceCard = ({
@@ -91,9 +91,15 @@ export const AnimatedFaceCard = ({
     onEnd: ({ velocityX, velocityY }) => {
       const destY = snapPoint(translateY.value, velocityY, snapPointsY);
       if (destY === midY) {
-        onSnapToMiddle(index);
         translateX.value = withSpring(0, { velocity: velocityX });
         rotate.value = withTiming(-1 + Math.random() * 2);
+        onSnapToMiddle(() => {
+          setTimeout(() => {
+            translateX.value = withSpring(offsetX, { velocity: velocityX });
+            translateY.value = withSpring(offsetY, { velocity: velocityY });
+            rotate.value = withTiming(offsetRotate);
+          }, 100);
+        });
       } else {
         translateX.value = withSpring(offsetX, { velocity: velocityX });
         rotate.value = withTiming(offsetRotate);
