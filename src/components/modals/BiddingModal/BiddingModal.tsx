@@ -9,11 +9,17 @@ import { BiddingPage } from "./bidding_pages/BiddingPage";
 
 export const BiddingModal = () => {
   const [biddingModalVisible, setBiddingModalVisible] = useState(true);
-  const isBidding = false;
+  const gameStatus = useAppSelector((state) => state.game.status);
+  const isBidding = useAppSelector((state) => state.game.isBidding);
+  const isPartnerChosen = useAppSelector((state) => state.game.isPartnerChosen);
 
-  // useEffect(() => {
-  //   setBiddingModalVisible(isBidding);
-  // }, [isBidding]);
+  useEffect(() => {
+    if (gameStatus === "stopped" || (!isBidding && isPartnerChosen)) {
+      setBiddingModalVisible(false);
+    } else {
+      setBiddingModalVisible(true);
+    }
+  }, [gameStatus, isBidding, isPartnerChosen]);
 
   return (
     <Modal
@@ -43,9 +49,17 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: "white",
-    borderRadius: SPACING.spacing12,
     alignItems: "center",
-    maxWidth: "68%",
+    margin: SPACING.spacing48,
+    borderRadius: SPACING.spacing12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   contentContainer: {
     justifyContent: "center",

@@ -3,15 +3,15 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import type { TrumpSuit } from "../../store/features/game";
+import type { Trump } from "../../store/features/game";
 import { getUnicodeCharacter } from "../../utils/utils";
 
 import { ThemedText } from "./ThemedText";
 
 type SuitButtonProps = {
-  suit: TrumpSuit;
-  selectedSuit?: TrumpSuit;
-  onSelectSuit: (level: TrumpSuit) => void;
+  suit: Trump;
+  selectedSuit?: Trump;
+  onSelectSuit: (level: Trump) => void;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 };

@@ -33,7 +33,7 @@ export const CurrentPlayerHand = ({
           <AnimatedFaceCard
             index={index}
             key={`${card.suit}${card.value}`}
-            image={DECK[`${card.suit}${card.value}`].imageUri}
+            image={DECK[`${card.suit}${card.value}`]!.imageUri}
             offsetX={translateX}
             offsetY={translateY}
             offsetRotate={rotate}

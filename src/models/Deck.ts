@@ -1,6 +1,6 @@
 import type { ImageSourcePropType } from "react-native";
 
-import type { BidLevel, TrumpSuit } from "../store/features/game";
+import type { BidLevel, Trump } from "../store/features/game";
 
 export type CardSuit = "c" | "d" | "h" | "s";
 
@@ -29,15 +29,11 @@ export interface PlayedCard extends Card {
   playedBy: string;
 }
 
-export const SUITS: TrumpSuit[] = ["c", "d", "h", "s"];
+export const SUITS: CardSuit[] = ["c", "d", "h", "s"];
 export const BID_LEVELS: BidLevel[] = [1, 2, 3, 4, 5, 6, 7];
-export const TRUMP_SUITS: TrumpSuit[] = ["c", "d", "h", "s", "n"];
+export const TRUMP_SUITS: Trump[] = ["c", "d", "h", "s", "n"];
 
-type Deck = {
-  [key: string]: Card;
-};
-
-export const DECK: Deck = {
+export const DECK = {
   c2: {
     suit: "c",
     value: "2",

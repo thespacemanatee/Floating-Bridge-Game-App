@@ -5,31 +5,20 @@ import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 
 import type { Member } from "../types";
-import type {
-  Bid,
-  BidLevel,
-  GameHand,
-  GameStatus,
-  Partner,
-  PlayCardPayload,
-  TrumpSuit,
-} from "../store/features/game";
+import type { Bid, GameHand, GameStatus } from "../store/features/game";
 import {
+  setGameIsPartnerChosen,
   setGameLatestBid,
   setGameId,
   setGamePlayedCards,
-  setGameLevel,
-  setGameTrump,
   setGameIsBidding,
   setGameBidSequence,
-  playCardFromHand,
   setGameCurrentPosition,
   setGameHands,
   setGameStatus,
 } from "../store/features/game";
 import { store } from "../store";
 import type { PlayedCard } from "../models";
-import { setGamePartner } from "../store/features/game/gameSlice";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
@@ -91,12 +80,10 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 type GameData = {
   roomId: string;
   currentPosition: number;
-  trump: TrumpSuit;
-  level: BidLevel;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
-  partner: Partner;
+  isPartnerChosen: boolean;
   hands: GameHand[];
   playedCards: PlayedCard[];
 };
@@ -130,22 +117,18 @@ export const bindGameEvents = () => {
 const setGameData = (gameData: GameData) => {
   const {
     currentPosition,
-    trump,
-    level,
     latestBid,
     bidSequence,
     isBidding,
-    partner,
+    isPartnerChosen,
     hands,
     playedCards,
   } = gameData;
   store.dispatch(setGameCurrentPosition(currentPosition));
-  store.dispatch(setGameTrump(trump));
-  store.dispatch(setGameLevel(level));
   store.dispatch(setGameLatestBid(latestBid));
   store.dispatch(setGameBidSequence(bidSequence));
   store.dispatch(setGameIsBidding(isBidding));
-  store.dispatch(setGamePartner(partner));
+  store.dispatch(setGameIsPartnerChosen(isPartnerChosen));
   store.dispatch(setGameHands(hands));
   store.dispatch(setGamePlayedCards(playedCards));
 };

@@ -36,7 +36,7 @@ export const triggerSetPartnerEvent = async (
   gameId: string,
   partner: Partner
 ) =>
-  await axios.post(HOST + "games/partner", {
+  await axios.post(HOST + "/games/partner", {
     gameId,
     partner,
   });

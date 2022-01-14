@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
-import type { Bid, BidLevel, TrumpSuit } from "../../../../store/features/game";
+import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
 import { getUnicodeCharacter } from "../../../../utils";
 import { triggerNextBidEvent } from "../../../../utils/GameHelper";
@@ -14,7 +14,7 @@ export const BiddingPage = () => {
   const userPosition = useAppSelector((state) => state.game.userPosition);
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const [selectedLevel, setSelectedLevel] = useState<BidLevel>();
-  const [selectedSuit, setSelectedSuit] = useState<TrumpSuit>();
+  const [selectedTrump, setSelectedSuit] = useState<Trump>();
   const userId = useAppSelector((state) => state.room.userId);
   const gameId = useAppSelector((state) => state.game.gameId);
   const latestBid = useAppSelector((state) => state.game.latestBid);
@@ -30,18 +30,18 @@ export const BiddingPage = () => {
     setSelectedLevel(level);
   };
 
-  const selectSuit = (suit: TrumpSuit) => {
-    setSelectedSuit(suit);
+  const selectSuit = (trump: Trump) => {
+    setSelectedSuit(trump);
   };
 
   const confirmBid = async () => {
-    if (selectedLevel && selectedSuit) {
+    if (selectedLevel && selectedTrump) {
       if (latestBid) {
-        const { level, suit } = latestBid;
+        const { level, trump } = latestBid;
         if (
           selectedLevel < level ||
           (selectedLevel === level &&
-            TRUMP_SUITS.indexOf(selectedSuit) <= TRUMP_SUITS.indexOf(suit))
+            TRUMP_SUITS.indexOf(selectedTrump) <= TRUMP_SUITS.indexOf(trump))
         ) {
           alert("Please bid higher!");
           return;
@@ -49,7 +49,7 @@ export const BiddingPage = () => {
       }
       const bid: Bid = {
         userId,
-        suit: selectedSuit,
+        trump: selectedTrump,
         level: selectedLevel,
       };
       if (gameId) {
@@ -94,7 +94,7 @@ export const BiddingPage = () => {
           <ThemedText style={styles.bidText}>
             {latestBid
               ? `Trump: ${latestBid?.level}${getUnicodeCharacter(
-                  latestBid?.suit
+                  latestBid?.trump
                 )}`
               : "Trump: N/A"}
           </ThemedText>
@@ -113,11 +113,11 @@ export const BiddingPage = () => {
         ))}
       </View>
       <View style={styles.bidButtonsContainer}>
-        {TRUMP_SUITS.map((suit) => (
+        {TRUMP_SUITS.map((trump) => (
           <SuitButton
-            key={suit}
-            suit={suit}
-            selectedSuit={selectedSuit}
+            key={trump}
+            suit={trump}
+            selectedSuit={selectedTrump}
             onSelectSuit={selectSuit}
             style={styles.bidButton}
           />
@@ -128,7 +128,7 @@ export const BiddingPage = () => {
           text="Confirm"
           onPress={confirmBid}
           disabled={
-            userPosition !== currentPosition || !selectedSuit || !selectedLevel
+            userPosition !== currentPosition || !selectedTrump || !selectedLevel
           }
           style={styles.button}
         />
