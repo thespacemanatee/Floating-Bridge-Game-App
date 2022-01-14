@@ -87,7 +87,6 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 };
 
 type GameData = {
-  gameId: string;
   roomId: string;
   currentPosition: number;
   trump: TrumpSuit;
@@ -107,30 +106,17 @@ export const bindGameEvents = () => {
         store.dispatch(setGameStatus(data.status));
       }
     );
-    channelRef.current.bind("game-init-event", (data: GameData) => {
-      store.dispatch(setGameId(data.gameId));
-      store.dispatch(setGameCurrentPosition(data.currentPosition));
-      store.dispatch(setGameTrump(data.trump));
-      store.dispatch(setGameLevel(data.level));
-      store.dispatch(setGameLatestBid(data.latestBid));
-      store.dispatch(setGameBidSequence(data.bidSequence));
-      store.dispatch(setGameIsBidding(data.isBidding));
-      store.dispatch(setGameHands(data.hands));
-      store.dispatch(setGamePlayedCards(data.playedCards));
-    });
+    channelRef.current.bind(
+      "game-init-event",
+      (data: { gameId: string; gameData: GameData }) => {
+        store.dispatch(setGameId(data.gameId));
+        setGameData(data.gameData);
+      }
+    );
     channelRef.current.bind(
       "game-bid-event",
-      (data: { gameData: GameData; winningBid?: Bid }) => {
-        console.log(data);
-
-        store.dispatch(setGameCurrentPosition(data.gameData.currentPosition));
-        store.dispatch(setGameTrump(data.gameData.trump));
-        store.dispatch(setGameLevel(data.gameData.level));
-        store.dispatch(setGameBidSequence(data.gameData.bidSequence));
-        store.dispatch(setGameLatestBid(data.gameData.latestBid));
-        store.dispatch(setGameIsBidding(data.gameData.isBidding));
-        store.dispatch(setGameHands(data.gameData.hands));
-        store.dispatch(setGamePlayedCards(data.gameData.playedCards));
+      (data: { gameData: GameData }) => {
+        setGameData(data.gameData);
       }
     );
     channelRef.current.bind(
@@ -143,4 +129,25 @@ export const bindGameEvents = () => {
   } else {
     throw Error("Channel not found!");
   }
+};
+
+const setGameData = (gameData: GameData) => {
+  const {
+    currentPosition,
+    trump,
+    level,
+    latestBid,
+    bidSequence,
+    isBidding,
+    hands,
+    playedCards,
+  } = gameData;
+  store.dispatch(setGameCurrentPosition(currentPosition));
+  store.dispatch(setGameTrump(trump));
+  store.dispatch(setGameLevel(level));
+  store.dispatch(setGameLatestBid(latestBid));
+  store.dispatch(setGameBidSequence(bidSequence));
+  store.dispatch(setGameIsBidding(isBidding));
+  store.dispatch(setGameHands(hands));
+  store.dispatch(setGamePlayedCards(playedCards));
 };

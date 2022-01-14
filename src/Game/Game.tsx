@@ -44,7 +44,6 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = async (cardIndex: number) => {
-    console.log(playedCards.length);
     if (playedCards.length > 0) {
       const card = findCardFromHand(gameHands, gameCurrentPosition, cardIndex);
       return;
