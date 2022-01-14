@@ -21,7 +21,7 @@ export const ChoosePartnerPage = () => {
   const gameId = useAppSelector((state) => state.game.gameId);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const currentHand = useAppSelector((state) =>
-    state.game.hands.find((hand) => hand.userId === userId)
+    state.game.players.find((hand) => hand.id === userId)
   );
   const [selectedSuit, setSelectedTrump] = useState<Trump>("c");
   const [selectedPartner, setSelectedPartner] = useState<PartnerPayload>();

@@ -3,16 +3,21 @@ import { HOST } from "@env";
 
 import type {
   Bid,
-  GameHand,
-  Partner,
   PlayCardPayload,
+  Player,
+  PlayerData,
 } from "../store/features/game";
-import type { Card } from "../models";
+import type { CardSuit, CardValue } from "../models";
 
-export const initialiseGame = async (userId: string, roomId: string) =>
+export const initialiseGame = async (
+  userId: string,
+  roomId: string,
+  players: Player[]
+) =>
   await axios.post(HOST + "/games/init", {
     userId,
     roomId,
+    players,
   });
 
 export const triggerNextBidEvent = async (gameId: string, bid?: Bid) =>
@@ -21,65 +26,52 @@ export const triggerNextBidEvent = async (gameId: string, bid?: Bid) =>
     bid,
   });
 
-export const triggerNextTurnEvent = async (
-  gameId: string,
-  playCardPayload: PlayCardPayload,
-  currentPosition: number
-) =>
-  await axios.post(HOST + "/games/turn", {
-    gameId,
-    playCardPayload,
-    currentPosition,
-  });
-
 export const triggerSetPartnerEvent = async (
   gameId: string,
-  partner: Partner
+  partner: {
+    suit: CardSuit;
+    value: CardValue;
+  }
 ) =>
   await axios.post(HOST + "/games/partner", {
     gameId,
     partner,
   });
 
-export const getHandPositions = (userId: string, hands: GameHand[]) => {
+export const triggerNextTurnEvent = async (
+  gameId: string,
+  playCardPayload: PlayCardPayload
+) =>
+  await axios.post(HOST + "/games/turn", {
+    gameId,
+    playCardPayload,
+  });
+
+export const getHandPositions = (userId: string, players: PlayerData[]) => {
   let currentUserIdx = 0;
-  for (let i = 0; i < hands.length; i++) {
-    if (hands[i]?.userId === userId) {
+  for (let i = 0; i < players.length; i++) {
+    if (players[i]?.id === userId) {
       currentUserIdx = i;
       break;
     }
   }
   return {
-    userPosition: currentUserIdx % hands.length,
-    bottom: {
-      position: currentUserIdx % hands.length,
-      hand: hands[currentUserIdx++ % hands.length],
+    userPosition: currentUserIdx % players.length,
+    currentPlayerData: {
+      position: currentUserIdx % players.length,
+      playerData: players[currentUserIdx++ % players.length],
     },
     left: {
-      position: currentUserIdx % hands.length,
-      hand: hands[currentUserIdx++ % hands.length],
+      position: currentUserIdx % players.length,
+      playerData: players[currentUserIdx++ % players.length],
     },
     top: {
-      position: currentUserIdx % hands.length,
-      hand: hands[currentUserIdx++ % hands.length],
+      position: currentUserIdx % players.length,
+      playerData: players[currentUserIdx++ % players.length],
     },
     right: {
-      position: currentUserIdx % hands.length,
-      hand: hands[currentUserIdx++ % hands.length],
+      position: currentUserIdx % players.length,
+      playerData: players[currentUserIdx++ % players.length],
     },
   };
-};
-
-export const findCardFromHand = (
-  gameHands: GameHand[],
-  position: number,
-  cardIndex: number
-) => {
-  let card: Card | undefined;
-  gameHands.forEach((hand, handIdx) => {
-    if (handIdx === position) {
-      card = hand.hand.find((_, cardIdx) => cardIdx === cardIndex);
-    }
-  });
-  return card;
 };
