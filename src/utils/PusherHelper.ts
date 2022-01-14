@@ -10,9 +10,10 @@ import type {
   BidLevel,
   GameHand,
   GameStatus,
+  Partner,
   PlayCardPayload,
   TrumpSuit,
-} from "../store/features/game/gameSlice";
+} from "../store/features/game";
 import {
   setGameLatestBid,
   setGameId,
@@ -25,9 +26,10 @@ import {
   setGameCurrentPosition,
   setGameHands,
   setGameStatus,
-} from "../store/features/game/gameSlice";
+} from "../store/features/game";
 import { store } from "../store";
 import type { PlayedCard } from "../models";
+import { setGamePartner } from "../store/features/game/gameSlice";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
@@ -94,6 +96,7 @@ type GameData = {
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
+  partner: Partner;
   hands: GameHand[];
   playedCards: PlayedCard[];
 };
@@ -114,16 +117,9 @@ export const bindGameEvents = () => {
       }
     );
     channelRef.current.bind(
-      "game-bid-event",
+      "game-turn-event",
       (data: { gameData: GameData }) => {
         setGameData(data.gameData);
-      }
-    );
-    channelRef.current.bind(
-      "game-turn-event",
-      (data: { playCardPayload: PlayCardPayload; nextPosition: number }) => {
-        store.dispatch(setGameCurrentPosition(data.nextPosition));
-        store.dispatch(playCardFromHand(data.playCardPayload));
       }
     );
   } else {
@@ -139,6 +135,7 @@ const setGameData = (gameData: GameData) => {
     latestBid,
     bidSequence,
     isBidding,
+    partner,
     hands,
     playedCards,
   } = gameData;
@@ -148,6 +145,7 @@ const setGameData = (gameData: GameData) => {
   store.dispatch(setGameLatestBid(latestBid));
   store.dispatch(setGameBidSequence(bidSequence));
   store.dispatch(setGameIsBidding(isBidding));
+  store.dispatch(setGamePartner(partner));
   store.dispatch(setGameHands(hands));
   store.dispatch(setGamePlayedCards(playedCards));
 };

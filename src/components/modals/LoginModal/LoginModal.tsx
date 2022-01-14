@@ -9,17 +9,17 @@ import {
   bindSubscriptionSucceededEvent,
   initPusherClient,
   subscribeToChannel,
-} from "../utils/PusherHelper";
-import type { Member } from "../types";
-import { SPACING } from "../resources/dimens";
-import { initialiseGame } from "../utils/GameHelper";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+} from "../../../utils/PusherHelper";
+import type { Member } from "../../../types";
+import { SPACING } from "../../../resources/dimens";
+import { initialiseGame } from "../../../utils/GameHelper";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   addPlayer,
   removePlayer,
   resetPlayers,
   setGameUserId,
-} from "../store/features/room/roomSlice";
+} from "../../../store/features/room/roomSlice";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
 import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";

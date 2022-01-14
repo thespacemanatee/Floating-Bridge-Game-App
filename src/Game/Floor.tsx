@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { PlayingCard } from "../components/elements/PlayingCard";
 import { ThemedText } from "../components/elements/ThemedText";
 import type { PlayedCard } from "../models";
-import { deck } from "../models";
+import { DECK } from "../models";
 import { SPACING } from "../resources/dimens";
 import type { Member } from "../types";
 
@@ -26,7 +26,7 @@ export const Floor = ({ players, playedCards }: FloorProps) => {
               key={`${card.suit}${card.value}`}
               style={styles.cardContainer}
             >
-              <PlayingCard image={deck[`${card.suit}${card.value}`].imageUri} />
+              <PlayingCard image={DECK[`${card.suit}${card.value}`].imageUri} />
               <View
                 style={[
                   { backgroundColor: currPlayer?.info.color || "white" },

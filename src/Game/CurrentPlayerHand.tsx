@@ -6,8 +6,8 @@ import {
   CARD_OFFSET_Y,
   CARD_ROTATION,
 } from "../config/Constants";
-import { deck } from "../models";
-import type { GameHand } from "../store/features/game/gameSlice";
+import { DECK } from "../models";
+import type { GameHand } from "../store/features/game";
 
 type CurrentPlayerHandProps = {
   gameHand: GameHand;
@@ -33,7 +33,7 @@ export const CurrentPlayerHand = ({
           <AnimatedFaceCard
             index={index}
             key={`${card.suit}${card.value}`}
-            image={deck[`${card.suit}${card.value}`].imageUri}
+            image={DECK[`${card.suit}${card.value}`].imageUri}
             offsetX={translateX}
             offsetY={translateY}
             offsetRotate={rotate}

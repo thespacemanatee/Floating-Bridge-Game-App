@@ -1,7 +1,7 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { Card, PlayedCard } from "../../../models";
+import type { Card, CardSuit, CardValue, PlayedCard } from "../../../models";
 
 export type GameStatus = "started" | "stopped";
 
@@ -26,6 +26,12 @@ export type Bid = {
   level: BidLevel;
 };
 
+export type Partner = {
+  userId: string;
+  suit: CardSuit;
+  value: CardValue;
+};
+
 interface GameState {
   gameId: string | null;
   status: GameStatus;
@@ -36,6 +42,7 @@ interface GameState {
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
+  partner: Partner | null;
   hands: GameHand[];
   playedCards: PlayedCard[];
 }
@@ -50,6 +57,7 @@ const initialState: GameState = {
   latestBid: null,
   bidSequence: [],
   isBidding: false,
+  partner: null,
   hands: [],
   playedCards: [],
 };
@@ -84,6 +92,9 @@ const gameSlice = createSlice({
     },
     setGameIsBidding(state: GameState, action: PayloadAction<boolean>) {
       state.isBidding = action.payload;
+    },
+    setGamePartner(state: GameState, action: PayloadAction<Partner>) {
+      state.partner = action.payload;
     },
     setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
       state.hands = action.payload;
@@ -123,6 +134,7 @@ const gameSlice = createSlice({
       state.latestBid = null;
       state.bidSequence = [];
       state.isBidding = false;
+      state.partner = null;
       state.hands = [];
       state.playedCards = [];
     },
@@ -139,6 +151,7 @@ export const {
   setGameLatestBid,
   setGameBidSequence,
   setGameIsBidding,
+  setGamePartner,
   setGameHands,
   setGamePlayedCards,
   playCardFromHand,

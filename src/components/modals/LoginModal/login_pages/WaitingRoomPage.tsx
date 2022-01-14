@@ -2,14 +2,14 @@ import React, { useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { Member } from "../../types";
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { TextButton } from "../../components/molecules/TextButton";
-import { LobbyUserEntry } from "../../components/elements/LobbyUserEntry";
-import { ThemedText } from "../../components/elements/ThemedText";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { unsubscribeToChannel } from "../../utils/PusherHelper";
-import { resetRoom } from "../../store/features/room/roomSlice";
+import type { Member } from "../../../../types";
+import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
+import { TextButton } from "../../../molecules/TextButton";
+import { LobbyUserEntry } from "../../../elements/LobbyUserEntry";
+import { ThemedText } from "../../../elements/ThemedText";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { unsubscribeToChannel } from "../../../../utils/PusherHelper";
+import { resetRoom } from "../../../../store/features/room/roomSlice";
 
 type WaitingRoomPageProps = {
   players: Member[];

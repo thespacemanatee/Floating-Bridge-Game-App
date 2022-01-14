@@ -2,11 +2,8 @@ import React, { useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { PlayCardPayload } from "../store/features/game/gameSlice";
-import {
-  setGameUserPosition,
-  resetGame,
-} from "../store/features/game/gameSlice";
+import type { PlayCardPayload } from "../store/features/game";
+import { setGameUserPosition, resetGame } from "../store/features/game";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
   findCardFromHand,
@@ -16,11 +13,11 @@ import {
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
+import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
 import { OpponentHand } from "./OpponentHand";
-import { BiddingModal } from "./BiddingModal";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);

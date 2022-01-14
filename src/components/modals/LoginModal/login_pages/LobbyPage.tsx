@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { TextButton } from "../../components/molecules/TextButton";
-import { HeroImage } from "../../components/elements/HeroImage";
-import { ThemedText } from "../../components/elements/ThemedText";
-import { ThemedTextInput } from "../../components/elements/ThemedTextInput";
-import { useAppDispatch } from "../../store/hooks";
+import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
+import { TextButton } from "../../../molecules/TextButton";
+import { HeroImage } from "../../../elements/HeroImage";
+import { ThemedText } from "../../../elements/ThemedText";
+import { ThemedTextInput } from "../../../elements/ThemedTextInput";
+import { useAppDispatch } from "../../../../store/hooks";
 import {
   setGameRoomId,
   setGameUsername,
-} from "../../store/features/room/roomSlice";
+} from "../../../../store/features/room/roomSlice";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
