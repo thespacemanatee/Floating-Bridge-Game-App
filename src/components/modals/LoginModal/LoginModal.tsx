@@ -9,18 +9,17 @@ import {
   bindSubscriptionSucceededEvent,
   initPusherClient,
   subscribeToChannel,
-} from "../utils/PusherHelper";
-import type { Member } from "../types";
-import { SPACING } from "../resources/dimens";
-import { initialiseGame } from "../utils/GameHelper";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+} from "../../../utils/PusherHelper";
+import type { Member } from "../../../types";
+import { SPACING } from "../../../resources/dimens";
+import { initialiseGame } from "../../../utils/GameHelper";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   addPlayer,
   removePlayer,
   resetPlayers,
   setGameUserId,
-  setIsAdmin,
-} from "../store/features/room/roomSlice";
+} from "../../../store/features/room/roomSlice";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
 import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
@@ -53,12 +52,6 @@ export const LoginModal = () => {
     },
     [dispatch]
   );
-
-  useEffect(() => {
-    if (players[0]?.id === gameUserId) {
-      dispatch(setIsAdmin(true));
-    }
-  }, [dispatch, gameUserId, players]);
 
   useEffect(() => {
     if (!gameUserId) {
@@ -124,5 +117,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: SPACING.spacing12,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

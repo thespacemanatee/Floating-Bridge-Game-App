@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { LoginModal } from "./LoginModal/LoginModal";
+import { LoginModal } from "./components/modals/LoginModal/LoginModal";
 import { Game } from "./Game/Game";
 
 export const Main = () => {

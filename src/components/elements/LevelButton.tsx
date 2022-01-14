@@ -3,7 +3,7 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import type { BidLevel } from "../../store/features/game/gameSlice";
+import type { BidLevel } from "../../store/features/game";
 
 import { ThemedText } from "./ThemedText";
 
@@ -11,6 +11,7 @@ type LevelButtonProps = {
   level: BidLevel;
   selectedLevel?: BidLevel;
   onSelectLevel: (level: BidLevel) => void;
+  disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -18,6 +19,7 @@ export const LevelButton = ({
   level,
   selectedLevel,
   onSelectLevel,
+  disabled,
   style,
 }: LevelButtonProps) => {
   const selectLevel = () => {
@@ -27,11 +29,15 @@ export const LevelButton = ({
   return (
     <Pressable
       onPress={selectLevel}
+      disabled={disabled}
       style={({ pressed }) => [
         {
           backgroundColor:
             // eslint-disable-next-line no-nested-ternary
-            level === selectedLevel
+            disabled
+              ? "grey"
+              : // eslint-disable-next-line no-nested-ternary
+              level === selectedLevel
               ? "#21b9ff"
               : pressed
               ? "#47c5ff"
@@ -41,7 +47,10 @@ export const LevelButton = ({
         style,
       ]}
     >
-      <ThemedText style={styles.levelText}>{`${level}`}</ThemedText>
+      <ThemedText
+        selectable={false}
+        style={styles.levelText}
+      >{`${level}`}</ThemedText>
     </Pressable>
   );
 };

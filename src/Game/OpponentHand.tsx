@@ -6,7 +6,7 @@ import {
   CARD_OFFSET_Y,
   CARD_ROTATION,
 } from "../config/Constants";
-import type { GameHand } from "../store/features/game/gameSlice";
+import type { GameHand } from "../store/features/game";
 
 type OpponentHandProps = {
   gameHand: GameHand;

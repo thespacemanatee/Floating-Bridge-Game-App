@@ -4,8 +4,9 @@ import { HOST } from "@env";
 import type {
   Bid,
   GameHand,
+  Partner,
   PlayCardPayload,
-} from "../store/features/game/gameSlice";
+} from "../store/features/game";
 import type { Card } from "../models";
 
 export const initialiseGame = async (userId: string, roomId: string) =>
@@ -21,14 +22,23 @@ export const triggerNextBidEvent = async (gameId: string, bid?: Bid) =>
   });
 
 export const triggerNextTurnEvent = async (
-  roomId: string,
+  gameId: string,
   playCardPayload: PlayCardPayload,
   currentPosition: number
 ) =>
   await axios.post(HOST + "/games/turn", {
-    roomId,
+    gameId,
     playCardPayload,
     currentPosition,
+  });
+
+export const triggerSetPartnerEvent = async (
+  gameId: string,
+  partner: Partner
+) =>
+  await axios.post(HOST + "/games/partner", {
+    gameId,
+    partner,
   });
 
 export const getHandPositions = (userId: string, hands: GameHand[]) => {

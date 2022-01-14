@@ -8,18 +8,23 @@ export const FACE_CARD_ASPECT_RATIO = 1.4;
 
 export interface PlayingCardProps {
   image: ImageSourcePropType;
+  scaleSize?: number;
   style?: StyleProp<ViewStyle>;
 }
 
-export const PlayingCard = ({ image, style }: PlayingCardProps) => {
+export const PlayingCard = ({
+  image,
+  scaleSize = 1,
+  style,
+}: PlayingCardProps) => {
   const { width: wWidth } = useWindowDimensions();
   const { cardWidth, cardHeight } = useMemo(() => {
-    const cWidth = wWidth * 0.1;
+    const cWidth = wWidth * 0.1 * scaleSize;
     return {
       cardWidth: cWidth,
       cardHeight: cWidth * FACE_CARD_ASPECT_RATIO,
     };
-  }, [wWidth]);
+  }, [wWidth, scaleSize]);
   return (
     <View style={[styles.container, style]}>
       <Image
