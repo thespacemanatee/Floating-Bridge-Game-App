@@ -1,13 +1,13 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { Member } from "../../../types";
+import type { Player } from "../game";
 
 interface RoomState {
   userId: string;
   username: string;
   roomId: string;
-  players: Member[];
+  players: Player[];
 }
 
 const initialState: RoomState = {
@@ -30,10 +30,10 @@ const roomSlice = createSlice({
     setGameRoomId(state: RoomState, action: PayloadAction<string>) {
       state.roomId = action.payload;
     },
-    addPlayer(state: RoomState, action: PayloadAction<Member>) {
+    addPlayer(state: RoomState, action: PayloadAction<Player>) {
       state.players.push(action.payload);
     },
-    removePlayer(state: RoomState, action: PayloadAction<Member>) {
+    removePlayer(state: RoomState, action: PayloadAction<Player>) {
       state.players = state.players.filter(
         (player) => player.id !== action.payload.id
       );

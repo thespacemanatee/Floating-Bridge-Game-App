@@ -5,15 +5,12 @@ import { Ionicons } from "@expo/vector-icons";
 import type { PlayCardPayload } from "../store/features/game";
 import { setGameUserPosition, resetGame } from "../store/features/game";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {
-  findCardFromHand,
-  getHandPositions,
-  triggerNextTurnEvent,
-} from "../utils/GameHelper";
+import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
 import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
+import type { Card } from "../models";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
@@ -22,16 +19,18 @@ import { OpponentHand } from "./OpponentHand";
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
-  const players = useAppSelector((state) => state.room.players);
+  const gameId = useAppSelector((state) => state.game.gameId);
+  const players = useAppSelector((state) => state.game.players);
   const gameUserPosition = useAppSelector((state) => state.game.userPosition);
   const gameCurrentPosition = useAppSelector(
     (state) => state.game.currentPosition
   );
-  const gameHands = useAppSelector((state) => state.game.hands);
+  const latestBid = useAppSelector((state) => state.game.latestBid);
+  const isTrumpBroken = useAppSelector((state) => state.game.isTrumpBroken);
   const playedCards = useAppSelector((state) => state.game.playedCards);
-  const { userPosition, top, left, right, bottom } = useMemo(
-    () => getHandPositions(userId, gameHands),
-    [gameHands, userId]
+  const { userPosition, top, left, right, currentPlayerData } = useMemo(
+    () => getHandPositions(userId, players),
+    [players, userId]
   );
 
   const dispatch = useAppDispatch();
@@ -40,19 +39,36 @@ export const Game = () => {
     dispatch(setGameUserPosition(userPosition));
   }, [dispatch, userPosition]);
 
-  const playCard = async (cardIndex: number) => {
-    if (playedCards.length > 0) {
-      const card = findCardFromHand(gameHands, gameCurrentPosition, cardIndex);
+  const playCard = async (card: Card, callback: () => void) => {
+    if (
+      !isTrumpBroken &&
+      playedCards.length === 0 &&
+      card.suit === latestBid?.trump
+    ) {
+      callback();
+      alert("You cannot start with the trump card!");
+      return;
+    }
+
+    if (
+      currentPlayerData.playerData?.hand.some(
+        (c) => c.suit === playedCards[0]?.suit
+      ) &&
+      card.suit !== playedCards[0]?.suit
+    ) {
+      callback();
+      alert(`You must finish throwing ${playedCards[0]?.suit.toUpperCase()}!`);
       return;
     }
 
     const payload: PlayCardPayload = {
       userId,
-      position: gameCurrentPosition,
-      cardIndex,
+      card,
     };
     try {
-      await triggerNextTurnEvent(roomId, payload, gameCurrentPosition);
+      if (gameId) {
+        await triggerNextTurnEvent(gameId, payload);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -70,18 +86,18 @@ export const Game = () => {
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
       <View style={styles.left}>
-        {left.hand && <OpponentHand gameHand={left.hand} />}
+        {left.playerData && <OpponentHand playerData={left.playerData} />}
       </View>
       <View style={styles.middle}>
         <View style={styles.top}>
-          {top.hand && <OpponentHand gameHand={top.hand} />}
+          {top.playerData && <OpponentHand playerData={top.playerData} />}
         </View>
-        <Floor players={players} playedCards={playedCards} />
+        <Floor playedCards={playedCards} />
         <BiddingModal />
         <View style={styles.bottom}>
-          {bottom.hand && (
+          {currentPlayerData.playerData && (
             <CurrentPlayerHand
-              gameHand={bottom.hand}
+              playerData={currentPlayerData.playerData}
               isActive={gameUserPosition === gameCurrentPosition}
               onPlayCard={playCard}
             />
@@ -89,7 +105,7 @@ export const Game = () => {
         </View>
       </View>
       <View style={styles.right}>
-        {right.hand && <OpponentHand gameHand={right.hand} />}
+        {right.playerData && <OpponentHand playerData={right.playerData} />}
       </View>
     </View>
   );

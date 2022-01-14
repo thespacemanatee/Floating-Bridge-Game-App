@@ -4,13 +4,12 @@ import { nanoid } from "nanoid/non-secure";
 
 import {
   bindGameEvents,
-  bindMemberAddedEvent,
-  bindMemberRemovedEvent,
+  bindPlayerAddedEvent,
+  bindPlayerRemovedEvent,
   bindSubscriptionSucceededEvent,
   initPusherClient,
   subscribeToChannel,
 } from "../../../utils/PusherHelper";
-import type { Member } from "../../../types";
 import { SPACING } from "../../../resources/dimens";
 import { initialiseGame } from "../../../utils/GameHelper";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -20,6 +19,7 @@ import {
   resetPlayers,
   setGameUserId,
 } from "../../../store/features/room/roomSlice";
+import type { Player } from "../../../store/features/game";
 
 import { LobbyPage } from "./login_pages/LobbyPage";
 import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
@@ -39,14 +39,14 @@ export const LoginModal = () => {
       initPusherClient(userId, username);
       subscribeToChannel(roomId);
       dispatch(resetPlayers());
-      bindSubscriptionSucceededEvent((member: Member) => {
-        dispatch(addPlayer(member));
+      bindSubscriptionSucceededEvent((player: Player) => {
+        dispatch(addPlayer(player));
       });
-      bindMemberAddedEvent((member: Member) => {
-        dispatch(addPlayer(member));
+      bindPlayerAddedEvent((player: Player) => {
+        dispatch(addPlayer(player));
       });
-      bindMemberRemovedEvent((member: Member) => {
-        dispatch(removePlayer(member));
+      bindPlayerRemovedEvent((player: Player) => {
+        dispatch(removePlayer(player));
       });
       bindGameEvents();
     },
@@ -80,7 +80,7 @@ export const LoginModal = () => {
 
   const startGame = async () => {
     if (gameRoomId) {
-      await initialiseGame(gameUserId, gameRoomId);
+      await initialiseGame(gameUserId, gameRoomId, players);
     }
   };
 

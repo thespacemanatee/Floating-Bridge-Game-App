@@ -5,15 +5,22 @@ import type { Card, PlayedCard } from "../../../models";
 
 export type GameStatus = "started" | "stopped";
 
-export type GameHand = {
-  userId: string;
+export interface Player {
+  id: string;
+  info: {
+    username: string;
+    color: string;
+  };
+}
+
+export interface PlayerData extends Player {
   hand: Card[];
-};
+  sets: PlayedCard[];
+}
 
 export type PlayCardPayload = {
   userId: string;
-  position: number;
-  cardIndex: number;
+  card: Card;
 };
 
 export type Trump = "c" | "d" | "h" | "s" | "n";
@@ -29,26 +36,28 @@ export type Bid = {
 interface GameState {
   gameId: string | null;
   status: GameStatus;
+  players: PlayerData[];
   userPosition: number;
   currentPosition: number;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
   isPartnerChosen: boolean;
-  hands: GameHand[];
+  isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 }
 
 const initialState: GameState = {
   gameId: null,
   status: "stopped",
+  players: [],
   userPosition: 0,
   currentPosition: 0,
   latestBid: null,
   bidSequence: [],
   isBidding: false,
   isPartnerChosen: false,
-  hands: [],
+  isTrumpBroken: false,
   playedCards: [],
 };
 
@@ -61,6 +70,9 @@ const gameSlice = createSlice({
     },
     setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
       state.status = action.payload;
+    },
+    setGamePlayerData(state: GameState, action: PayloadAction<PlayerData[]>) {
+      state.players = action.payload;
     },
     setGameUserPosition(state: GameState, action: PayloadAction<number>) {
       state.userPosition = action.payload;
@@ -80,33 +92,11 @@ const gameSlice = createSlice({
     setGameIsPartnerChosen(state: GameState, action: PayloadAction<boolean>) {
       state.isPartnerChosen = action.payload;
     },
-    setGameHands(state: GameState, action: PayloadAction<GameHand[]>) {
-      state.hands = action.payload;
+    setGameIsTrumpBroken(state: GameState, action: PayloadAction<boolean>) {
+      state.isTrumpBroken = action.payload;
     },
     setGamePlayedCards(state: GameState, action: PayloadAction<PlayedCard[]>) {
       state.playedCards = action.payload;
-    },
-    playCardFromHand(state: GameState, action: PayloadAction<PlayCardPayload>) {
-      const { userId, position, cardIndex } = action.payload;
-      state.hands = state.hands.map((hand, handIdx) => {
-        if (handIdx === position) {
-          const newHand: GameHand = {
-            userId: hand.userId,
-            hand: hand.hand.filter((card, cardIdx) => {
-              if (cardIdx === cardIndex) {
-                const playedCard: PlayedCard = {
-                  ...card,
-                  playedBy: userId,
-                };
-                state.playedCards = [...state.playedCards, playedCard];
-              }
-              return cardIdx !== cardIndex;
-            }),
-          };
-          return newHand;
-        }
-        return hand;
-      });
     },
     resetGame(state: GameState) {
       state.gameId = null;
@@ -117,7 +107,8 @@ const gameSlice = createSlice({
       state.bidSequence = [];
       state.isBidding = false;
       state.isPartnerChosen = false;
-      state.hands = [];
+      state.isTrumpBroken = false;
+      state.players = [];
       state.playedCards = [];
     },
   },
@@ -126,15 +117,15 @@ const gameSlice = createSlice({
 export const {
   setGameId,
   setGameStatus,
+  setGamePlayerData,
   setGameUserPosition,
   setGameCurrentPosition,
   setGameLatestBid,
   setGameBidSequence,
   setGameIsBidding,
   setGameIsPartnerChosen,
-  setGameHands,
+  setGameIsTrumpBroken,
   setGamePlayedCards,
-  playCardFromHand,
   resetGame,
 } = gameSlice.actions;
 

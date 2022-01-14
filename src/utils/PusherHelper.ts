@@ -4,9 +4,14 @@ import type { Channel } from "pusher-js";
 import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 
-import type { Member } from "../types";
-import type { Bid, GameHand, GameStatus } from "../store/features/game";
+import type {
+  Bid,
+  GameStatus,
+  Player,
+  PlayerData,
+} from "../store/features/game";
 import {
+  setGameIsTrumpBroken,
   setGameIsPartnerChosen,
   setGameLatestBid,
   setGameId,
@@ -14,7 +19,7 @@ import {
   setGameIsBidding,
   setGameBidSequence,
   setGameCurrentPosition,
-  setGameHands,
+  setGamePlayerData,
   setGameStatus,
 } from "../store/features/game";
 import { store } from "../store";
@@ -50,10 +55,12 @@ export const unsubscribeToChannel = (gameId: string) => {
 };
 
 export const bindSubscriptionSucceededEvent = (
-  callback: (member: Member) => void
+  callback: (player: Player) => void
 ) => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:subscription_succeeded", () => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       channelRef.current?.members.each(callback);
     });
   } else {
@@ -61,7 +68,7 @@ export const bindSubscriptionSucceededEvent = (
   }
 };
 
-export const bindMemberAddedEvent = (callback: (member: Member) => void) => {
+export const bindPlayerAddedEvent = (callback: (player: Player) => void) => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:member_added", callback);
   } else {
@@ -69,7 +76,7 @@ export const bindMemberAddedEvent = (callback: (member: Member) => void) => {
   }
 };
 
-export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
+export const bindPlayerRemovedEvent = (callback: (player: Player) => void) => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:member_removed", callback);
   } else {
@@ -79,12 +86,13 @@ export const bindMemberRemovedEvent = (callback: (member: Member) => void) => {
 
 type GameData = {
   roomId: string;
+  players: PlayerData[];
   currentPosition: number;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
   isPartnerChosen: boolean;
-  hands: GameHand[];
+  isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 };
 
@@ -117,18 +125,20 @@ export const bindGameEvents = () => {
 const setGameData = (gameData: GameData) => {
   const {
     currentPosition,
+    players,
     latestBid,
     bidSequence,
     isBidding,
     isPartnerChosen,
-    hands,
+    isTrumpBroken,
     playedCards,
   } = gameData;
+  store.dispatch(setGamePlayerData(players));
   store.dispatch(setGameCurrentPosition(currentPosition));
   store.dispatch(setGameLatestBid(latestBid));
   store.dispatch(setGameBidSequence(bidSequence));
   store.dispatch(setGameIsBidding(isBidding));
   store.dispatch(setGameIsPartnerChosen(isPartnerChosen));
-  store.dispatch(setGameHands(hands));
+  store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
   store.dispatch(setGamePlayedCards(playedCards));
 };

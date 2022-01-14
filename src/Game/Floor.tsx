@@ -6,20 +6,22 @@ import { ThemedText } from "../components/elements/ThemedText";
 import type { PlayedCard } from "../models";
 import { DECK } from "../models";
 import { SPACING } from "../resources/dimens";
-import type { Member } from "../types";
+import { useAppSelector } from "../store/hooks";
 
 type FloorProps = {
-  players: Member[];
   playedCards: PlayedCard[];
 };
 
-export const Floor = ({ players, playedCards }: FloorProps) => {
+export const Floor = ({ playedCards }: FloorProps) => {
+  const players = useAppSelector((state) => state.game.players);
+
   return (
     <View style={styles.container}>
       {playedCards.map((card) => {
         const currPlayer = players.find(
           (player) => player.id === card.playedBy
         );
+
         return (
           currPlayer && (
             <View
@@ -29,12 +31,12 @@ export const Floor = ({ players, playedCards }: FloorProps) => {
               <PlayingCard image={DECK[`${card.suit}${card.value}`].imageUri} />
               <View
                 style={[
-                  { backgroundColor: currPlayer?.info.color || "white" },
+                  { backgroundColor: currPlayer.info.color || "white" },
                   styles.nameContainer,
                 ]}
               >
                 <ThemedText style={styles.nameText}>
-                  {currPlayer?.info.username}
+                  {currPlayer.info.username}
                 </ThemedText>
               </View>
             </View>
