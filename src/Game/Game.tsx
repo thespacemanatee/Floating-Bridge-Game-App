@@ -36,7 +36,9 @@ export const Game = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setGameUserPosition(userPosition));
+    if (userPosition) {
+      dispatch(setGameUserPosition(userPosition));
+    }
   }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
@@ -51,7 +53,7 @@ export const Game = () => {
     }
 
     if (
-      currentPlayerData.playerData?.hand.some(
+      currentPlayerData?.playerData?.hand.some(
         (c) => c.suit === playedCards[0]?.suit
       ) &&
       card.suit !== playedCards[0]?.suit
@@ -86,16 +88,16 @@ export const Game = () => {
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
       <View style={styles.left}>
-        {left.playerData && <OpponentHand playerData={left.playerData} />}
+        {left?.playerData && <OpponentHand playerData={left.playerData} />}
       </View>
       <View style={styles.middle}>
         <View style={styles.top}>
-          {top.playerData && <OpponentHand playerData={top.playerData} />}
+          {top?.playerData && <OpponentHand playerData={top.playerData} />}
         </View>
         <Floor playedCards={playedCards} />
         <BiddingModal />
         <View style={styles.bottom}>
-          {currentPlayerData.playerData && (
+          {currentPlayerData?.playerData && (
             <CurrentPlayerHand
               playerData={currentPlayerData.playerData}
               isActive={gameUserPosition === gameCurrentPosition}
@@ -105,7 +107,7 @@ export const Game = () => {
         </View>
       </View>
       <View style={styles.right}>
-        {right.playerData && <OpponentHand playerData={right.playerData} />}
+        {right?.playerData && <OpponentHand playerData={right.playerData} />}
       </View>
     </View>
   );
