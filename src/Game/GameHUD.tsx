@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
@@ -16,6 +16,10 @@ export const GameHUD = ({ style }: GameHUDProps) => {
   const players = useAppSelector((state) => state.game.players);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const partner = useAppSelector((state) => state.game.partner);
+  const bidder = useMemo(
+    () => players.find((player) => player.id === latestBid?.userId),
+    [latestBid?.userId, players]
+  );
 
   return (
     <View style={[styles.container, style]}>
@@ -57,16 +61,10 @@ export const GameHUD = ({ style }: GameHUDProps) => {
       </View>
       <View style={styles.entryContainer}>
         <ThemedText style={styles.labelText}>Bidder:</ThemedText>
-        {partner ? (
+        {bidder ? (
           <ThemedText
-            style={[
-              { color: getColorFromUnicodeCharacter(partner.suit) },
-              styles.labelText,
-            ]}
-          >{`${
-            players.find((player) => player.id === latestBid?.userId)?.info
-              .username
-          }`}</ThemedText>
+            style={[{ color: bidder.info.color }, styles.labelText]}
+          >{`${bidder.info.username}`}</ThemedText>
         ) : (
           <ThemedText style={styles.labelText}>N/A</ThemedText>
         )}
