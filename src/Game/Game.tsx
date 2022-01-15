@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import type { PlayCardPayload } from "../store/features/game";
@@ -11,10 +16,14 @@ import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
 import type { Card } from "../models";
+import { ThemedText } from "../components/elements";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
 import { OpponentHand } from "./OpponentHand";
+import { WonSets } from "./WonSets";
+
+import { OpponentGroup } from ".";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
@@ -84,31 +93,38 @@ export const Game = () => {
 
   return (
     <View style={styles.container}>
+      <BiddingModal />
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
-      <View style={styles.left}>
-        {left?.playerData && <OpponentHand playerData={left.playerData} />}
-      </View>
+      {top?.playerData && (
+        <View style={styles.topContainer}>
+          <View style={styles.topHand}>
+            <WonSets sets={top.playerData.sets} />
+            <OpponentHand hand={top.playerData.hand} />
+          </View>
+          <View style={styles.topPlayer}>
+            <ThemedText>{top.playerData.info.username}</ThemedText>
+          </View>
+        </View>
+      )}
       <View style={styles.middle}>
-        <View style={styles.top}>
-          {top?.playerData && <OpponentHand playerData={top.playerData} />}
-        </View>
-        <Floor playedCards={playedCards} />
-        <BiddingModal />
+        {left?.playerData && <OpponentGroup playerData={left.playerData} />}
+        <Floor playedCards={playedCards} style={StyleSheet.absoluteFill} />
+        {right?.playerData && (
+          <OpponentGroup playerData={right.playerData} mirrored />
+        )}
+      </View>
+      {currentPlayerData?.playerData && (
         <View style={styles.bottom}>
-          {currentPlayerData?.playerData && (
-            <CurrentPlayerHand
-              playerData={currentPlayerData.playerData}
-              isActive={gameUserPosition === gameCurrentPosition}
-              onPlayCard={playCard}
-            />
-          )}
+          <WonSets sets={currentPlayerData.playerData.sets} current />
+          <CurrentPlayerHand
+            hand={currentPlayerData.playerData.hand}
+            isActive={gameUserPosition === gameCurrentPosition}
+            onPlayCard={playCard}
+          />
         </View>
-      </View>
-      <View style={styles.right}>
-        {right?.playerData && <OpponentHand playerData={right.playerData} />}
-      </View>
+      )}
     </View>
   );
 };
@@ -116,7 +132,6 @@ export const Game = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
     backgroundColor: "green",
     overflow: "hidden",
   },
@@ -139,28 +154,25 @@ const styles = StyleSheet.create({
     shadowRadius: 16.0,
     elevation: 24,
   },
-  left: {
-    flex: 0.1,
-    alignItems: "center",
-    justifyContent: "center",
-    transform: [{ rotate: "270deg" }],
-  },
-  top: {
+  topContainer: {
     flex: 1,
     alignItems: "center",
   },
+  topHand: {
+    flex: 1,
+    alignItems: "center",
+  },
+  topPlayer: {
+    // flex: 1,
+  },
   middle: {
-    flex: 0.8,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   bottom: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-  },
-  right: {
-    flex: 0.1,
-    alignItems: "center",
-    justifyContent: "center",
-    transform: [{ rotate: "90deg" }],
   },
 });

@@ -15,7 +15,7 @@ export interface Player {
 
 export interface PlayerData extends Player {
   hand: Card[];
-  sets: PlayedCard[];
+  sets: PlayedCard[][];
 }
 
 export type PlayCardPayload = {

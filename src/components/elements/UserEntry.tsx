@@ -7,14 +7,11 @@ import type { Player } from "../../store/features/game";
 import { ThemedText } from "./ThemedText";
 
 type LobbyUserEntryProps = {
-  currentUsername: string;
+  currentUsername?: string;
   player: Player;
 };
 
-export const LobbyUserEntry = ({
-  currentUsername,
-  player,
-}: LobbyUserEntryProps) => {
+export const UserEntry = ({ currentUsername, player }: LobbyUserEntryProps) => {
   const { username, color } = player.info;
   return (
     <View style={styles.userContainer}>

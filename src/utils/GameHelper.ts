@@ -51,13 +51,8 @@ export const getHandPositions = (userId: string, players: PlayerData[]) => {
   if (!players) {
     return {};
   }
-  let currentUserIdx = 0;
-  for (let i = 0; i < players.length; i++) {
-    if (players[i]?.id === userId) {
-      currentUserIdx = i;
-      break;
-    }
-  }
+  let currentUserIdx = players.findIndex((player) => player.id === userId);
+
   return {
     userPosition: currentUserIdx % players.length,
     currentPlayerData: {
