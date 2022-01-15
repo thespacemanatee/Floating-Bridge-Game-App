@@ -7,12 +7,14 @@ import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 import type {
   Bid,
   GameStatus,
+  Partner,
   Player,
   PlayerData,
 } from "../store/features/game";
 import {
+  setGamePartner,
+  setGameRoundNo,
   setGameIsTrumpBroken,
-  setGameIsPartnerChosen,
   setGameLatestBid,
   setGameId,
   setGamePlayedCards,
@@ -87,11 +89,12 @@ export const bindPlayerRemovedEvent = (callback: (player: Player) => void) => {
 type GameData = {
   roomId: string;
   players: PlayerData[];
+  roundNo: number;
   currentPosition: number;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
-  isPartnerChosen: boolean;
+  partner: Partner;
   isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 };
@@ -124,21 +127,23 @@ export const bindGameEvents = () => {
 
 const setGameData = (gameData: GameData) => {
   const {
-    currentPosition,
     players,
+    roundNo,
+    currentPosition,
     latestBid,
     bidSequence,
     isBidding,
-    isPartnerChosen,
+    partner,
     isTrumpBroken,
     playedCards,
   } = gameData;
   store.dispatch(setGamePlayerData(players));
+  store.dispatch(setGameRoundNo(roundNo));
   store.dispatch(setGameCurrentPosition(currentPosition));
   store.dispatch(setGameLatestBid(latestBid));
   store.dispatch(setGameBidSequence(bidSequence));
   store.dispatch(setGameIsBidding(isBidding));
-  store.dispatch(setGameIsPartnerChosen(isPartnerChosen));
+  store.dispatch(setGamePartner(partner));
   store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
   store.dispatch(setGamePlayedCards(playedCards));
 };

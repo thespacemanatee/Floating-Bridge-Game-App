@@ -24,7 +24,11 @@ export const HorizontalOpponentGroup = ({
 
   return (
     <View style={[styles.container, style]}>
-      <GameUserEntry playerData={playerData} active={active} />
+      <GameUserEntry
+        playerData={playerData}
+        active={active}
+        style={styles.player}
+      />
       <View
         style={[
           {
@@ -51,5 +55,8 @@ const styles = StyleSheet.create({
   hand: {
     flex: 1,
     alignItems: "center",
+  },
+  player: {
+    zIndex: 10,
   },
 });

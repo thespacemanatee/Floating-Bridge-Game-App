@@ -31,13 +31,9 @@ export const GameUserEntry = ({
   const progress = useSharedValue(0);
 
   useEffect(() => {
-    if (active) {
-      progress.value = withRepeat(
-        withTiming(1, { duration: BOB_DURATION }),
-        -1,
-        true
-      );
-    }
+    progress.value = active
+      ? withRepeat(withTiming(1, { duration: BOB_DURATION }), -1, true)
+      : 0;
   }, [active, progress]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -54,7 +50,7 @@ export const GameUserEntry = ({
     borderColor: interpolateColor(
       progress.value,
       [0, 1],
-      ["#ff4242", "#ffffff"]
+      ["#ff4242", "#ff80cc"]
     ),
   }));
 

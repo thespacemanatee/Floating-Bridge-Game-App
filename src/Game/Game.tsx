@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import type { PlayCardPayload } from "../store/features/game";
-import { resetGame } from "../store/features/game";
+import { setGameUserPosition, resetGame } from "../store/features/game";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
@@ -11,11 +11,13 @@ import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
 import type { Card } from "../models";
+import { GameOverModal } from "../components/modals/GameOverModal/GameOverModal";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
 import { WonSets } from "./WonSets";
 import { TopOpponentGroup } from "./TopOpponentGroup";
+import { GameHUD } from "./GameHUD";
 
 import { HorizontalOpponentGroup } from ".";
 
@@ -36,6 +38,12 @@ export const Game = () => {
   );
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (userPosition) {
+      dispatch(setGameUserPosition(userPosition));
+    }
+  }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
     if (
@@ -81,9 +89,11 @@ export const Game = () => {
   return (
     <View style={styles.container}>
       <BiddingModal />
+      <GameOverModal />
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
+      {gameId && <GameHUD style={styles.gameHud} />}
       {top?.playerData && (
         <TopOpponentGroup
           playerData={top.playerData}
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    margin: SPACING.spacing16,
+    margin: SPACING.spacing32,
     zIndex: 1,
     shadowColor: "#000",
     shadowOffset: {
@@ -146,6 +156,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
     elevation: 24,
+  },
+  gameHud: {
+    position: "absolute",
+    right: 0,
+    margin: SPACING.spacing32,
   },
   middle: {
     flex: 1,
