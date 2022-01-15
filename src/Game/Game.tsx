@@ -1,14 +1,9 @@
-import React, { useEffect, useMemo } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import React, { useMemo } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import type { PlayCardPayload } from "../store/features/game";
-import { setGameUserPosition, resetGame } from "../store/features/game";
+import { resetGame } from "../store/features/game";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
@@ -16,24 +11,22 @@ import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
 import type { Card } from "../models";
-import { ThemedText } from "../components/elements";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
-import { OpponentHand } from "./OpponentHand";
 import { WonSets } from "./WonSets";
+import { TopOpponentGroup } from "./TopOpponentGroup";
 
-import { OpponentGroup } from ".";
+import { HorizontalOpponentGroup } from ".";
+
+const HORIZONTAL_OFFSET = 40;
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
   const gameId = useAppSelector((state) => state.game.gameId);
   const players = useAppSelector((state) => state.game.players);
-  const gameUserPosition = useAppSelector((state) => state.game.userPosition);
-  const gameCurrentPosition = useAppSelector(
-    (state) => state.game.currentPosition
-  );
+  const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const isTrumpBroken = useAppSelector((state) => state.game.isTrumpBroken);
   const playedCards = useAppSelector((state) => state.game.playedCards);
@@ -43,12 +36,6 @@ export const Game = () => {
   );
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (userPosition) {
-      dispatch(setGameUserPosition(userPosition));
-    }
-  }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
     if (
@@ -98,21 +85,27 @@ export const Game = () => {
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
       {top?.playerData && (
-        <View style={styles.topContainer}>
-          <View style={styles.topHand}>
-            <WonSets sets={top.playerData.sets} />
-            <OpponentHand hand={top.playerData.hand} />
-          </View>
-          <View style={styles.topPlayer}>
-            <ThemedText>{top.playerData.info.username}</ThemedText>
-          </View>
-        </View>
+        <TopOpponentGroup
+          playerData={top.playerData}
+          active={currentPosition === top.position}
+        />
       )}
       <View style={styles.middle}>
-        {left?.playerData && <OpponentGroup playerData={left.playerData} />}
+        {left?.playerData && (
+          <HorizontalOpponentGroup
+            active={currentPosition === left.position}
+            playerData={left.playerData}
+            style={styles.leftGroup}
+          />
+        )}
         <Floor playedCards={playedCards} style={StyleSheet.absoluteFill} />
         {right?.playerData && (
-          <OpponentGroup playerData={right.playerData} mirrored />
+          <HorizontalOpponentGroup
+            playerData={right.playerData}
+            active={currentPosition === right.position}
+            mirrored
+            style={styles.rightGroup}
+          />
         )}
       </View>
       {currentPlayerData?.playerData && (
@@ -120,7 +113,7 @@ export const Game = () => {
           <WonSets sets={currentPlayerData.playerData.sets} current />
           <CurrentPlayerHand
             hand={currentPlayerData.playerData.hand}
-            isActive={gameUserPosition === gameCurrentPosition}
+            isActive={userPosition === currentPosition}
             onPlayCard={playCard}
           />
         </View>
@@ -154,17 +147,6 @@ const styles = StyleSheet.create({
     shadowRadius: 16.0,
     elevation: 24,
   },
-  topContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
-  topHand: {
-    flex: 1,
-    alignItems: "center",
-  },
-  topPlayer: {
-    // flex: 1,
-  },
   middle: {
     flex: 1,
     flexDirection: "row",
@@ -174,5 +156,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
+  },
+  leftGroup: {
+    transform: [
+      {
+        translateX: -HORIZONTAL_OFFSET,
+      },
+    ],
+  },
+  rightGroup: {
+    transform: [
+      {
+        translateX: HORIZONTAL_OFFSET,
+      },
+    ],
   },
 });

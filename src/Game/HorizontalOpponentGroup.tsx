@@ -1,4 +1,5 @@
 import React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import type { PlayerData } from "../store/features/game";
@@ -6,16 +7,24 @@ import { GameUserEntry } from "../components/molecules/GameUserEntry";
 
 import { OpponentHand, WonSets } from ".";
 
-type OpponentGroup = {
+type HorizontalOpponentGroup = {
   playerData: PlayerData;
+  active: boolean;
   mirrored?: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
-export const OpponentGroup = ({ playerData, mirrored }: OpponentGroup) => {
+export const HorizontalOpponentGroup = ({
+  playerData,
+  active,
+  mirrored,
+  style,
+}: HorizontalOpponentGroup) => {
   const { width, height } = useWindowDimensions();
+
   return (
-    <View style={styles.container}>
-      <GameUserEntry playerData={playerData} />
+    <View style={[styles.container, style]}>
+      <GameUserEntry playerData={playerData} active={active} />
       <View
         style={[
           {
