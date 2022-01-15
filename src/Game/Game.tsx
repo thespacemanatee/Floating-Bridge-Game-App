@@ -11,20 +11,24 @@ import { unsubscribeToChannel } from "../utils/PusherHelper";
 import { SPACING } from "../resources/dimens";
 import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
 import type { Card } from "../models";
+import { GameOverModal } from "../components/modals/GameOverModal/GameOverModal";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
-import { OpponentHand } from "./OpponentHand";
+import { WonSets } from "./WonSets";
+import { TopOpponentGroup } from "./TopOpponentGroup";
+import { GameHUD } from "./GameHUD";
+
+import { HorizontalOpponentGroup } from ".";
+
+const HORIZONTAL_OFFSET = 40;
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
   const gameId = useAppSelector((state) => state.game.gameId);
   const players = useAppSelector((state) => state.game.players);
-  const gameUserPosition = useAppSelector((state) => state.game.userPosition);
-  const gameCurrentPosition = useAppSelector(
-    (state) => state.game.currentPosition
-  );
+  const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const isTrumpBroken = useAppSelector((state) => state.game.isTrumpBroken);
   const playedCards = useAppSelector((state) => state.game.playedCards);
@@ -36,7 +40,9 @@ export const Game = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setGameUserPosition(userPosition));
+    if (userPosition) {
+      dispatch(setGameUserPosition(userPosition));
+    }
   }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
@@ -51,7 +57,7 @@ export const Game = () => {
     }
 
     if (
-      currentPlayerData.playerData?.hand.some(
+      currentPlayerData?.playerData?.hand.some(
         (c) => c.suit === playedCards[0]?.suit
       ) &&
       card.suit !== playedCards[0]?.suit
@@ -82,31 +88,46 @@ export const Game = () => {
 
   return (
     <View style={styles.container}>
+      <BiddingModal />
+      <GameOverModal />
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
         <Ionicons name="close-outline" size={32} color="black" />
       </TouchableOpacity>
-      <View style={styles.left}>
-        {left.playerData && <OpponentHand playerData={left.playerData} />}
-      </View>
+      {gameId && <GameHUD style={styles.gameHud} />}
+      {top?.playerData && (
+        <TopOpponentGroup
+          playerData={top.playerData}
+          active={currentPosition === top.position}
+        />
+      )}
       <View style={styles.middle}>
-        <View style={styles.top}>
-          {top.playerData && <OpponentHand playerData={top.playerData} />}
-        </View>
-        <Floor playedCards={playedCards} />
-        <BiddingModal />
+        {left?.playerData && (
+          <HorizontalOpponentGroup
+            active={currentPosition === left.position}
+            playerData={left.playerData}
+            style={styles.leftGroup}
+          />
+        )}
+        <Floor playedCards={playedCards} style={StyleSheet.absoluteFill} />
+        {right?.playerData && (
+          <HorizontalOpponentGroup
+            playerData={right.playerData}
+            active={currentPosition === right.position}
+            mirrored
+            style={styles.rightGroup}
+          />
+        )}
+      </View>
+      {currentPlayerData?.playerData && (
         <View style={styles.bottom}>
-          {currentPlayerData.playerData && (
-            <CurrentPlayerHand
-              playerData={currentPlayerData.playerData}
-              isActive={gameUserPosition === gameCurrentPosition}
-              onPlayCard={playCard}
-            />
-          )}
+          <WonSets sets={currentPlayerData.playerData.sets} current />
+          <CurrentPlayerHand
+            hand={currentPlayerData.playerData.hand}
+            isActive={userPosition === currentPosition}
+            onPlayCard={playCard}
+          />
         </View>
-      </View>
-      <View style={styles.right}>
-        {right.playerData && <OpponentHand playerData={right.playerData} />}
-      </View>
+      )}
     </View>
   );
 };
@@ -114,7 +135,6 @@ export const Game = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
     backgroundColor: "green",
     overflow: "hidden",
   },
@@ -126,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    margin: SPACING.spacing16,
+    margin: SPACING.spacing32,
     zIndex: 1,
     shadowColor: "#000",
     shadowOffset: {
@@ -137,28 +157,33 @@ const styles = StyleSheet.create({
     shadowRadius: 16.0,
     elevation: 24,
   },
-  left: {
-    flex: 0.1,
-    alignItems: "center",
-    justifyContent: "center",
-    transform: [{ rotate: "270deg" }],
-  },
-  top: {
-    flex: 1,
-    alignItems: "center",
+  gameHud: {
+    position: "absolute",
+    right: 0,
+    margin: SPACING.spacing32,
   },
   middle: {
-    flex: 0.8,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   bottom: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
   },
-  right: {
-    flex: 0.1,
-    alignItems: "center",
-    justifyContent: "center",
-    transform: [{ rotate: "90deg" }],
+  leftGroup: {
+    transform: [
+      {
+        translateX: -HORIZONTAL_OFFSET,
+      },
+    ],
+  },
+  rightGroup: {
+    transform: [
+      {
+        translateX: HORIZONTAL_OFFSET,
+      },
+    ],
   },
 });

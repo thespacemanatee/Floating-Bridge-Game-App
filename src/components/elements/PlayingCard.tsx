@@ -7,7 +7,7 @@ import { SPACING } from "../../resources/dimens";
 export const FACE_CARD_ASPECT_RATIO = 1.4;
 
 export interface PlayingCardProps {
-  image: ImageSourcePropType;
+  image?: ImageSourcePropType;
   scaleSize?: number;
   style?: StyleProp<ViewStyle>;
 }
@@ -19,16 +19,22 @@ export const PlayingCard = ({
 }: PlayingCardProps) => {
   const { width: wWidth } = useWindowDimensions();
   const { cardWidth, cardHeight } = useMemo(() => {
-    const cWidth = wWidth * 0.1 * scaleSize;
+    const cWidth = wWidth * 0.06 * scaleSize;
     return {
       cardWidth: cWidth,
       cardHeight: cWidth * FACE_CARD_ASPECT_RATIO,
     };
   }, [wWidth, scaleSize]);
   return (
-    <View style={[styles.container, style]}>
+    <View
+      style={[
+        { borderRadius: image ? SPACING.spacing8 : SPACING.spacing20 },
+        styles.container,
+        style,
+      ]}
+    >
       <Image
-        source={image}
+        source={image || require("../../../assets/images/cards/BACK.svg")}
         style={{
           width: cardWidth,
           height: cardHeight,
@@ -43,11 +49,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 9,
+      height: 6,
     },
-    shadowOpacity: 0.48,
-    shadowRadius: 11.95,
-    elevation: 18,
-    borderRadius: SPACING.spacing8,
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
   },
 });

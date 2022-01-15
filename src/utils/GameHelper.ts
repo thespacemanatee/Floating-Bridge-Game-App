@@ -48,13 +48,11 @@ export const triggerNextTurnEvent = async (
   });
 
 export const getHandPositions = (userId: string, players: PlayerData[]) => {
-  let currentUserIdx = 0;
-  for (let i = 0; i < players.length; i++) {
-    if (players[i]?.id === userId) {
-      currentUserIdx = i;
-      break;
-    }
+  if (!players) {
+    return {};
   }
+  let currentUserIdx = players.findIndex((player) => player.id === userId);
+
   return {
     userPosition: currentUserIdx % players.length,
     currentPlayerData: {

@@ -11,6 +11,7 @@ import { LevelButton, SuitButton, ThemedText } from "../../../elements";
 import { TextButton } from "../../../molecules";
 
 export const BiddingPage = () => {
+  const players = useAppSelector((state) => state.game.players);
   const userPosition = useAppSelector((state) => state.game.userPosition);
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const [selectedLevel, setSelectedLevel] = useState<BidLevel>();
@@ -82,12 +83,26 @@ export const BiddingPage = () => {
       <View style={styles.topContainer}>
         <View>
           <ThemedText style={styles.titleText}>
-            {`Welcome Player ${userPosition + 1}`}
+            Welcome{" "}
+            <ThemedText
+              style={[
+                { color: players[userPosition]?.info.color },
+                styles.titleText,
+              ]}
+            >{`${players[userPosition]?.info.username}`}</ThemedText>
+            !
           </ThemedText>
           <ThemedText style={styles.playerText}>
-            {userPosition === currentPosition
-              ? "Your turn to bid!"
-              : `Player ${currentPosition + 1} is bidding...`}
+            {userPosition === currentPosition ? (
+              "Your turn to bid!"
+            ) : (
+              <ThemedText
+                style={[
+                  { color: players[currentPosition]?.info.color },
+                  styles.playerText,
+                ]}
+              >{`${players[currentPosition]?.info.username} is bidding...`}</ThemedText>
+            )}
           </ThemedText>
         </View>
         <View>

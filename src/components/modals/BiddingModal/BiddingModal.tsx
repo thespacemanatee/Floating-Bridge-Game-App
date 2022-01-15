@@ -11,15 +11,15 @@ export const BiddingModal = () => {
   const [biddingModalVisible, setBiddingModalVisible] = useState(true);
   const gameStatus = useAppSelector((state) => state.game.status);
   const isBidding = useAppSelector((state) => state.game.isBidding);
-  const isPartnerChosen = useAppSelector((state) => state.game.isPartnerChosen);
+  const partner = useAppSelector((state) => state.game.partner);
 
   useEffect(() => {
-    if (gameStatus === "stopped" || (!isBidding && isPartnerChosen)) {
+    if (gameStatus === "stopped" || (!isBidding && partner)) {
       setBiddingModalVisible(false);
     } else {
       setBiddingModalVisible(true);
     }
-  }, [gameStatus, isBidding, isPartnerChosen]);
+  }, [gameStatus, isBidding, partner]);
 
   return (
     <Modal
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width: "50%",
   },
   contentContainer: {
     justifyContent: "center",

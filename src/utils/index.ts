@@ -1,1 +1,5 @@
-export { getUnicodeCharacter } from "./utils";
+export {
+  getUnicodeCharacter,
+  getColorFromUnicodeCharacter,
+  getWinners,
+} from "./utils";

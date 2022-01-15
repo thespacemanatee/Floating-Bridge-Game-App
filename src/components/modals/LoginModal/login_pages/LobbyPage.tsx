@@ -24,10 +24,6 @@ export const LobbyPage = () => {
   };
 
   const enterRoom = () => {
-    if (!username || !roomId) {
-      alert("Please enter the missing information!");
-      return;
-    }
     dispatch(setGameUsername(username));
     dispatch(setGameRoomId(roomId));
   };
@@ -61,8 +57,9 @@ export const LobbyPage = () => {
         />
       </View>
       <TextButton
-        onPress={enterRoom}
         text="Enter Room"
+        onPress={enterRoom}
+        disabled={!username || !roomId}
         style={styles.loginButton}
       />
     </View>

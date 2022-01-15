@@ -1,4 +1,5 @@
 import React from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
 import { PlayingCard } from "../components/elements/PlayingCard";
@@ -10,13 +11,14 @@ import { useAppSelector } from "../store/hooks";
 
 type FloorProps = {
   playedCards: PlayedCard[];
+  style?: StyleProp<ViewStyle>;
 };
 
-export const Floor = ({ playedCards }: FloorProps) => {
+export const Floor = ({ playedCards, style }: FloorProps) => {
   const players = useAppSelector((state) => state.game.players);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {playedCards.map((card) => {
         const currPlayer = players.find(
           (player) => player.id === card.playedBy
@@ -26,9 +28,13 @@ export const Floor = ({ playedCards }: FloorProps) => {
           currPlayer && (
             <View
               key={`${card.suit}${card.value}`}
-              style={styles.cardContainer}
+              style={styles.playedCardContainer}
             >
-              <PlayingCard image={DECK[`${card.suit}${card.value}`].imageUri} />
+              <View style={styles.cardContainer}>
+                <PlayingCard
+                  image={DECK[`${card.suit}${card.value}`].imageUri}
+                />
+              </View>
               <View
                 style={[
                   { backgroundColor: currPlayer.info.color || "white" },
@@ -51,9 +57,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  playedCardContainer: {
+    marginHorizontal: SPACING.spacing8,
   },
   cardContainer: {
-    marginHorizontal: SPACING.spacing8,
+    alignItems: "center",
   },
   nameContainer: {
     justifyContent: "center",

@@ -4,12 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import { TextButton } from "../../../molecules/TextButton";
-import { LobbyUserEntry } from "../../../elements/LobbyUserEntry";
+import { UserEntry } from "../../../elements/UserEntry";
 import { ThemedText } from "../../../elements/ThemedText";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import { unsubscribeToChannel } from "../../../../utils/PusherHelper";
 import { resetRoom } from "../../../../store/features/room/roomSlice";
 import type { Player } from "../../../../store/features/game";
+import { RoomIdClipboard } from "../../../molecules/RoomIdClipboard";
 
 type WaitingRoomPageProps = {
   players: Player[];
@@ -25,32 +26,34 @@ export const WaitingRoomPage = ({
 
   const dispatch = useAppDispatch();
 
-  const roomReady = useMemo(() => {
-    return players.length === 4 ? true : false;
-  }, [players]);
+  const roomReady = useMemo(
+    () => (players.length === 4 ? true : false),
+    [players]
+  );
 
   const leaveRoom = () => {
-    if (roomId) {
-      unsubscribeToChannel(roomId);
-    }
+    unsubscribeToChannel(roomId);
     dispatch(resetRoom());
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={leaveRoom}>
-        <Ionicons name="close-outline" size={32} color="black" />
-      </TouchableOpacity>
-      <ThemedText
-        style={styles.titleText}
-      >{`Waiting Room (ID: ${roomId})`}</ThemedText>
+      <View style={styles.topContainer}>
+        <View style={styles.titleContainer}>
+          <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
+            <Ionicons name="close-outline" size={32} color="black" />
+          </TouchableOpacity>
+          <ThemedText style={styles.titleText}>Waiting Room</ThemedText>
+        </View>
+        <RoomIdClipboard roomId={roomId} />
+      </View>
       <ThemedText
         style={styles.welcomeText}
       >{`Welcome ${username}!`}</ThemedText>
       <View style={styles.usersContainer}>
         {players.map((player) => {
           return (
-            <LobbyUserEntry
+            <UserEntry
               key={player.id}
               currentUsername={username || ""}
               player={player}
@@ -72,6 +75,19 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     padding: SPACING.spacing32,
+  },
+  closeButton: {
+    marginRight: SPACING.spacing8,
+  },
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   titleText: {
     fontFamily: "bold",
