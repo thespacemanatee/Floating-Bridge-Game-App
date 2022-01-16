@@ -5,8 +5,7 @@ import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
-import { getUnicodeCharacter } from "../../../../utils";
-import { triggerNextBidEvent } from "../../../../utils/GameHelper";
+import { getUnicodeCharacter, triggerNextBidEvent } from "../../../../utils";
 import { LevelButton, SuitButton, ThemedText } from "../../../elements";
 import { TextButton } from "../../../molecules";
 

@@ -7,7 +7,7 @@ import { TextButton } from "../../../molecules/TextButton";
 import { UserEntry } from "../../../elements/UserEntry";
 import { ThemedText } from "../../../elements/ThemedText";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { unsubscribeToChannel } from "../../../../utils/PusherHelper";
+import { unsubscribeToChannel } from "../../../../utils";
 import { resetRoom } from "../../../../store/features/room/roomSlice";
 import type { Player } from "../../../../store/features/game";
 import { RoomIdClipboard } from "../../../molecules/RoomIdClipboard";

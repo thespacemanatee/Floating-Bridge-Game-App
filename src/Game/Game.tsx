@@ -5,9 +5,13 @@ import { Ionicons } from "@expo/vector-icons";
 import type { PlayCardPayload } from "../store/features/game";
 import { setGameUserPosition, resetGame } from "../store/features/game";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
 import { resetRoom } from "../store/features/room/roomSlice";
-import { unsubscribeToChannel } from "../utils/PusherHelper";
+import {
+  unsubscribeToChannel,
+  getHandPositions,
+  isInvalidPlayCard,
+  triggerNextTurnEvent,
+} from "../utils";
 import { SPACING } from "../resources/dimens";
 import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
 import type { Card } from "../models";
@@ -46,24 +50,22 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
-    if (
-      !isTrumpBroken &&
-      playedCards.length === 0 &&
-      card.suit === latestBid?.trump
-    ) {
-      callback();
-      alert("You cannot start with the trump card!");
+    if (!latestBid || !currentPlayerData?.playerData) {
+      alert("There was a problem with the game :(");
+      leaveRoom();
       return;
     }
 
     if (
-      currentPlayerData?.playerData?.hand.some(
-        (c) => c.suit === playedCards[0]?.suit
-      ) &&
-      card.suit !== playedCards[0]?.suit
+      isInvalidPlayCard(
+        card,
+        isTrumpBroken,
+        playedCards,
+        latestBid,
+        currentPlayerData.playerData.hand
+      )
     ) {
       callback();
-      alert(`You must finish throwing ${playedCards[0]?.suit.toUpperCase()}!`);
       return;
     }
 
@@ -85,6 +87,8 @@ export const Game = () => {
     dispatch(resetRoom());
     dispatch(resetGame());
   };
+
+  console.log("rerendering");
 
   return (
     <View style={styles.container}>

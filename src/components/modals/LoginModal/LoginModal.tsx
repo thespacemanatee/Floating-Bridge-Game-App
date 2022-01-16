@@ -7,11 +7,11 @@ import {
   bindPlayerAddedEvent,
   bindPlayerRemovedEvent,
   bindSubscriptionSucceededEvent,
+  initialiseGame,
   initPusherClient,
   subscribeToChannel,
-} from "../../../utils/PusherHelper";
+} from "../../../utils";
 import { SPACING } from "../../../resources/dimens";
-import { initialiseGame } from "../../../utils/GameHelper";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   addPlayer,

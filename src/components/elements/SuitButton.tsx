@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../resources/dimens";
 import type { Trump } from "../../store/features/game";
-import { getUnicodeCharacter } from "../../utils/utils";
+import { getUnicodeCharacter } from "../../utils";
 
 import { ThemedText } from "./ThemedText";
 

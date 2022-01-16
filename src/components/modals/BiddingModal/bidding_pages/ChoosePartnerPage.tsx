@@ -6,7 +6,7 @@ import { DECK, SUITS } from "../../../../models";
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import type { Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
-import { triggerSetPartnerEvent } from "../../../../utils/GameHelper";
+import { triggerSetPartnerEvent } from "../../../../utils";
 import { PlayingCard, SuitButton, ThemedText } from "../../../elements";
 import { TextButton } from "../../../molecules";
 
