@@ -21,6 +21,7 @@
     "expo-font": "~10.0.4",
     "expo-status-bar": "~1.2.0",
     "lodash.isequal": "^4.5.0",
+    "lottie-react-native": "^5.0.1",
     "nanoid": "^3.1.30",
     "pusher-js": "^7.0.3",
     "react": "17.0.1",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@expo/webpack-config": "^0.16.16",
     "@types/lodash.isequal": "^4.5.5",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
