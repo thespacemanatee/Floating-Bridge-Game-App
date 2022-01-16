@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import type { PlayCardPayload } from "../../store/features/game";
@@ -87,7 +92,10 @@ export const Game = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={{ uri: "https://dkqpv4xfvkxsw.cloudfront.net/background.jpg" }}
+      style={styles.container}
+    >
       <BiddingModal />
       <GameOverModal />
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
@@ -126,7 +134,7 @@ export const Game = () => {
           />
         </View>
       )}
-    </View>
+    </ImageBackground>
   );
 };
 

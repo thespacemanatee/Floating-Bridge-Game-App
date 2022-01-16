@@ -25,7 +25,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
     <View style={[styles.container, style]}>
       <View style={styles.entryContainer}>
         <ThemedText style={styles.labelText}>Round:</ThemedText>
-        <ThemedText style={styles.labelText}>
+        <ThemedText style={styles.valueText}>
           {Math.min(roundNo + 1, 13)}
         </ThemedText>
       </View>
@@ -35,7 +35,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
           <ThemedText
             style={[
               { color: getColorFromUnicodeCharacter(latestBid?.trump) },
-              styles.labelText,
+              styles.valueText,
             ]}
           >{`${latestBid?.level}${getUnicodeCharacter(
             latestBid?.trump
@@ -50,23 +50,23 @@ export const GameHUD = ({ style }: GameHUDProps) => {
           <ThemedText
             style={[
               { color: getColorFromUnicodeCharacter(partner.suit) },
-              styles.labelText,
+              styles.valueText,
             ]}
           >{`${partner.value.toUpperCase()}${getUnicodeCharacter(
             partner.suit
           )}`}</ThemedText>
         ) : (
-          <ThemedText style={styles.labelText}>N/A</ThemedText>
+          <ThemedText style={styles.valueText}>N/A</ThemedText>
         )}
       </View>
       <View style={styles.entryContainer}>
         <ThemedText style={styles.labelText}>Bidder:</ThemedText>
         {bidder ? (
           <ThemedText
-            style={[{ color: bidder.info.color }, styles.labelText]}
+            style={[{ color: bidder.info.color }, styles.valueText]}
           >{`${bidder.info.username}`}</ThemedText>
         ) : (
-          <ThemedText style={styles.labelText}>N/A</ThemedText>
+          <ThemedText style={styles.valueText}>N/A</ThemedText>
         )}
       </View>
     </View>
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: SPACING.spacing16,
     borderRadius: SPACING.spacing12,
-    width: 250,
+    width: 225,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -91,8 +91,13 @@ const styles = StyleSheet.create({
   entryContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   labelText: {
+    fontSize: FONT_SIZE.large,
+    fontFamily: "semiBold",
+  },
+  valueText: {
     fontSize: FONT_SIZE.title2,
     fontFamily: "bold",
   },

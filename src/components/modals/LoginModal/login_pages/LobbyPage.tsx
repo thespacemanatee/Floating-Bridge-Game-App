@@ -12,6 +12,7 @@ import {
   setGameRoomId,
   setGameUsername,
 } from "../../../../store/features/room/roomSlice";
+import { ThemedButton } from "../../../elements";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
@@ -47,14 +48,13 @@ export const LobbyPage = () => {
           value={roomId}
           style={styles.input}
         />
-        <TextButton
+        <ThemedButton
           onPress={generateGameId}
-          text="Generate"
-          textColor="black"
           type="outlined"
-          size="tiny"
           style={styles.generateButton}
-        />
+        >
+          <ThemedText>Generate</ThemedText>
+        </ThemedButton>
       </View>
       <TextButton
         text="Enter Room"
