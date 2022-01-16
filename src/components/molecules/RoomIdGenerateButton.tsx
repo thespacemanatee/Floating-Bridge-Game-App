@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { LottieView } from "../..";
@@ -6,42 +6,40 @@ import { FONT_SIZE, SPACING } from "../../resources/dimens";
 import { ThemedText } from "../elements";
 
 type RoomIdGenerateButtonProps = {
-  roomId: string;
   onPress: () => void;
 };
 
 export const RoomIdGenerateButton = ({
-  roomId,
   onPress,
 }: RoomIdGenerateButtonProps) => {
   const animationRef = useRef<LottieView>(null);
+  const [generated, setGenerated] = useState(false);
+
+  const onGenerate = () => {
+    setGenerated(true);
+    onPress();
+  };
 
   useEffect(() => {
-    if (roomId) {
+    if (generated) {
       animationRef.current?.reset();
       animationRef.current?.play();
     }
-  }, [roomId]);
+  }, [generated]);
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={onGenerate}
       style={({ pressed }) => [
         { backgroundColor: pressed ? "#80d7ff" : "#47c5ff" },
         styles.generateButtonContainer,
       ]}
     >
       <View style={styles.generateButton}>
-        <ThemedText
-          style={{
-            color: "white",
-            fontFamily: "semiBold",
-            fontSize: FONT_SIZE.tiny,
-          }}
-        >
-          {roomId ? "Copied" : "Generate"}
+        <ThemedText style={styles.buttonText}>
+          {generated ? "Copied" : "Generate"}
         </ThemedText>
-        {!!roomId && (
+        {generated && (
           <LottieView
             ref={animationRef}
             style={{
@@ -67,5 +65,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+  },
+  buttonText: {
+    color: "white",
+    fontFamily: "semiBold",
+    fontSize: FONT_SIZE.tiny,
   },
 });

@@ -27,9 +27,18 @@ import {
 } from "../store/features/game";
 import { store } from "../store";
 import type { PlayedCard } from "../models";
+import { setGameConnected } from "../store/features/room";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
+
+type PusherStates =
+  | "initialized"
+  | "connecting"
+  | "connected"
+  | "unavailable"
+  | "failed"
+  | "disconnected";
 
 export const initPusherClient = (userId: string, username: string) => {
   pusherRef.current = new Pusher(PUSHER_KEY, {
@@ -39,6 +48,20 @@ export const initPusherClient = (userId: string, username: string) => {
     authEndpoint: HOST + AUTH_ENDPOINT,
     cluster: PUSHER_CLUSTER,
   });
+  pusherRef.current.connection.bind(
+    "state_change",
+    (states: { previous: PusherStates; current: PusherStates }) => {
+      switch (states.current) {
+        case "connected": {
+          store.dispatch(setGameConnected(true));
+          break;
+        }
+        default: {
+          store.dispatch(setGameConnected(false));
+        }
+      }
+    }
+  );
 };
 
 export const subscribeToChannel = (gameId: string) => {
@@ -109,6 +132,12 @@ export const bindGameEvents = () => {
       }
     );
     channelRef.current.bind(
+      "client-game-status-event",
+      (data: { status: GameStatus }) => {
+        store.dispatch(setGameStatus(data.status));
+      }
+    );
+    channelRef.current.bind(
       "game-init-event",
       (data: { gameId: string; gameData: GameData }) => {
         store.dispatch(setGameId(data.gameId));
@@ -124,6 +153,12 @@ export const bindGameEvents = () => {
   } else {
     throw Error("Channel not found!");
   }
+};
+
+export const triggerGameStartedLoading = () => {
+  channelRef.current?.trigger("client-game-status-event", {
+    status: "loading",
+  });
 };
 
 const setGameData = (gameData: GameData) => {

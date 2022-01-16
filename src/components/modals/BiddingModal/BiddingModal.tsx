@@ -14,7 +14,7 @@ export const BiddingModal = () => {
   const partner = useAppSelector((state) => state.game.partner);
 
   useEffect(() => {
-    if (gameStatus === "stopped" || (!isBidding && partner)) {
+    if (gameStatus !== "started" || (!isBidding && partner)) {
       setBiddingModalVisible(false);
     } else {
       setBiddingModalVisible(true);
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: "white",
-    alignItems: "center",
     margin: SPACING.spacing48,
     borderRadius: SPACING.spacing12,
     shadowColor: "#000",
@@ -61,6 +60,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: "50%",
+    minWidth: 750,
   },
   contentContainer: {
     justifyContent: "center",

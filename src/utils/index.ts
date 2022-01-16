@@ -16,10 +16,13 @@ export {
   bindPlayerAddedEvent,
   bindPlayerRemovedEvent,
   bindGameEvents,
+  triggerGameStartedLoading,
 } from "./PusherHelper";
 
 export {
   initialiseGame,
+  findExistingGameById,
+  resumeGame,
   triggerNextBidEvent,
   triggerSetPartnerEvent,
   triggerNextTurnEvent,

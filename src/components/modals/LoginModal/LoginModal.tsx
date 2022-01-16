@@ -7,7 +7,6 @@ import {
   bindPlayerAddedEvent,
   bindPlayerRemovedEvent,
   bindSubscriptionSucceededEvent,
-  initialiseGame,
   initPusherClient,
   subscribeToChannel,
 } from "../../../utils";
@@ -20,6 +19,7 @@ import {
   setGameUserId,
 } from "../../../store/features/room/roomSlice";
 import type { Player } from "../../../store/features/game";
+import { setGameStatus } from "../../../store/features/game";
 
 import { LobbyPage, WaitingRoomPage } from "./login_pages";
 
@@ -46,6 +46,7 @@ export const LoginModal = () => {
       });
       bindPlayerRemovedEvent((player: Player) => {
         dispatch(removePlayer(player));
+        dispatch(setGameStatus("stopped"));
       });
       bindGameEvents();
     },
@@ -77,25 +78,12 @@ export const LoginModal = () => {
     }
   }, [gameUserId, gameUsername, gameRoomId, enterRoom]);
 
-  const startGame = async () => {
-    if (gameRoomId) {
-      await initialiseGame(gameUserId, gameRoomId, players);
-    }
-  };
-
   return (
-    <Modal
-      animationType="fade"
-      transparent
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
+    <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.container}>
         <View style={styles.modalView}>
           {gameUserId && gameUsername && gameRoomId ? (
-            <WaitingRoomPage players={players} onStartGame={startGame} />
+            <WaitingRoomPage players={players} />
           ) : (
             <LobbyPage />
           )}
@@ -124,5 +112,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: "50%",
+    minWidth: 750,
   },
 });

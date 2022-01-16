@@ -22,14 +22,7 @@ export const GameOverModal = () => {
   }, [roundNo]);
 
   return (
-    <Modal
-      animationType="fade"
-      transparent
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
+    <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.biddingModalContainer}>
         <View style={styles.modalView}>
           <View style={styles.contentContainer}>
@@ -74,6 +67,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width: "50%",
+    minWidth: "750",
   },
   contentContainer: {
     justifyContent: "center",

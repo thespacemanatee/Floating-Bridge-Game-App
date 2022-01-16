@@ -54,7 +54,7 @@ export const Game = () => {
 
   const playCard = async (card: Card, callback: () => void) => {
     if (!latestBid || !currentPlayerData?.playerData) {
-      alert("There was a problem with the game :(");
+      alert("There was a problem with the game!");
       leaveRoom();
       return;
     }
@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     margin: SPACING.spacing32,
+    zIndex: 10,
   },
   middle: {
     flex: 1,

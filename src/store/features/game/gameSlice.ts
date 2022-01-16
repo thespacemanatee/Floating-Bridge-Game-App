@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import type { Card, PlayedCard } from "../../../models";
 
-export type GameStatus = "started" | "stopped";
+export type GameStatus = "loading" | "started" | "stopped";
 
 export interface Player {
   id: string;

@@ -41,7 +41,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
             latestBid?.trump
           )}`}</ThemedText>
         ) : (
-          <ThemedText style={styles.labelText}>N/A</ThemedText>
+          <ThemedText style={styles.valueText}>N/A</ThemedText>
         )}
       </View>
       <View style={styles.entryContainer}>

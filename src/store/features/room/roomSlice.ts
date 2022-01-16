@@ -5,6 +5,7 @@ import type { Player } from "../game";
 
 interface RoomState {
   userId: string;
+  isConnected: boolean;
   username: string;
   roomId: string;
   players: Player[];
@@ -12,6 +13,7 @@ interface RoomState {
 
 const initialState: RoomState = {
   userId: "",
+  isConnected: false,
   username: "",
   roomId: "",
   players: [],
@@ -23,6 +25,9 @@ const roomSlice = createSlice({
   reducers: {
     setGameUserId(state: RoomState, action: PayloadAction<string>) {
       state.userId = action.payload;
+    },
+    setGameConnected(state: RoomState, action: PayloadAction<boolean>) {
+      state.isConnected = action.payload;
     },
     setGameUsername(state: RoomState, action: PayloadAction<string>) {
       state.username = action.payload;
@@ -43,6 +48,7 @@ const roomSlice = createSlice({
     },
     resetRoom(state: RoomState) {
       state.userId = "";
+      state.isConnected = false;
       state.username = "";
       state.roomId = "";
       state.players = [];
@@ -52,6 +58,7 @@ const roomSlice = createSlice({
 
 export const {
   setGameUserId,
+  setGameConnected,
   setGameUsername,
   setGameRoomId,
   addPlayer,
