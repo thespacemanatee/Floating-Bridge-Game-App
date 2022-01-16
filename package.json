@@ -20,6 +20,8 @@
     "expo": "~44.0.0",
     "expo-font": "~10.0.4",
     "expo-status-bar": "~1.2.0",
+    "lodash.isequal": "^4.5.0",
+    "lottie-react-native": "^5.0.1",
     "nanoid": "^3.1.30",
     "pusher-js": "^7.0.3",
     "react": "17.0.1",
@@ -30,11 +32,14 @@
     "react-native-reanimated": "~2.3.1",
     "react-native-redash": "^16.2.3",
     "react-native-web": "0.17.1",
+    "react-native-web-lottie": "^1.4.4",
     "react-redux": "^7.2.6",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@expo/webpack-config": "^0.16.16",
+    "@types/lodash.isequal": "^4.5.5",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "eslint": "^7.32.0",

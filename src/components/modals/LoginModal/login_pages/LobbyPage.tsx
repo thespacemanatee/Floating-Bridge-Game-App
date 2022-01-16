@@ -12,6 +12,7 @@ import {
   setGameRoomId,
   setGameUsername,
 } from "../../../../store/features/room/roomSlice";
+import { RoomIdGenerateButton } from "../../../molecules/RoomIdGenerateButton";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
@@ -47,14 +48,7 @@ export const LobbyPage = () => {
           value={roomId}
           style={styles.input}
         />
-        <TextButton
-          onPress={generateGameId}
-          text="Generate"
-          textColor="black"
-          type="outlined"
-          size="tiny"
-          style={styles.generateButton}
-        />
+        <RoomIdGenerateButton roomId={roomId} onPress={generateGameId} />
       </View>
       <TextButton
         text="Enter Room"
@@ -85,9 +79,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginVertical: SPACING.spacing12,
-  },
-  generateButton: {
-    marginLeft: SPACING.spacing8,
   },
   loginButton: {
     margin: SPACING.spacing4,

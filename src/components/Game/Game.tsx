@@ -1,17 +1,26 @@
 import React, { useEffect, useMemo } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { PlayCardPayload } from "../store/features/game";
-import { setGameUserPosition, resetGame } from "../store/features/game";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { getHandPositions, triggerNextTurnEvent } from "../utils/GameHelper";
-import { resetRoom } from "../store/features/room/roomSlice";
-import { unsubscribeToChannel } from "../utils/PusherHelper";
-import { SPACING } from "../resources/dimens";
-import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
-import type { Card } from "../models";
-import { GameOverModal } from "../components/modals/GameOverModal/GameOverModal";
+import type { PlayCardPayload } from "../../store/features/game";
+import { setGameUserPosition, resetGame } from "../../store/features/game";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { resetRoom } from "../../store/features/room/roomSlice";
+import {
+  unsubscribeToChannel,
+  getHandPositions,
+  isInvalidPlayCard,
+  triggerNextTurnEvent,
+} from "../../utils";
+import { SPACING } from "../../resources/dimens";
+import { BiddingModal } from "../modals/BiddingModal";
+import type { Card } from "../../models";
+import { GameOverModal } from "../modals/GameOverModal/GameOverModal";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
@@ -20,8 +29,6 @@ import { TopOpponentGroup } from "./TopOpponentGroup";
 import { GameHUD } from "./GameHUD";
 
 import { HorizontalOpponentGroup } from ".";
-
-const HORIZONTAL_OFFSET = 40;
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
@@ -46,24 +53,22 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
-    if (
-      !isTrumpBroken &&
-      playedCards.length === 0 &&
-      card.suit === latestBid?.trump
-    ) {
-      callback();
-      alert("You cannot start with the trump card!");
+    if (!latestBid || !currentPlayerData?.playerData) {
+      alert("There was a problem with the game :(");
+      leaveRoom();
       return;
     }
 
     if (
-      currentPlayerData?.playerData?.hand.some(
-        (c) => c.suit === playedCards[0]?.suit
-      ) &&
-      card.suit !== playedCards[0]?.suit
+      isInvalidPlayCard(
+        card,
+        isTrumpBroken,
+        playedCards,
+        latestBid,
+        currentPlayerData.playerData.hand
+      )
     ) {
       callback();
-      alert(`You must finish throwing ${playedCards[0]?.suit.toUpperCase()}!`);
       return;
     }
 
@@ -87,7 +92,10 @@ export const Game = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={{ uri: "https://dkqpv4xfvkxsw.cloudfront.net/background.jpg" }}
+      style={styles.container}
+    >
       <BiddingModal />
       <GameOverModal />
       <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
@@ -105,7 +113,6 @@ export const Game = () => {
           <HorizontalOpponentGroup
             active={currentPosition === left.position}
             playerData={left.playerData}
-            style={styles.leftGroup}
           />
         )}
         <Floor playedCards={playedCards} style={StyleSheet.absoluteFill} />
@@ -114,7 +121,6 @@ export const Game = () => {
             playerData={right.playerData}
             active={currentPosition === right.position}
             mirrored
-            style={styles.rightGroup}
           />
         )}
       </View>
@@ -128,7 +134,7 @@ export const Game = () => {
           />
         </View>
       )}
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -171,19 +177,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-  },
-  leftGroup: {
-    transform: [
-      {
-        translateX: -HORIZONTAL_OFFSET,
-      },
-    ],
-  },
-  rightGroup: {
-    transform: [
-      {
-        translateX: HORIZONTAL_OFFSET,
-      },
-    ],
   },
 });

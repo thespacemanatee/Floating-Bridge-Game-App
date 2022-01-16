@@ -7,11 +7,11 @@ import {
   bindPlayerAddedEvent,
   bindPlayerRemovedEvent,
   bindSubscriptionSucceededEvent,
+  initialiseGame,
   initPusherClient,
   subscribeToChannel,
-} from "../../../utils/PusherHelper";
+} from "../../../utils";
 import { SPACING } from "../../../resources/dimens";
-import { initialiseGame } from "../../../utils/GameHelper";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   addPlayer,
@@ -21,8 +21,7 @@ import {
 } from "../../../store/features/room/roomSlice";
 import type { Player } from "../../../store/features/game";
 
-import { LobbyPage } from "./login_pages/LobbyPage";
-import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
+import { LobbyPage, WaitingRoomPage } from "./login_pages";
 
 export const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);

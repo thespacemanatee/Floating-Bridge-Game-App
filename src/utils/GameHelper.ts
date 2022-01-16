@@ -1,12 +1,7 @@
 import axios from "axios";
 import { HOST } from "@env";
 
-import type {
-  Bid,
-  PlayCardPayload,
-  Player,
-  PlayerData,
-} from "../store/features/game";
+import type { Bid, PlayCardPayload, Player } from "../store/features/game";
 import type { CardSuit, CardValue } from "../models";
 
 export const initialiseGame = async (
@@ -46,30 +41,3 @@ export const triggerNextTurnEvent = async (
     gameId,
     playCardPayload,
   });
-
-export const getHandPositions = (userId: string, players: PlayerData[]) => {
-  if (!players) {
-    return {};
-  }
-  let currentUserIdx = players.findIndex((player) => player.id === userId);
-
-  return {
-    userPosition: currentUserIdx % players.length,
-    currentPlayerData: {
-      position: currentUserIdx % players.length,
-      playerData: players[currentUserIdx++ % players.length],
-    },
-    left: {
-      position: currentUserIdx % players.length,
-      playerData: players[currentUserIdx++ % players.length],
-    },
-    top: {
-      position: currentUserIdx % players.length,
-      playerData: players[currentUserIdx++ % players.length],
-    },
-    right: {
-      position: currentUserIdx % players.length,
-      playerData: players[currentUserIdx++ % players.length],
-    },
-  };
-};

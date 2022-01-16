@@ -3,6 +3,7 @@ import { createRef } from "react";
 import type { Channel } from "pusher-js";
 import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
+import { batch } from "react-redux";
 
 import type {
   Bid,
@@ -137,13 +138,15 @@ const setGameData = (gameData: GameData) => {
     isTrumpBroken,
     playedCards,
   } = gameData;
-  store.dispatch(setGamePlayerData(players));
-  store.dispatch(setGameRoundNo(roundNo));
-  store.dispatch(setGameCurrentPosition(currentPosition));
-  store.dispatch(setGameLatestBid(latestBid));
-  store.dispatch(setGameBidSequence(bidSequence));
-  store.dispatch(setGameIsBidding(isBidding));
-  store.dispatch(setGamePartner(partner));
-  store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
-  store.dispatch(setGamePlayedCards(playedCards));
+  batch(() => {
+    store.dispatch(setGamePlayerData(players));
+    store.dispatch(setGameRoundNo(roundNo));
+    store.dispatch(setGameCurrentPosition(currentPosition));
+    store.dispatch(setGameLatestBid(latestBid));
+    store.dispatch(setGameBidSequence(bidSequence));
+    store.dispatch(setGameIsBidding(isBidding));
+    store.dispatch(setGamePartner(partner));
+    store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
+    store.dispatch(setGamePlayedCards(playedCards));
+  });
 };

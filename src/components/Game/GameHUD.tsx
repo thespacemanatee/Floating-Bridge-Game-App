@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-import { ThemedText } from "../components/elements";
-import { FONT_SIZE, SPACING } from "../resources/dimens";
-import { useAppSelector } from "../store/hooks";
-import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../utils";
+import { ThemedText } from "../elements";
+import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { useAppSelector } from "../../store/hooks";
+import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../../utils";
 
 type GameHUDProps = {
   style?: StyleProp<ViewStyle>;
@@ -16,12 +16,16 @@ export const GameHUD = ({ style }: GameHUDProps) => {
   const players = useAppSelector((state) => state.game.players);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const partner = useAppSelector((state) => state.game.partner);
+  const bidder = useMemo(
+    () => players.find((player) => player.id === latestBid?.userId),
+    [latestBid?.userId, players]
+  );
 
   return (
     <View style={[styles.container, style]}>
       <View style={styles.entryContainer}>
         <ThemedText style={styles.labelText}>Round:</ThemedText>
-        <ThemedText style={styles.labelText}>
+        <ThemedText style={styles.valueText}>
           {Math.min(roundNo + 1, 13)}
         </ThemedText>
       </View>
@@ -31,7 +35,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
           <ThemedText
             style={[
               { color: getColorFromUnicodeCharacter(latestBid?.trump) },
-              styles.labelText,
+              styles.valueText,
             ]}
           >{`${latestBid?.level}${getUnicodeCharacter(
             latestBid?.trump
@@ -46,29 +50,23 @@ export const GameHUD = ({ style }: GameHUDProps) => {
           <ThemedText
             style={[
               { color: getColorFromUnicodeCharacter(partner.suit) },
-              styles.labelText,
+              styles.valueText,
             ]}
           >{`${partner.value.toUpperCase()}${getUnicodeCharacter(
             partner.suit
           )}`}</ThemedText>
         ) : (
-          <ThemedText style={styles.labelText}>N/A</ThemedText>
+          <ThemedText style={styles.valueText}>N/A</ThemedText>
         )}
       </View>
       <View style={styles.entryContainer}>
         <ThemedText style={styles.labelText}>Bidder:</ThemedText>
-        {partner ? (
+        {bidder ? (
           <ThemedText
-            style={[
-              { color: getColorFromUnicodeCharacter(partner.suit) },
-              styles.labelText,
-            ]}
-          >{`${
-            players.find((player) => player.id === latestBid?.userId)?.info
-              .username
-          }`}</ThemedText>
+            style={[{ color: bidder.info.color }, styles.valueText]}
+          >{`${bidder.info.username}`}</ThemedText>
         ) : (
-          <ThemedText style={styles.labelText}>N/A</ThemedText>
+          <ThemedText style={styles.valueText}>N/A</ThemedText>
         )}
       </View>
     </View>
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: SPACING.spacing16,
     borderRadius: SPACING.spacing12,
-    width: 250,
+    width: 225,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -93,8 +91,13 @@ const styles = StyleSheet.create({
   entryContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   labelText: {
+    fontSize: FONT_SIZE.large,
+    fontFamily: "semiBold",
+  },
+  valueText: {
     fontSize: FONT_SIZE.title2,
     fontFamily: "bold",
   },
