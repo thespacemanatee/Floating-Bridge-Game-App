@@ -2,10 +2,10 @@ import React, { useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-import { ThemedText } from "../components/elements";
-import { FONT_SIZE, SPACING } from "../resources/dimens";
-import { useAppSelector } from "../store/hooks";
-import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../utils";
+import { ThemedText } from "../elements";
+import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { useAppSelector } from "../../store/hooks";
+import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../../utils";
 
 type GameHUDProps = {
   style?: StyleProp<ViewStyle>;

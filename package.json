@@ -20,6 +20,7 @@
     "expo": "~44.0.0",
     "expo-font": "~10.0.4",
     "expo-status-bar": "~1.2.0",
+    "lodash.isequal": "^4.5.0",
     "nanoid": "^3.1.30",
     "pusher-js": "^7.0.3",
     "react": "17.0.1",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@types/lodash.isequal": "^4.5.5",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "eslint": "^7.32.0",

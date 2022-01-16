@@ -2,20 +2,20 @@ import React, { useEffect, useMemo } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import type { PlayCardPayload } from "../store/features/game";
-import { setGameUserPosition, resetGame } from "../store/features/game";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { resetRoom } from "../store/features/room/roomSlice";
+import type { PlayCardPayload } from "../../store/features/game";
+import { setGameUserPosition, resetGame } from "../../store/features/game";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { resetRoom } from "../../store/features/room/roomSlice";
 import {
   unsubscribeToChannel,
   getHandPositions,
   isInvalidPlayCard,
   triggerNextTurnEvent,
-} from "../utils";
-import { SPACING } from "../resources/dimens";
-import { BiddingModal } from "../components/modals/BiddingModal/BiddingModal";
-import type { Card } from "../models";
-import { GameOverModal } from "../components/modals/GameOverModal/GameOverModal";
+} from "../../utils";
+import { SPACING } from "../../resources/dimens";
+import { BiddingModal } from "../modals/BiddingModal";
+import type { Card } from "../../models";
+import { GameOverModal } from "../modals/GameOverModal/GameOverModal";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
@@ -87,8 +87,6 @@ export const Game = () => {
     dispatch(resetRoom());
     dispatch(resetGame());
   };
-
-  console.log("rerendering");
 
   return (
     <View style={styles.container}>

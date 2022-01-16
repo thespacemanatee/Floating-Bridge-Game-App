@@ -1,12 +1,12 @@
 import React from "react";
 
-import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
+import { AnimatedBackCard } from "../molecules/AnimatedBackCard";
 import {
   BACK_CARD_OFFSET_X,
   CARD_OFFSET_Y,
   CARD_ROTATION,
-} from "../config/Constants";
-import type { Card } from "../models";
+} from "../../config/Constants";
+import type { Card } from "../../models";
 
 type OpponentHandProps = {
   hand: Card[];
