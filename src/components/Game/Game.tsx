@@ -25,8 +25,6 @@ import { GameHUD } from "./GameHUD";
 
 import { HorizontalOpponentGroup } from ".";
 
-const HORIZONTAL_OFFSET = 40;
-
 export const Game = () => {
   const userId = useAppSelector((state) => state.room.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
@@ -107,7 +105,6 @@ export const Game = () => {
           <HorizontalOpponentGroup
             active={currentPosition === left.position}
             playerData={left.playerData}
-            style={styles.leftGroup}
           />
         )}
         <Floor playedCards={playedCards} style={StyleSheet.absoluteFill} />
@@ -116,7 +113,6 @@ export const Game = () => {
             playerData={right.playerData}
             active={currentPosition === right.position}
             mirrored
-            style={styles.rightGroup}
           />
         )}
       </View>
@@ -173,19 +169,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-  },
-  leftGroup: {
-    transform: [
-      {
-        translateX: -HORIZONTAL_OFFSET,
-      },
-    ],
-  },
-  rightGroup: {
-    transform: [
-      {
-        translateX: HORIZONTAL_OFFSET,
-      },
-    ],
   },
 });

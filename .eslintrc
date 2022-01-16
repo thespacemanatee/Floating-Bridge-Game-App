@@ -2,5 +2,8 @@
   "extends": "react-native-wcandillon",
   "globals": {
     "JSX": true
+  },
+  "rules": {
+    "no-alert": "off"
   }
 }

@@ -66,5 +66,6 @@ const styles = StyleSheet.create({
   },
   player: {
     zIndex: 10,
+    position: "absolute",
   },
 });
