@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { FONT_SIZE } from "../../resources/dimens";
 import type { ThemedButtonProps } from "../elements/ThemedButton";
@@ -10,6 +10,7 @@ interface TextButtonProps extends ThemedButtonProps {
   text: string;
   textColor?: string;
   size?: "tiny" | "small" | "default" | "large";
+  rightComponent?: () => React.ReactNode;
 }
 
 const textSize = {
@@ -26,6 +27,7 @@ export const TextButton = ({
   textColor,
   size,
   type,
+  rightComponent,
   style,
 }: TextButtonProps) => {
   return (
@@ -33,20 +35,25 @@ export const TextButton = ({
       onPress={onPress}
       disabled={disabled}
       type={type}
-      style={style}
+      style={[styles.button, style]}
     >
-      <ThemedText
-        selectable={false}
-        style={[
-          {
-            fontSize: textSize[size || "default"],
-            color: textColor || "white",
-          },
-          styles.text,
-        ]}
-      >
-        {text}
-      </ThemedText>
+      <View style={styles.contentContainer}>
+        <ThemedText
+          selectable={false}
+          style={[
+            {
+              fontSize: textSize[size || "default"],
+              color: textColor || "white",
+            },
+            styles.text,
+          ]}
+        >
+          {text}
+        </ThemedText>
+        {rightComponent && (
+          <View style={styles.rightComponent}>{rightComponent()}</View>
+        )}
+      </View>
     </ThemedButton>
   );
 };
@@ -54,5 +61,16 @@ export const TextButton = ({
 const styles = StyleSheet.create({
   text: {
     fontFamily: "semiBold",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  button: {
+    flexDirection: "row",
+  },
+  rightComponent: {
+    position: "absolute",
+    alignSelf: "flex-end",
   },
 });

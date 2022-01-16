@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
+import Clipboard from "@react-native-clipboard/clipboard";
 
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import { TextButton } from "../../../molecules/TextButton";
@@ -21,7 +22,9 @@ export const LobbyPage = () => {
   const dispatch = useAppDispatch();
 
   const generateGameId = () => {
-    setRoomId(nanoid(8));
+    const id = nanoid(8);
+    setRoomId(id);
+    Clipboard.setString(id);
   };
 
   const enterRoom = () => {
@@ -48,7 +51,7 @@ export const LobbyPage = () => {
           value={roomId}
           style={styles.input}
         />
-        <RoomIdGenerateButton roomId={roomId} onPress={generateGameId} />
+        <RoomIdGenerateButton onPress={generateGameId} />
       </View>
       <TextButton
         text="Enter Room"

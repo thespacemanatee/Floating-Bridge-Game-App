@@ -1,6 +1,7 @@
 export {
   reducer,
   setGameUserId,
+  setGameConnected,
   setGameUsername,
   setGameRoomId,
   addPlayer,
