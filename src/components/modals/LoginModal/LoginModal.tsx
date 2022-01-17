@@ -37,10 +37,14 @@ export const LoginModal = () => {
     (userId: string, username: string, roomId: string) => {
       initPusherClient(userId, username);
       subscribeToChannel(roomId);
-      dispatch(resetPlayers());
-      bindSubscriptionSucceededEvent((player: Player) => {
-        dispatch(addPlayer(player));
-      });
+      bindSubscriptionSucceededEvent(
+        (player: Player) => {
+          dispatch(addPlayer(player));
+        },
+        () => {
+          dispatch(resetPlayers());
+        }
+      );
       bindPlayerAddedEvent((player: Player) => {
         dispatch(addPlayer(player));
       });

@@ -46,17 +46,17 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    try {
-      if (isConnected && gameId) {
-        (async () => {
-          setTimeout(async () => {
+    if (isConnected && gameId) {
+      (async () => {
+        setTimeout(async () => {
+          try {
             const res = await findExistingGameById(roomId, gameId);
             setGameExists(res.data ? true : false);
-          }, 500);
-        })();
-      }
-    } catch (err) {
-      console.error(err);
+          } catch (err) {
+            console.error(err);
+          }
+        }, 1000);
+      })();
     }
   }, [gameId, isConnected, roomId]);
 
