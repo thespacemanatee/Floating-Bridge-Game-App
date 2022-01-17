@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
-import { SPACING } from "../../../resources/dimens";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { SPACING } from "../../../resources";
+import { useAppDispatch, useAppSelector } from "../../../store";
 import { setUserId } from "../../../store/features/auth";
 
 import { LobbyPage, WaitingRoomPage } from "./login_pages";

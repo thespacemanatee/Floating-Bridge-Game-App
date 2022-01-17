@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
-import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
+import { FONT_SIZE, SPACING } from "../../../../resources";
 import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
 import { leaveRoom, triggerNextBidEvent } from "../../../../utils";

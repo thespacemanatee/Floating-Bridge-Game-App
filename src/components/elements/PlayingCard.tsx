@@ -2,9 +2,8 @@ import React, { useMemo } from "react";
 import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
 import { useWindowDimensions, View, StyleSheet, Image } from "react-native";
 
-import { SPACING } from "../../resources/dimens";
-
-export const FACE_CARD_ASPECT_RATIO = 1.4;
+import { FACE_CARD_ASPECT_RATIO } from "../../config/Constants";
+import { SPACING } from "../../resources";
 
 export interface PlayingCardProps {
   image?: ImageSourcePropType;

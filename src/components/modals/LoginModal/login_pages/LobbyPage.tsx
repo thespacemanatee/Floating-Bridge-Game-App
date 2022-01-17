@@ -3,17 +3,14 @@ import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 import Clipboard from "@react-native-clipboard/clipboard";
 
-import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
-import { TextButton } from "../../../molecules/TextButton";
-import { HeroImage } from "../../../elements/HeroImage";
-import { ThemedText } from "../../../elements/ThemedText";
-import { ThemedTextInput } from "../../../elements/ThemedTextInput";
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { FONT_SIZE, SPACING } from "../../../../resources";
+import { TextButton, RoomIdGenerateButton } from "../../../molecules";
+import { HeroImage, ThemedText, ThemedTextInput } from "../../../elements";
+import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
   setGameRoomId,
   setGameUsername,
-} from "../../../../store/features/room/roomSlice";
-import { RoomIdGenerateButton } from "../../../molecules/RoomIdGenerateButton";
+} from "../../../../store/features/room";
 import {
   bindGameEvents,
   bindPusherChannelEvents,

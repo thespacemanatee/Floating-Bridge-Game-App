@@ -13,8 +13,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { snapPoint } from "react-native-redash";
 
-import type { PlayingCardProps } from "../elements/PlayingCard";
-import { PlayingCard } from "../elements/PlayingCard";
+import type { PlayingCardProps } from "../elements";
+import { PlayingCard } from "../elements";
 
 const DURATION = 150;
 

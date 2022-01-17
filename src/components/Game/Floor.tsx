@@ -2,12 +2,11 @@ import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-import { PlayingCard } from "../elements/PlayingCard";
-import { ThemedText } from "../elements/ThemedText";
+import { PlayingCard, ThemedText } from "../elements";
 import type { PlayedCard } from "../../models";
 import { DECK } from "../../models";
-import { SPACING } from "../../resources/dimens";
-import { useAppSelector } from "../../store/hooks";
+import { SPACING } from "../../resources";
+import { useAppSelector } from "../../store";
 
 type FloorProps = {
   playedCards: PlayedCard[];

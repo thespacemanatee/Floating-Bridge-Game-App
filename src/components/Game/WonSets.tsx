@@ -2,9 +2,9 @@ import React, { memo, useMemo } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { PlayingCard } from "../elements";
-import { FACE_CARD_ASPECT_RATIO } from "../elements/PlayingCard";
 import type { PlayedCard } from "../../models";
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
+import { FACE_CARD_ASPECT_RATIO } from "../../config/Constants";
 
 type WonSetsProps = {
   sets: PlayedCard[][];

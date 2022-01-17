@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { FONT_SIZE, SPACING } from "../../resources";
 import type { Player } from "../../store/features/game";
 
-import { ThemedText } from "./ThemedText";
+import { ThemedText } from ".";
 
 type LobbyUserEntryProps = {
   currentUsername?: string;

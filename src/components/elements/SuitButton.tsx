@@ -2,7 +2,7 @@ import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { FONT_SIZE, SPACING } from "../../resources";
 import type { Trump } from "../../store/features/game";
 import { getUnicodeCharacter } from "../../utils";
 

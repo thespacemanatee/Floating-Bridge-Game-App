@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
-import { FONT_SIZE, SPACING } from "../../../resources/dimens";
+import { FONT_SIZE, SPACING } from "../../../resources";
 import { useAppSelector } from "../../../store/hooks";
 import { getWinners } from "../../../utils";
 import { ThemedText } from "../../elements";

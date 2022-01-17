@@ -3,8 +3,8 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
 import { ThemedText } from "../elements";
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { useAppSelector } from "../../store/hooks";
+import { FONT_SIZE, SPACING } from "../../resources";
+import { useAppSelector } from "../../store";
 import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../../utils";
 
 type GameHUDProps = {

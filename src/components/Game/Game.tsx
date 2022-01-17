@@ -3,27 +3,27 @@ import { StyleSheet, View } from "react-native";
 
 import type { PlayCardPayload } from "../../store/features/game";
 import { setGameUserPosition } from "../../store/features/game";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   getHandPositions,
   isInvalidPlayCard,
   triggerNextTurnEvent,
   leaveRoom,
 } from "../../utils";
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
 import { BiddingModal } from "../modals/BiddingModal";
 import type { Card } from "../../models";
 import { GameOverModal } from "../modals/GameOverModal/GameOverModal";
-import { GameBackground } from "../elements/GameBackground";
-import { CloseButton } from "../elements/CloseButton";
+import { GameBackground, CloseButton } from "../elements";
 
-import { Floor } from "./Floor";
-import { CurrentPlayerHand } from "./CurrentPlayerHand";
-import { WonSets } from "./WonSets";
-import { TopOpponentGroup } from "./TopOpponentGroup";
-import { GameHUD } from "./GameHUD";
-
-import { HorizontalOpponentGroup } from ".";
+import {
+  WonSets,
+  TopOpponentGroup,
+  GameHUD,
+  Floor,
+  CurrentPlayerHand,
+  HorizontalOpponentGroup,
+} from ".";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.auth.userId);

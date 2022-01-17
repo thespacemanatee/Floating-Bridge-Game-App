@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import type { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
 export interface ThemedButtonProps {
   children?: React.ReactNode;
   onPress?: ((event: GestureResponderEvent) => void) | null;

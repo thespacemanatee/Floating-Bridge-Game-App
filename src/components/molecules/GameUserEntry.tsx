@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
 import type { PlayerData } from "../../store/features/game";
 import { UserEntry } from "../elements";
 

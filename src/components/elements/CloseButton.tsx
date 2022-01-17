@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
 
 type CloseButtonProps = {
   onPress: () => void;

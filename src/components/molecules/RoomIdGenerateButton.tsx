@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import LottieView from "react-native-web-lottie";
 
-import { LottieView } from "../..";
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
+import { FONT_SIZE, SPACING } from "../../resources";
 import { ThemedText } from "../elements";
 
 type RoomIdGenerateButtonProps = {

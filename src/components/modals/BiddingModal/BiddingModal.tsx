@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Platform, StyleSheet, View } from "react-native";
 
-import { SPACING } from "../../../resources/dimens";
-import { useAppSelector } from "../../../store/hooks";
+import { SPACING } from "../../../resources";
+import { useAppSelector } from "../../../store";
 
-import { ChoosePartnerPage } from "./bidding_pages";
-import { BiddingPage } from "./bidding_pages/BiddingPage";
+import { ChoosePartnerPage, BiddingPage } from "./bidding_pages";
 
 export const BiddingModal = () => {
   const [biddingModalVisible, setBiddingModalVisible] = useState(true);

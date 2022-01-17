@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Clipboard from "@react-native-clipboard/clipboard";
 
 import { ThemedText } from "../elements";
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
 
 type RoomIdClipboardProps = {
   roomId: string;

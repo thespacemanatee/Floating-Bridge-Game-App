@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native";
 import isEqual from "lodash.isequal";
 
 import type { PlayerData } from "../../store/features/game";
-import { GameUserEntry } from "../molecules/GameUserEntry";
+import { GameUserEntry } from "../molecules";
 
 import { OpponentHand, WonSets } from ".";
 

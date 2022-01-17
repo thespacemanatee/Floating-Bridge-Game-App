@@ -8,11 +8,14 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { batch } from "react-redux";
 
-import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
-import { TextButton } from "../../../molecules/TextButton";
-import { UserEntry } from "../../../elements/UserEntry";
-import { ThemedText } from "../../../elements/ThemedText";
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import { FONT_SIZE, SPACING } from "../../../../resources";
+import { TextButton, RoomIdClipboard } from "../../../molecules";
+import {
+  UserEntry,
+  ThemedText,
+  UserEntryContentLoader,
+} from "../../../elements";
+import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
   initialiseGame,
   resumeGame,
@@ -22,8 +25,6 @@ import {
 import { resetRoom, setGameStatus } from "../../../../store/features/room";
 import type { Player } from "../../../../store/features/game";
 import { resetGame } from "../../../../store/features/game";
-import { RoomIdClipboard } from "../../../molecules/RoomIdClipboard";
-import { UserEntryContentLoader } from "../../../elements/UserEntryContentLoader";
 
 type WaitingRoomPageProps = {
   players: Player[];
