@@ -1,7 +1,6 @@
 export {
   reducer,
   setGameId,
-  setGameStatus,
   setGamePlayerData,
   setGameRoundNo,
   setGameUserPosition,
@@ -16,7 +15,6 @@ export {
 } from "./gameSlice";
 
 export type {
-  GameStatus,
   Player,
   PlayerData,
   Partner,

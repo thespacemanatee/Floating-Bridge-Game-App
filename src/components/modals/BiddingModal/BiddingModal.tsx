@@ -9,7 +9,7 @@ import { BiddingPage } from "./bidding_pages/BiddingPage";
 
 export const BiddingModal = () => {
   const [biddingModalVisible, setBiddingModalVisible] = useState(true);
-  const gameStatus = useAppSelector((state) => state.game.status);
+  const gameStatus = useAppSelector((state) => state.room.gameStatus);
   const isBidding = useAppSelector((state) => state.game.isBidding);
   const partner = useAppSelector((state) => state.game.partner);
 

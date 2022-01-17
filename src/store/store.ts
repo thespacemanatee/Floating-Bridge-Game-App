@@ -11,10 +11,12 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+import { reducer as authReducer } from "./features/auth";
 import { reducer as gameReducer } from "./features/game";
 import { reducer as roomReducer } from "./features/room";
 
 const rootReducer = combineReducers({
+  auth: authReducer,
   room: roomReducer,
   game: gameReducer,
 });
@@ -23,6 +25,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
+  blacklist: ["room"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

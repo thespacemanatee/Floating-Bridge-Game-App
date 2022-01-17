@@ -15,10 +15,20 @@ export const initialiseGame = async (
     players,
   });
 
-export const findExistingGameById = async (roomId: string, gameId: string) =>
-  await axios.post(`${HOST}/games/${gameId}`, {
-    roomId,
-  });
+export const getExistingGameExists = async (
+  roomId: string,
+  gameId: string | null
+) => {
+  let res;
+  try {
+    res = await axios.post(`${HOST}/games/${gameId}`, {
+      roomId,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+  return res ? true : false;
+};
 
 export const resumeGame = async (roomId: string, gameId: string) =>
   await axios.post(`${HOST}/games/resume/${gameId}`, {
