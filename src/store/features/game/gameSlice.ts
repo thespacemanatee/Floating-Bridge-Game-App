@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import type { Card, PlayedCard } from "../../../models";
 
-export type GameStatus = "started" | "stopped";
+export type GameStatus = "loading" | "started" | "stopped";
 
 export interface Player {
   id: string;
@@ -15,7 +15,11 @@ export interface Player {
 
 export interface PlayerData extends Player {
   hand: Card[];
-  sets: PlayedCard[];
+  sets: PlayedCard[][];
+}
+
+export interface Partner extends Card {
+  userId: string;
 }
 
 export type PlayCardPayload = {
@@ -37,12 +41,13 @@ interface GameState {
   gameId: string | null;
   status: GameStatus;
   players: PlayerData[];
+  roundNo: number;
   userPosition: number;
   currentPosition: number;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
-  isPartnerChosen: boolean;
+  partner: Partner | null;
   isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 }
@@ -51,12 +56,13 @@ const initialState: GameState = {
   gameId: null,
   status: "stopped",
   players: [],
+  roundNo: 0,
   userPosition: 0,
   currentPosition: 0,
   latestBid: null,
   bidSequence: [],
   isBidding: false,
-  isPartnerChosen: false,
+  partner: null,
   isTrumpBroken: false,
   playedCards: [],
 };
@@ -74,6 +80,9 @@ const gameSlice = createSlice({
     setGamePlayerData(state: GameState, action: PayloadAction<PlayerData[]>) {
       state.players = action.payload;
     },
+    setGameRoundNo(state: GameState, action: PayloadAction<number>) {
+      state.roundNo = action.payload;
+    },
     setGameUserPosition(state: GameState, action: PayloadAction<number>) {
       state.userPosition = action.payload;
     },
@@ -89,8 +98,8 @@ const gameSlice = createSlice({
     setGameIsBidding(state: GameState, action: PayloadAction<boolean>) {
       state.isBidding = action.payload;
     },
-    setGameIsPartnerChosen(state: GameState, action: PayloadAction<boolean>) {
-      state.isPartnerChosen = action.payload;
+    setGamePartner(state: GameState, action: PayloadAction<Partner>) {
+      state.partner = action.payload;
     },
     setGameIsTrumpBroken(state: GameState, action: PayloadAction<boolean>) {
       state.isTrumpBroken = action.payload;
@@ -106,7 +115,7 @@ const gameSlice = createSlice({
       state.latestBid = null;
       state.bidSequence = [];
       state.isBidding = false;
-      state.isPartnerChosen = false;
+      state.partner = null;
       state.isTrumpBroken = false;
       state.players = [];
       state.playedCards = [];
@@ -118,12 +127,13 @@ export const {
   setGameId,
   setGameStatus,
   setGamePlayerData,
+  setGameRoundNo,
   setGameUserPosition,
   setGameCurrentPosition,
   setGameLatestBid,
   setGameBidSequence,
   setGameIsBidding,
-  setGameIsPartnerChosen,
+  setGamePartner,
   setGameIsTrumpBroken,
   setGamePlayedCards,
   resetGame,

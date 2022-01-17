@@ -5,12 +5,12 @@ import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
-import { getUnicodeCharacter } from "../../../../utils";
-import { triggerNextBidEvent } from "../../../../utils/GameHelper";
+import { getUnicodeCharacter, triggerNextBidEvent } from "../../../../utils";
 import { LevelButton, SuitButton, ThemedText } from "../../../elements";
 import { TextButton } from "../../../molecules";
 
 export const BiddingPage = () => {
+  const players = useAppSelector((state) => state.game.players);
   const userPosition = useAppSelector((state) => state.game.userPosition);
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const [selectedLevel, setSelectedLevel] = useState<BidLevel>();
@@ -82,21 +82,26 @@ export const BiddingPage = () => {
       <View style={styles.topContainer}>
         <View>
           <ThemedText style={styles.titleText}>
-            {`Welcome Player ${userPosition + 1}`}
+            Welcome{" "}
+            <ThemedText
+              style={[
+                { color: players[userPosition]?.info.color },
+                styles.titleText,
+              ]}
+            >{`${players[userPosition]?.info.username}`}</ThemedText>
+            !
           </ThemedText>
           <ThemedText style={styles.playerText}>
-            {userPosition === currentPosition
-              ? "Your turn to bid!"
-              : `Player ${currentPosition + 1} is bidding...`}
-          </ThemedText>
-        </View>
-        <View>
-          <ThemedText style={styles.bidText}>
-            {latestBid
-              ? `Trump: ${latestBid?.level}${getUnicodeCharacter(
-                  latestBid?.trump
-                )}`
-              : "Trump: N/A"}
+            {userPosition === currentPosition ? (
+              "Your turn to bid!"
+            ) : (
+              <ThemedText
+                style={[
+                  { color: players[currentPosition]?.info.color },
+                  styles.playerText,
+                ]}
+              >{`${players[currentPosition]?.info.username} is bidding...`}</ThemedText>
+            )}
           </ThemedText>
         </View>
       </View>
@@ -160,10 +165,6 @@ const styles = StyleSheet.create({
     fontFamily: "semiBold",
     fontSize: FONT_SIZE.title3,
     marginBottom: SPACING.spacing8,
-  },
-  bidText: {
-    fontFamily: "semiBold",
-    fontSize: FONT_SIZE.title3,
   },
   bidButtonsContainer: {
     flexDirection: "row",

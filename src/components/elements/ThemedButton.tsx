@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from "react-native";
 
 import { SPACING } from "../../resources/dimens";
 export interface ThemedButtonProps {
-  children?: JSX.Element;
+  children?: React.ReactNode;
   onPress?: ((event: GestureResponderEvent) => void) | null;
   disabled?: boolean | null;
   type?: "outlined" | "default";

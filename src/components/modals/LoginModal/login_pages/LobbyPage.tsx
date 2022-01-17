@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
+import Clipboard from "@react-native-clipboard/clipboard";
 
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import { TextButton } from "../../../molecules/TextButton";
@@ -12,6 +13,7 @@ import {
   setGameRoomId,
   setGameUsername,
 } from "../../../../store/features/room/roomSlice";
+import { RoomIdGenerateButton } from "../../../molecules/RoomIdGenerateButton";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
@@ -20,14 +22,12 @@ export const LobbyPage = () => {
   const dispatch = useAppDispatch();
 
   const generateGameId = () => {
-    setRoomId(nanoid(8));
+    const id = nanoid(8);
+    setRoomId(id);
+    Clipboard.setString(id);
   };
 
   const enterRoom = () => {
-    if (!username || !roomId) {
-      alert("Please enter the missing information!");
-      return;
-    }
     dispatch(setGameUsername(username));
     dispatch(setGameRoomId(roomId));
   };
@@ -51,18 +51,12 @@ export const LobbyPage = () => {
           value={roomId}
           style={styles.input}
         />
-        <TextButton
-          onPress={generateGameId}
-          text="Generate"
-          textColor="black"
-          type="outlined"
-          size="tiny"
-          style={styles.generateButton}
-        />
+        <RoomIdGenerateButton onPress={generateGameId} />
       </View>
       <TextButton
-        onPress={enterRoom}
         text="Enter Room"
+        onPress={enterRoom}
+        disabled={!username || !roomId}
         style={styles.loginButton}
       />
     </View>
@@ -88,9 +82,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     marginVertical: SPACING.spacing12,
-  },
-  generateButton: {
-    marginLeft: SPACING.spacing8,
   },
   loginButton: {
     margin: SPACING.spacing4,

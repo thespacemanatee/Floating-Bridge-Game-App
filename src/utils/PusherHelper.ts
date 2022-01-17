@@ -3,16 +3,19 @@ import { createRef } from "react";
 import type { Channel } from "pusher-js";
 import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
+import { batch } from "react-redux";
 
 import type {
   Bid,
   GameStatus,
+  Partner,
   Player,
   PlayerData,
 } from "../store/features/game";
 import {
+  setGamePartner,
+  setGameRoundNo,
   setGameIsTrumpBroken,
-  setGameIsPartnerChosen,
   setGameLatestBid,
   setGameId,
   setGamePlayedCards,
@@ -24,9 +27,18 @@ import {
 } from "../store/features/game";
 import { store } from "../store";
 import type { PlayedCard } from "../models";
+import { setGameConnected } from "../store/features/room";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
+
+type PusherStates =
+  | "initialized"
+  | "connecting"
+  | "connected"
+  | "unavailable"
+  | "failed"
+  | "disconnected";
 
 export const initPusherClient = (userId: string, username: string) => {
   pusherRef.current = new Pusher(PUSHER_KEY, {
@@ -36,6 +48,20 @@ export const initPusherClient = (userId: string, username: string) => {
     authEndpoint: HOST + AUTH_ENDPOINT,
     cluster: PUSHER_CLUSTER,
   });
+  pusherRef.current.connection.bind(
+    "state_change",
+    (states: { previous: PusherStates; current: PusherStates }) => {
+      switch (states.current) {
+        case "connected": {
+          store.dispatch(setGameConnected(true));
+          break;
+        }
+        default: {
+          store.dispatch(setGameConnected(false));
+        }
+      }
+    }
+  );
 };
 
 export const subscribeToChannel = (gameId: string) => {
@@ -55,9 +81,13 @@ export const unsubscribeToChannel = (gameId: string) => {
 };
 
 export const bindSubscriptionSucceededEvent = (
-  callback: (player: Player) => void
+  callback: (player: Player) => void,
+  onSubscribe?: () => void
 ) => {
   if (channelRef.current) {
+    if (onSubscribe) {
+      onSubscribe();
+    }
     channelRef.current.bind("pusher:subscription_succeeded", () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -87,11 +117,12 @@ export const bindPlayerRemovedEvent = (callback: (player: Player) => void) => {
 type GameData = {
   roomId: string;
   players: PlayerData[];
+  roundNo: number;
   currentPosition: number;
   latestBid: Bid | null;
   bidSequence: Bid[];
   isBidding: boolean;
-  isPartnerChosen: boolean;
+  partner: Partner;
   isTrumpBroken: boolean;
   playedCards: PlayedCard[];
 };
@@ -100,6 +131,12 @@ export const bindGameEvents = () => {
   if (channelRef.current) {
     channelRef.current.bind(
       "game-status-event",
+      (data: { status: GameStatus }) => {
+        store.dispatch(setGameStatus(data.status));
+      }
+    );
+    channelRef.current.bind(
+      "client-game-status-event",
       (data: { status: GameStatus }) => {
         store.dispatch(setGameStatus(data.status));
       }
@@ -122,23 +159,33 @@ export const bindGameEvents = () => {
   }
 };
 
+export const triggerGameStartedLoading = () => {
+  channelRef.current?.trigger("client-game-status-event", {
+    status: "loading",
+  });
+};
+
 const setGameData = (gameData: GameData) => {
   const {
-    currentPosition,
     players,
+    roundNo,
+    currentPosition,
     latestBid,
     bidSequence,
     isBidding,
-    isPartnerChosen,
+    partner,
     isTrumpBroken,
     playedCards,
   } = gameData;
-  store.dispatch(setGamePlayerData(players));
-  store.dispatch(setGameCurrentPosition(currentPosition));
-  store.dispatch(setGameLatestBid(latestBid));
-  store.dispatch(setGameBidSequence(bidSequence));
-  store.dispatch(setGameIsBidding(isBidding));
-  store.dispatch(setGameIsPartnerChosen(isPartnerChosen));
-  store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
-  store.dispatch(setGamePlayedCards(playedCards));
+  batch(() => {
+    store.dispatch(setGamePlayerData(players));
+    store.dispatch(setGameRoundNo(roundNo));
+    store.dispatch(setGameCurrentPosition(currentPosition));
+    store.dispatch(setGameLatestBid(latestBid));
+    store.dispatch(setGameBidSequence(bidSequence));
+    store.dispatch(setGameIsBidding(isBidding));
+    store.dispatch(setGamePartner(partner));
+    store.dispatch(setGameIsTrumpBroken(isTrumpBroken));
+    store.dispatch(setGamePlayedCards(playedCards));
+  });
 };

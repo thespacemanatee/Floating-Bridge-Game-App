@@ -1,29 +1,29 @@
 import React from "react";
 
-import { AnimatedFaceCard } from "../components/molecules/AnimatedFaceCard";
+import { AnimatedFaceCard } from "../molecules/AnimatedFaceCard";
 import {
   CARD_OFFSET_X,
   CARD_OFFSET_Y,
   CARD_ROTATION,
-} from "../config/Constants";
-import type { Card } from "../models";
-import { DECK } from "../models";
-import type { PlayerData } from "../store/features/game";
+} from "../../config/Constants";
+import type { Card } from "../../models";
+import { DECK } from "../../models";
 
 type CurrentPlayerHandProps = {
-  playerData: PlayerData;
+  hand: Card[];
+  scaleSize?: number;
   isActive: boolean;
   onPlayCard: (card: Card, callback: () => void) => void;
 };
 
 export const CurrentPlayerHand = ({
-  playerData,
+  hand,
   isActive,
   onPlayCard,
 }: CurrentPlayerHandProps) => {
   return (
     <>
-      {playerData.hand.map((card, index, hand) => {
+      {hand.map((card, index) => {
         const noOfCards = hand.length;
         const translateX = CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
         const translateY =
@@ -34,7 +34,7 @@ export const CurrentPlayerHand = ({
           <AnimatedFaceCard
             index={index}
             key={`${card.suit}${card.value}`}
-            image={DECK[`${card.suit}${card.value}`]!.imageUri}
+            image={DECK[`${card.suit}${card.value}`].imageUri}
             offsetX={translateX}
             offsetY={translateY}
             offsetRotate={rotate}

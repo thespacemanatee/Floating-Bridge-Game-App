@@ -9,9 +9,8 @@ import {
   bindSubscriptionSucceededEvent,
   initPusherClient,
   subscribeToChannel,
-} from "../../../utils/PusherHelper";
+} from "../../../utils";
 import { SPACING } from "../../../resources/dimens";
-import { initialiseGame } from "../../../utils/GameHelper";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   addPlayer,
@@ -20,9 +19,9 @@ import {
   setGameUserId,
 } from "../../../store/features/room/roomSlice";
 import type { Player } from "../../../store/features/game";
+import { setGameStatus } from "../../../store/features/game";
 
-import { LobbyPage } from "./login_pages/LobbyPage";
-import { WaitingRoomPage } from "./login_pages/WaitingRoomPage";
+import { LobbyPage, WaitingRoomPage } from "./login_pages";
 
 export const LoginModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -38,15 +37,20 @@ export const LoginModal = () => {
     (userId: string, username: string, roomId: string) => {
       initPusherClient(userId, username);
       subscribeToChannel(roomId);
-      dispatch(resetPlayers());
-      bindSubscriptionSucceededEvent((player: Player) => {
-        dispatch(addPlayer(player));
-      });
+      bindSubscriptionSucceededEvent(
+        (player: Player) => {
+          dispatch(addPlayer(player));
+        },
+        () => {
+          dispatch(resetPlayers());
+        }
+      );
       bindPlayerAddedEvent((player: Player) => {
         dispatch(addPlayer(player));
       });
       bindPlayerRemovedEvent((player: Player) => {
         dispatch(removePlayer(player));
+        dispatch(setGameStatus("stopped"));
       });
       bindGameEvents();
     },
@@ -78,25 +82,12 @@ export const LoginModal = () => {
     }
   }, [gameUserId, gameUsername, gameRoomId, enterRoom]);
 
-  const startGame = async () => {
-    if (gameRoomId) {
-      await initialiseGame(gameUserId, gameRoomId, players);
-    }
-  };
-
   return (
-    <Modal
-      animationType="fade"
-      transparent
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
+    <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.container}>
         <View style={styles.modalView}>
           {gameUserId && gameUsername && gameRoomId ? (
-            <WaitingRoomPage players={players} onStartGame={startGame} />
+            <WaitingRoomPage players={players} />
           ) : (
             <LobbyPage />
           )}
@@ -116,7 +107,6 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: "white",
     borderRadius: SPACING.spacing12,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -125,5 +115,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    width: "50%",
+    minWidth: 750,
   },
 });

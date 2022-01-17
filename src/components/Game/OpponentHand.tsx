@@ -1,21 +1,22 @@
 import React from "react";
 
-import { AnimatedBackCard } from "../components/molecules/AnimatedBackCard";
+import { AnimatedBackCard } from "../molecules/AnimatedBackCard";
 import {
   BACK_CARD_OFFSET_X,
   CARD_OFFSET_Y,
   CARD_ROTATION,
-} from "../config/Constants";
-import type { PlayerData } from "../store/features/game";
+} from "../../config/Constants";
+import type { Card } from "../../models";
 
 type OpponentHandProps = {
-  playerData: PlayerData;
+  hand: Card[];
+  scaleSize?: number;
 };
 
-export const OpponentHand = ({ playerData }: OpponentHandProps) => {
+export const OpponentHand = ({ hand, scaleSize = 1 }: OpponentHandProps) => {
   return (
     <>
-      {playerData.hand.map((card, index, hand) => {
+      {hand.map((card, index) => {
         const noOfCards = hand.length;
         const translateX =
           BACK_CARD_OFFSET_X * (index - Math.floor(noOfCards / 2));
@@ -27,6 +28,7 @@ export const OpponentHand = ({ playerData }: OpponentHandProps) => {
           <AnimatedBackCard
             key={`${card.suit}${card.value}`}
             index={index}
+            scaleSize={scaleSize}
             offsetX={translateX}
             offsetY={translateY}
             offsetRotate={rotate}
