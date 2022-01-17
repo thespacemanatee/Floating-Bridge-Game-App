@@ -81,9 +81,13 @@ export const unsubscribeToChannel = (gameId: string) => {
 };
 
 export const bindSubscriptionSucceededEvent = (
-  callback: (player: Player) => void
+  callback: (player: Player) => void,
+  onSubscribe?: () => void
 ) => {
   if (channelRef.current) {
+    if (onSubscribe) {
+      onSubscribe();
+    }
     channelRef.current.bind("pusher:subscription_succeeded", () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore

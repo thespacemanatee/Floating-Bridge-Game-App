@@ -104,15 +104,6 @@ export const BiddingPage = () => {
             )}
           </ThemedText>
         </View>
-        <View>
-          <ThemedText style={styles.bidText}>
-            {latestBid
-              ? `Trump: ${latestBid?.level}${getUnicodeCharacter(
-                  latestBid?.trump
-                )}`
-              : "Trump: N/A"}
-          </ThemedText>
-        </View>
       </View>
       <View style={styles.bidButtonsContainer}>
         {BID_LEVELS.map((level) => (
@@ -174,10 +165,6 @@ const styles = StyleSheet.create({
     fontFamily: "semiBold",
     fontSize: FONT_SIZE.title3,
     marginBottom: SPACING.spacing8,
-  },
-  bidText: {
-    fontFamily: "semiBold",
-    fontSize: FONT_SIZE.title3,
   },
   bidButtonsContainer: {
     flexDirection: "row",
