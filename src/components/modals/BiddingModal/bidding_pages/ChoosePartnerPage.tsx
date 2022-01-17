@@ -16,7 +16,7 @@ type PartnerPayload = {
 };
 
 export const ChoosePartnerPage = () => {
-  const userId = useAppSelector((state) => state.room.userId);
+  const userId = useAppSelector((state) => state.auth.userId);
   const players = useAppSelector((state) => state.room.players);
   const gameId = useAppSelector((state) => state.game.gameId);
   const latestBid = useAppSelector((state) => state.game.latestBid);

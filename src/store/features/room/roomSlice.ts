@@ -3,30 +3,30 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import type { Player } from "../game";
 
+export type GameStatus = "loading" | "started" | "stopped";
 interface RoomState {
-  userId: string;
   isConnected: boolean;
   username: string;
   roomId: string;
   players: Player[];
+  gameExists: boolean;
+  gameStatus: GameStatus;
 }
 
 const initialState: RoomState = {
-  userId: "",
   isConnected: false,
   username: "",
   roomId: "",
   players: [],
+  gameExists: false,
+  gameStatus: "stopped",
 };
 
 const roomSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    setGameUserId(state: RoomState, action: PayloadAction<string>) {
-      state.userId = action.payload;
-    },
-    setGameConnected(state: RoomState, action: PayloadAction<boolean>) {
+    setGameIsConnected(state: RoomState, action: PayloadAction<boolean>) {
       state.isConnected = action.payload;
     },
     setGameUsername(state: RoomState, action: PayloadAction<string>) {
@@ -46,24 +46,32 @@ const roomSlice = createSlice({
     resetPlayers(state: RoomState) {
       state.players = [];
     },
+    setGameExists(state: RoomState, action: PayloadAction<boolean>) {
+      state.gameExists = action.payload;
+    },
+    setGameStatus(state: RoomState, action: PayloadAction<GameStatus>) {
+      state.gameStatus = action.payload;
+    },
     resetRoom(state: RoomState) {
-      state.userId = "";
       state.isConnected = false;
       state.username = "";
       state.roomId = "";
       state.players = [];
+      state.gameExists = false;
+      state.gameStatus = "stopped";
     },
   },
 });
 
 export const {
-  setGameUserId,
-  setGameConnected,
+  setGameIsConnected,
   setGameUsername,
   setGameRoomId,
   addPlayer,
   removePlayer,
   resetPlayers,
+  setGameExists,
+  setGameStatus,
   resetRoom,
 } = roomSlice.actions;
 

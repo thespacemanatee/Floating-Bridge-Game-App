@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 import Clipboard from "@react-native-clipboard/clipboard";
@@ -8,16 +8,23 @@ import { TextButton } from "../../../molecules/TextButton";
 import { HeroImage } from "../../../elements/HeroImage";
 import { ThemedText } from "../../../elements/ThemedText";
 import { ThemedTextInput } from "../../../elements/ThemedTextInput";
-import { useAppDispatch } from "../../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import {
   setGameRoomId,
   setGameUsername,
 } from "../../../../store/features/room/roomSlice";
 import { RoomIdGenerateButton } from "../../../molecules/RoomIdGenerateButton";
+import {
+  bindGameEvents,
+  bindPusherChannelEvents,
+  initPusherClient,
+  subscribeToChannel,
+} from "../../../../utils";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
+  const userId = useAppSelector((state) => state.auth.userId);
 
   const dispatch = useAppDispatch();
 
@@ -27,10 +34,18 @@ export const LobbyPage = () => {
     Clipboard.setString(id);
   };
 
-  const enterRoom = () => {
-    dispatch(setGameUsername(username));
-    dispatch(setGameRoomId(roomId));
-  };
+  const enterRoom = useCallback(() => {
+    try {
+      initPusherClient(userId, username);
+      subscribeToChannel(roomId);
+      bindPusherChannelEvents();
+      bindGameEvents();
+      dispatch(setGameUsername(username));
+      dispatch(setGameRoomId(roomId));
+    } catch (err) {
+      console.error(err);
+    }
+  }, [dispatch, roomId, userId, username]);
 
   return (
     <View style={styles.container}>
