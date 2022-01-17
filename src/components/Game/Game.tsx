@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { batch } from "react-redux";
 
 import type { PlayCardPayload } from "../../store/features/game";
 import { setGameUserPosition, resetGame } from "../../store/features/game";
@@ -31,7 +32,7 @@ import { GameHUD } from "./GameHUD";
 import { HorizontalOpponentGroup } from ".";
 
 export const Game = () => {
-  const userId = useAppSelector((state) => state.room.userId);
+  const userId = useAppSelector((state) => state.auth.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
   const gameId = useAppSelector((state) => state.game.gameId);
   const players = useAppSelector((state) => state.game.players);
@@ -45,6 +46,18 @@ export const Game = () => {
   );
 
   const dispatch = useAppDispatch();
+
+  const leaveRoom = useCallback(() => {
+    try {
+      unsubscribeToChannel(roomId);
+    } catch (err) {
+      console.error(err);
+    }
+    batch(() => {
+      dispatch(resetRoom());
+      dispatch(resetGame());
+    });
+  }, [dispatch, roomId]);
 
   useEffect(() => {
     if (userPosition) {
@@ -83,12 +96,6 @@ export const Game = () => {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const leaveRoom = () => {
-    unsubscribeToChannel(roomId);
-    dispatch(resetRoom());
-    dispatch(resetGame());
   };
 
   return (

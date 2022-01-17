@@ -5,13 +5,7 @@ import Pusher from "pusher-js";
 import { AUTH_ENDPOINT, HOST, PUSHER_CLUSTER, PUSHER_KEY } from "@env";
 import { batch } from "react-redux";
 
-import type {
-  Bid,
-  GameStatus,
-  Partner,
-  Player,
-  PlayerData,
-} from "../store/features/game";
+import type { Bid, Partner, Player, PlayerData } from "../store/features/game";
 import {
   setGamePartner,
   setGameRoundNo,
@@ -23,11 +17,20 @@ import {
   setGameBidSequence,
   setGameCurrentPosition,
   setGamePlayerData,
-  setGameStatus,
 } from "../store/features/game";
 import { store } from "../store";
 import type { PlayedCard } from "../models";
-import { setGameConnected } from "../store/features/room";
+import type { GameStatus } from "../store/features/room";
+import {
+  setGameExists,
+  addPlayer,
+  removePlayer,
+  resetPlayers,
+  setGameIsConnected,
+  setGameStatus,
+} from "../store/features/room";
+
+import { getExistingGameExists } from ".";
 
 export const pusherRef: MutableRefObject<Pusher | null> = createRef();
 export const channelRef: MutableRefObject<Channel | null> = createRef();
@@ -53,11 +56,11 @@ export const initPusherClient = (userId: string, username: string) => {
     (states: { previous: PusherStates; current: PusherStates }) => {
       switch (states.current) {
         case "connected": {
-          store.dispatch(setGameConnected(true));
+          store.dispatch(setGameIsConnected(true));
           break;
         }
         default: {
-          store.dispatch(setGameConnected(false));
+          store.dispatch(setGameIsConnected(false));
         }
       }
     }
@@ -80,38 +83,41 @@ export const unsubscribeToChannel = (gameId: string) => {
   }
 };
 
-export const bindSubscriptionSucceededEvent = (
-  callback: (player: Player) => void,
-  onSubscribe?: () => void
-) => {
+export const bindPusherChannelEvents = () => {
   if (channelRef.current) {
-    if (onSubscribe) {
-      onSubscribe();
-    }
-    channelRef.current.bind("pusher:subscription_succeeded", () => {
+    channelRef.current.bind("pusher:subscription_succeeded", async () => {
+      console.log("subscription_succeeded");
+      store.dispatch(resetPlayers());
+      await dispatchGameExists();
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      channelRef.current?.members.each(callback);
+      channelRef.current?.members.each((player: Player) => {
+        console.log("player_in_room");
+        store.dispatch(addPlayer(player));
+      });
+    });
+    channelRef.current.bind("pusher:member_added", async (player: Player) => {
+      console.log("added_player");
+      await dispatchGameExists();
+      store.dispatch(addPlayer(player));
+    });
+    channelRef.current.bind("pusher:member_removed", async (player: Player) => {
+      console.log("removed_player");
+      await dispatchGameExists();
+      store.dispatch(removePlayer(player));
+      store.dispatch(setGameStatus("stopped"));
     });
   } else {
     throw Error("Channel not found!");
   }
 };
 
-export const bindPlayerAddedEvent = (callback: (player: Player) => void) => {
-  if (channelRef.current) {
-    channelRef.current.bind("pusher:member_added", callback);
-  } else {
-    throw Error("Channel not found!");
-  }
-};
-
-export const bindPlayerRemovedEvent = (callback: (player: Player) => void) => {
-  if (channelRef.current) {
-    channelRef.current.bind("pusher:member_removed", callback);
-  } else {
-    throw Error("Channel not found!");
-  }
+const dispatchGameExists = async () => {
+  const exists = await getExistingGameExists(
+    store.getState().room.roomId,
+    store.getState().game.gameId
+  );
+  store.dispatch(setGameExists(exists));
 };
 
 type GameData = {
@@ -145,13 +151,13 @@ export const bindGameEvents = () => {
       "game-init-event",
       (data: { gameId: string; gameData: GameData }) => {
         store.dispatch(setGameId(data.gameId));
-        setGameData(data.gameData);
+        dispatchGameData(data.gameData);
       }
     );
     channelRef.current.bind(
       "game-turn-event",
       (data: { gameData: GameData }) => {
-        setGameData(data.gameData);
+        dispatchGameData(data.gameData);
       }
     );
   } else {
@@ -160,12 +166,16 @@ export const bindGameEvents = () => {
 };
 
 export const triggerGameStartedLoading = () => {
-  channelRef.current?.trigger("client-game-status-event", {
-    status: "loading",
-  });
+  if (channelRef.current) {
+    channelRef.current.trigger("client-game-status-event", {
+      status: "loading",
+    });
+  } else {
+    throw Error("Channel not found!");
+  }
 };
 
-const setGameData = (gameData: GameData) => {
+const dispatchGameData = (gameData: GameData) => {
   const {
     players,
     roundNo,

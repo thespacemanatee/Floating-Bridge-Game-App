@@ -3,8 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import type { Card, PlayedCard } from "../../../models";
 
-export type GameStatus = "loading" | "started" | "stopped";
-
 export interface Player {
   id: string;
   info: {
@@ -39,7 +37,6 @@ export type Bid = {
 
 interface GameState {
   gameId: string | null;
-  status: GameStatus;
   players: PlayerData[];
   roundNo: number;
   userPosition: number;
@@ -54,7 +51,6 @@ interface GameState {
 
 const initialState: GameState = {
   gameId: null,
-  status: "stopped",
   players: [],
   roundNo: 0,
   userPosition: 0,
@@ -73,9 +69,6 @@ const gameSlice = createSlice({
   reducers: {
     setGameId(state: GameState, action: PayloadAction<string>) {
       state.gameId = action.payload;
-    },
-    setGameStatus(state: GameState, action: PayloadAction<GameStatus>) {
-      state.status = action.payload;
     },
     setGamePlayerData(state: GameState, action: PayloadAction<PlayerData[]>) {
       state.players = action.payload;
@@ -109,7 +102,6 @@ const gameSlice = createSlice({
     },
     resetGame(state: GameState) {
       state.gameId = null;
-      state.status = "stopped";
       state.userPosition = 0;
       state.currentPosition = 0;
       state.latestBid = null;
@@ -125,7 +117,6 @@ const gameSlice = createSlice({
 
 export const {
   setGameId,
-  setGameStatus,
   setGamePlayerData,
   setGameRoundNo,
   setGameUserPosition,

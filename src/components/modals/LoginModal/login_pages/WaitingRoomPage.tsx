@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -14,15 +14,14 @@ import { UserEntry } from "../../../elements/UserEntry";
 import { ThemedText } from "../../../elements/ThemedText";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import {
-  findExistingGameById,
   initialiseGame,
   resumeGame,
   triggerGameStartedLoading,
   unsubscribeToChannel,
 } from "../../../../utils";
-import { resetRoom } from "../../../../store/features/room/roomSlice";
+import { resetRoom, setGameStatus } from "../../../../store/features/room";
 import type { Player } from "../../../../store/features/game";
-import { setGameStatus, resetGame } from "../../../../store/features/game";
+import { resetGame } from "../../../../store/features/game";
 import { RoomIdClipboard } from "../../../molecules/RoomIdClipboard";
 import { UserEntryContentLoader } from "../../../elements/UserEntryContentLoader";
 
@@ -31,12 +30,11 @@ type WaitingRoomPageProps = {
 };
 
 export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
-  const [gameExists, setGameExists] = useState(false);
+  const userId = useAppSelector((state) => state.auth.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
-  const isConnected = useAppSelector((state) => state.room.isConnected);
-  const userId = useAppSelector((state) => state.room.userId);
   const username = useAppSelector((state) => state.room.username);
-  const gameStatus = useAppSelector((state) => state.game.status);
+  const gameStatus = useAppSelector((state) => state.room.gameStatus);
+  const gameExists = useAppSelector((state) => state.room.gameExists);
   const gameId = useAppSelector((state) => state.game.gameId);
   const roomReady = useMemo(
     () => (players.length === 4 ? true : false),
@@ -44,21 +42,6 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
   );
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (isConnected && gameId) {
-      (async () => {
-        setTimeout(async () => {
-          try {
-            const res = await findExistingGameById(roomId, gameId);
-            setGameExists(res.data ? true : false);
-          } catch (err) {
-            console.error(err);
-          }
-        }, 1000);
-      })();
-    }
-  }, [gameId, isConnected, roomId]);
 
   const onStartOrResumeGame = async () => {
     try {
@@ -70,12 +53,17 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
         await initialiseGame(userId, roomId, players);
       }
     } catch (err) {
+      console.error(err);
       dispatch(setGameStatus("stopped"));
     }
   };
 
   const leaveRoom = () => {
-    unsubscribeToChannel(roomId);
+    try {
+      unsubscribeToChannel(roomId);
+    } catch (err) {
+      console.error(err);
+    }
     batch(() => {
       dispatch(resetRoom());
       dispatch(resetGame());

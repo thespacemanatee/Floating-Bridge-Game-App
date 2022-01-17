@@ -5,7 +5,7 @@ import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
-import { getUnicodeCharacter, triggerNextBidEvent } from "../../../../utils";
+import { triggerNextBidEvent } from "../../../../utils";
 import { LevelButton, SuitButton, ThemedText } from "../../../elements";
 import { TextButton } from "../../../molecules";
 
@@ -15,7 +15,7 @@ export const BiddingPage = () => {
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
   const [selectedLevel, setSelectedLevel] = useState<BidLevel>();
   const [selectedTrump, setSelectedSuit] = useState<Trump>();
-  const userId = useAppSelector((state) => state.room.userId);
+  const userId = useAppSelector((state) => state.auth.userId);
   const gameId = useAppSelector((state) => state.game.gameId);
   const latestBid = useAppSelector((state) => state.game.latestBid);
 

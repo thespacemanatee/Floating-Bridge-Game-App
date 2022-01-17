@@ -12,16 +12,14 @@ export {
   initPusherClient,
   subscribeToChannel,
   unsubscribeToChannel,
-  bindSubscriptionSucceededEvent,
-  bindPlayerAddedEvent,
-  bindPlayerRemovedEvent,
+  bindPusherChannelEvents,
   bindGameEvents,
   triggerGameStartedLoading,
 } from "./PusherHelper";
 
 export {
   initialiseGame,
-  findExistingGameById,
+  getExistingGameExists,
   resumeGame,
   triggerNextBidEvent,
   triggerSetPartnerEvent,
