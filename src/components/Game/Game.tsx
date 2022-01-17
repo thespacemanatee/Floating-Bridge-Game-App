@@ -1,27 +1,21 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import {
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { batch } from "react-redux";
+import React, { useEffect, useMemo } from "react";
+import { StyleSheet, View } from "react-native";
 
 import type { PlayCardPayload } from "../../store/features/game";
-import { setGameUserPosition, resetGame } from "../../store/features/game";
+import { setGameUserPosition } from "../../store/features/game";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { resetRoom } from "../../store/features/room/roomSlice";
 import {
-  unsubscribeToChannel,
   getHandPositions,
   isInvalidPlayCard,
   triggerNextTurnEvent,
+  leaveRoom,
 } from "../../utils";
 import { SPACING } from "../../resources/dimens";
 import { BiddingModal } from "../modals/BiddingModal";
 import type { Card } from "../../models";
 import { GameOverModal } from "../modals/GameOverModal/GameOverModal";
+import { GameBackground } from "../elements/GameBackground";
+import { CloseButton } from "../elements/CloseButton";
 
 import { Floor } from "./Floor";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
@@ -33,7 +27,6 @@ import { HorizontalOpponentGroup } from ".";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.auth.userId);
-  const roomId = useAppSelector((state) => state.room.roomId);
   const gameId = useAppSelector((state) => state.game.gameId);
   const players = useAppSelector((state) => state.game.players);
   const currentPosition = useAppSelector((state) => state.game.currentPosition);
@@ -41,23 +34,11 @@ export const Game = () => {
   const isTrumpBroken = useAppSelector((state) => state.game.isTrumpBroken);
   const playedCards = useAppSelector((state) => state.game.playedCards);
   const { userPosition, top, left, right, currentPlayerData } = useMemo(
-    () => getHandPositions(userId, players),
+    () => (userId ? getHandPositions(userId, players) : {}),
     [players, userId]
   );
 
   const dispatch = useAppDispatch();
-
-  const leaveRoom = useCallback(() => {
-    try {
-      unsubscribeToChannel(roomId);
-    } catch (err) {
-      console.error(err);
-    }
-    batch(() => {
-      dispatch(resetRoom());
-      dispatch(resetGame());
-    });
-  }, [dispatch, roomId]);
 
   useEffect(() => {
     if (userPosition) {
@@ -66,7 +47,7 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
-    if (!latestBid || !currentPlayerData?.playerData) {
+    if (!latestBid || !currentPlayerData?.playerData || !userId) {
       alert("There was a problem with the game!");
       leaveRoom();
       return;
@@ -99,15 +80,10 @@ export const Game = () => {
   };
 
   return (
-    <ImageBackground
-      source={{ uri: "https://dkqpv4xfvkxsw.cloudfront.net/background.jpg" }}
-      style={styles.container}
-    >
+    <GameBackground>
       <BiddingModal />
       <GameOverModal />
-      <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
-        <Ionicons name="close-outline" size={32} color="black" />
-      </TouchableOpacity>
+      <CloseButton onPress={leaveRoom} />
       {gameId && <GameHUD style={styles.gameHud} />}
       {top?.playerData && (
         <TopOpponentGroup
@@ -141,35 +117,11 @@ export const Game = () => {
           />
         </View>
       )}
-    </ImageBackground>
+    </GameBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "green",
-    overflow: "hidden",
-  },
-  closeButton: {
-    position: "absolute",
-    height: SPACING.spacing48,
-    width: SPACING.spacing48,
-    borderRadius: SPACING.spacing24,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: SPACING.spacing32,
-    zIndex: 1,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 12,
-    },
-    shadowOpacity: 0.58,
-    shadowRadius: 16.0,
-    elevation: 24,
-  },
   gameHud: {
     position: "absolute",
     right: 0,

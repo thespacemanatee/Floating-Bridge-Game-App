@@ -35,6 +35,10 @@ export const LobbyPage = () => {
   };
 
   const enterRoom = useCallback(() => {
+    if (!userId) {
+      console.error("Missing userId for some reason...");
+      return;
+    }
     try {
       initPusherClient(userId, username);
       subscribeToChannel(roomId);

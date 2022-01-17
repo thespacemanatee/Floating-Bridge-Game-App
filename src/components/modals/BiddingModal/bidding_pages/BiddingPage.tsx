@@ -5,7 +5,7 @@ import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
 import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
 import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
 import { useAppSelector } from "../../../../store/hooks";
-import { triggerNextBidEvent } from "../../../../utils";
+import { leaveRoom, triggerNextBidEvent } from "../../../../utils";
 import { LevelButton, SuitButton, ThemedText } from "../../../elements";
 import { TextButton } from "../../../molecules";
 
@@ -35,6 +35,11 @@ export const BiddingPage = () => {
   };
 
   const confirmBid = async () => {
+    if (!gameId || !userId) {
+      alert("There was a problem with the game!");
+      leaveRoom();
+      return;
+    }
     if (selectedLevel && selectedTrump) {
       if (latestBid) {
         const { level, trump } = latestBid;
@@ -52,12 +57,10 @@ export const BiddingPage = () => {
         trump: selectedTrump,
         level: selectedLevel,
       };
-      if (gameId) {
-        try {
-          await triggerNextBidEvent(gameId, bid);
-        } catch (err) {
-          console.error(err);
-        }
+      try {
+        await triggerNextBidEvent(gameId, bid);
+      } catch (err) {
+        console.error(err);
       }
     } else {
       alert("Please select your bid!");

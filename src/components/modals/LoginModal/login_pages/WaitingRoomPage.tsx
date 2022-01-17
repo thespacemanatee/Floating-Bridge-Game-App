@@ -44,9 +44,16 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
   const dispatch = useAppDispatch();
 
   const onStartOrResumeGame = async () => {
+    if (!userId || !roomId) {
+      console.error("Missing userId or roomId for some reason...");
+      return;
+    }
     try {
       triggerGameStartedLoading();
-      dispatch(setGameStatus("loading"));
+      batch(() => {
+        dispatch(resetGame());
+        dispatch(setGameStatus("loading"));
+      });
       if (gameExists && gameId) {
         await resumeGame(roomId, gameId);
       } else {
@@ -59,6 +66,9 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
   };
 
   const leaveRoom = () => {
+    if (!roomId) {
+      return;
+    }
     try {
       unsubscribeToChannel(roomId);
     } catch (err) {
@@ -79,7 +89,9 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
           </TouchableOpacity>
           <ThemedText style={styles.titleText}>Waiting Room</ThemedText>
         </View>
-        <RoomIdClipboard roomId={roomId} />
+        {roomId && (
+          <RoomIdClipboard roomId={roomId} style={styles.idClipboard} />
+        )}
       </View>
       <ThemedText
         style={styles.welcomeText}
@@ -130,6 +142,9 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginRight: SPACING.spacing8,
+  },
+  idClipboard: {
+    marginLeft: SPACING.spacing16,
   },
   topContainer: {
     flexDirection: "row",

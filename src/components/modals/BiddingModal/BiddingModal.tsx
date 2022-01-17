@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
+import { Modal, Platform, StyleSheet, View } from "react-native";
 
 import { SPACING } from "../../../resources/dimens";
 import { useAppSelector } from "../../../store/hooks";
@@ -59,8 +59,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    width: "50%",
-    minWidth: 750,
+    maxWidth: Platform.select({ web: "60%" }),
   },
   contentContainer: {
     justifyContent: "center",

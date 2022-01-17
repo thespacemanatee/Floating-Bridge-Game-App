@@ -7,6 +7,7 @@ import { batch } from "react-redux";
 
 import type { Bid, Partner, Player, PlayerData } from "../store/features/game";
 import {
+  resetGame,
   setGamePartner,
   setGameRoundNo,
   setGameIsTrumpBroken,
@@ -22,6 +23,7 @@ import { store } from "../store";
 import type { PlayedCard } from "../models";
 import type { GameStatus } from "../store/features/room";
 import {
+  resetRoom,
   setGameExists,
   addPlayer,
   removePlayer,
@@ -86,23 +88,19 @@ export const unsubscribeToChannel = (gameId: string) => {
 export const bindPusherChannelEvents = () => {
   if (channelRef.current) {
     channelRef.current.bind("pusher:subscription_succeeded", async () => {
-      console.log("subscription_succeeded");
       store.dispatch(resetPlayers());
       await dispatchGameExists();
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       channelRef.current?.members.each((player: Player) => {
-        console.log("player_in_room");
         store.dispatch(addPlayer(player));
       });
     });
     channelRef.current.bind("pusher:member_added", async (player: Player) => {
-      console.log("added_player");
       await dispatchGameExists();
       store.dispatch(addPlayer(player));
     });
     channelRef.current.bind("pusher:member_removed", async (player: Player) => {
-      console.log("removed_player");
       await dispatchGameExists();
       store.dispatch(removePlayer(player));
       store.dispatch(setGameStatus("stopped"));
@@ -113,10 +111,12 @@ export const bindPusherChannelEvents = () => {
 };
 
 const dispatchGameExists = async () => {
-  const exists = await getExistingGameExists(
-    store.getState().room.roomId,
-    store.getState().game.gameId
-  );
+  const { roomId } = store.getState().room;
+  const { gameId } = store.getState().game;
+  if (!roomId || !gameId) {
+    return;
+  }
+  const exists = await getExistingGameExists(roomId, gameId);
   store.dispatch(setGameExists(exists));
 };
 
@@ -173,6 +173,22 @@ export const triggerGameStartedLoading = () => {
   } else {
     throw Error("Channel not found!");
   }
+};
+
+export const leaveRoom = () => {
+  const { roomId } = store.getState().room;
+  if (!roomId) {
+    return;
+  }
+  try {
+    unsubscribeToChannel(roomId);
+  } catch (err) {
+    console.error(err);
+  }
+  batch(() => {
+    store.dispatch(resetRoom());
+    store.dispatch(resetGame());
+  });
 };
 
 const dispatchGameData = (gameData: GameData) => {
