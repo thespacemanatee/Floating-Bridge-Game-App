@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 
-import type { Card, CardSuit, CardValue } from "../../../../models";
-import { DECK, SUITS } from "../../../../models";
-import { FONT_SIZE, SPACING } from "../../../../resources";
-import type { Trump } from "../../../../store/features/game";
-import { useAppSelector } from "../../../../store";
-import { triggerSetPartnerEvent } from "../../../../utils";
-import { PlayingCard, SuitButton, ThemedText } from "../../../elements";
-import { TextButton } from "../../../molecules";
+import type { Card, CardSuit, CardValue } from "../../../models";
+import { DECK, SUITS } from "../../../models";
+import { FONT_SIZE, SPACING } from "../../../resources";
+import type { Trump } from "../../../store/features/game";
+import { useAppSelector } from "../../../store";
+import { triggerSetPartnerEvent } from "../../../utils";
+import { PlayingCard, SuitButton, ThemedText } from "../../elements";
+import { TextButton } from "../../molecules";
 
 type PartnerPayload = {
   suit: CardSuit;

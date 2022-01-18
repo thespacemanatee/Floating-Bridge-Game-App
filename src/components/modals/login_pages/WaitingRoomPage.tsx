@@ -8,23 +8,19 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { batch } from "react-redux";
 
-import { FONT_SIZE, SPACING } from "../../../../resources";
-import { TextButton, RoomIdClipboard } from "../../../molecules";
-import {
-  UserEntry,
-  ThemedText,
-  UserEntryContentLoader,
-} from "../../../elements";
-import { useAppDispatch, useAppSelector } from "../../../../store";
+import { FONT_SIZE, SPACING } from "../../../resources";
+import { TextButton, RoomIdClipboard } from "../../molecules";
+import { UserEntry, ThemedText, UserEntryContentLoader } from "../../elements";
+import { useAppDispatch, useAppSelector } from "../../../store";
 import {
   initialiseGame,
   resumeGame,
   triggerGameStartedLoading,
   unsubscribeToChannel,
-} from "../../../../utils";
-import { resetRoom, setGameStatus } from "../../../../store/features/room";
-import type { Player } from "../../../../store/features/game";
-import { resetGame } from "../../../../store/features/game";
+} from "../../../utils";
+import { resetRoom, setGameStatus } from "../../../store/features/room";
+import type { Player } from "../../../store/features/game";
+import { resetGame } from "../../../store/features/game";
 
 type WaitingRoomPageProps = {
   players: Player[];

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { BID_LEVELS, TRUMP_SUITS } from "../../../../models";
-import { FONT_SIZE, SPACING } from "../../../../resources";
-import type { Bid, BidLevel, Trump } from "../../../../store/features/game";
-import { useAppSelector } from "../../../../store/hooks";
-import { leaveRoom, triggerNextBidEvent } from "../../../../utils";
-import { LevelButton, SuitButton, ThemedText } from "../../../elements";
-import { TextButton } from "../../../molecules";
+import { BID_LEVELS, TRUMP_SUITS } from "../../../models";
+import { FONT_SIZE, SPACING } from "../../../resources";
+import type { Bid, BidLevel, Trump } from "../../../store/features/game";
+import { useAppSelector } from "../../../store";
+import { leaveRoom, triggerNextBidEvent } from "../../../utils";
+import { LevelButton, SuitButton, ThemedText } from "../../elements";
+import { TextButton } from "../../molecules";
 
 export const BiddingPage = () => {
   const players = useAppSelector((state) => state.game.players);

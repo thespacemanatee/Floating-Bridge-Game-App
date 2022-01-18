@@ -3,20 +3,17 @@ import { StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 import Clipboard from "@react-native-clipboard/clipboard";
 
-import { FONT_SIZE, SPACING } from "../../../../resources";
-import { TextButton, RoomIdGenerateButton } from "../../../molecules";
-import { HeroImage, ThemedText, ThemedTextInput } from "../../../elements";
-import { useAppDispatch, useAppSelector } from "../../../../store";
-import {
-  setGameRoomId,
-  setGameUsername,
-} from "../../../../store/features/room";
+import { FONT_SIZE, SPACING } from "../../../resources";
+import { TextButton, RoomIdGenerateButton } from "../../molecules";
+import { HeroImage, ThemedText, ThemedTextInput } from "../../elements";
+import { useAppDispatch, useAppSelector } from "../../../store";
+import { setGameRoomId, setGameUsername } from "../../../store/features/room";
 import {
   bindGameEvents,
   bindPusherChannelEvents,
   initPusherClient,
   subscribeToChannel,
-} from "../../../../utils";
+} from "../../../utils";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");

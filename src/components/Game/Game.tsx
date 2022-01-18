@@ -11,9 +11,8 @@ import {
   leaveRoom,
 } from "../../utils";
 import { SPACING } from "../../resources";
-import { BiddingModal } from "../modals/BiddingModal";
+import { BiddingModal, GameOverModal } from "../modals";
 import type { Card } from "../../models";
-import { GameOverModal } from "../modals/GameOverModal/GameOverModal";
 import { GameBackground, CloseButton } from "../elements";
 
 import {
