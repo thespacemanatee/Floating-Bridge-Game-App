@@ -1,20 +1,19 @@
 import React, { useEffect, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
-import type { PlayCardPayload } from "../../store/features/game";
-import { setGameUserPosition } from "../../store/features/game";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "./store";
 import {
   getHandPositions,
   isInvalidPlayCard,
   triggerNextTurnEvent,
   leaveRoom,
-} from "../../utils";
-import { SPACING } from "../../resources";
-import { BiddingModal, GameOverModal } from "../modals";
-import type { Card } from "../../models";
-import { GameBackground, CloseButton } from "../elements";
-
+} from "./utils";
+import { SPACING } from "./resources";
+import { BiddingModal, GameOverModal } from "./components/modals";
+import type { Card } from "./models";
+import { GameBackground, CloseButton } from "./components/elements";
+import type { PlayCardPayload } from "./store/features/game";
+import { setGameUserPosition } from "./store/features/game";
 import {
   WonSets,
   TopOpponentGroup,
@@ -22,7 +21,7 @@ import {
   Floor,
   CurrentPlayerHand,
   HorizontalOpponentGroup,
-} from ".";
+} from "./components/game";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.auth.userId);

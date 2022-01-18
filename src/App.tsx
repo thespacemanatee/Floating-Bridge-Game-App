@@ -4,8 +4,9 @@ import { registerRootComponent } from "expo";
 import { useFonts } from "expo-font";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { Main } from "./Main";
 import { store, persistor } from "./store";
+
+import { Main } from ".";
 
 export const App = () => {
   const [loaded] = useFonts({

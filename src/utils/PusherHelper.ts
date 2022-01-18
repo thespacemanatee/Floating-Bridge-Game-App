@@ -98,7 +98,13 @@ export const bindPusherChannelEvents = () => {
     });
     channelRef.current.bind("pusher:member_added", async (player: Player) => {
       await dispatchGameExists();
-      store.dispatch(addPlayer(player));
+      if (
+        !store
+          .getState()
+          .room.players.some((thisPlayer) => thisPlayer.id === player.id)
+      ) {
+        store.dispatch(addPlayer(player));
+      }
     });
     channelRef.current.bind("pusher:member_removed", async (player: Player) => {
       await dispatchGameExists();
