@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { SPACING } from "../../resources";
+import { ELEVATION, SPACING } from "../../resources";
 
 type CloseButtonProps = {
   onPress: () => void;
@@ -34,6 +34,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
-    elevation: 24,
+    elevation: ELEVATION.elevation24,
   },
 });

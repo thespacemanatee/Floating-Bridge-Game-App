@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
-import { SPACING } from "../../resources";
+import { ELEVATION, SPACING } from "../../resources";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { setUserId } from "../../store/features/auth";
 
@@ -66,10 +66,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: ELEVATION.elevation6,
   },
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Platform, StyleSheet, View } from "react-native";
 
-import { SPACING } from "../../resources";
+import { ELEVATION, SPACING } from "../../resources";
 import { useAppSelector } from "../../store";
 
 import { ChoosePartnerPage, BiddingPage } from "./bidding_pages";
@@ -53,11 +53,12 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: ELEVATION.elevation6,
+
     maxWidth: Platform.select({ web: "60%" }),
   },
   contentContainer: {

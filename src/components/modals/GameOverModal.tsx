@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
-import { FONT_SIZE, SPACING } from "../../resources";
+import { ELEVATION, FONT_SIZE, SPACING } from "../../resources";
 import { useAppSelector } from "../../store/hooks";
 import { getWinners } from "../../utils";
 import { ThemedText } from "../elements";
@@ -62,11 +62,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: ELEVATION.elevation6,
   },
   contentContainer: {
     justifyContent: "center",

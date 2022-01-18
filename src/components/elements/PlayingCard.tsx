@@ -3,7 +3,7 @@ import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
 import { useWindowDimensions, View, StyleSheet, Image } from "react-native";
 
 import { FACE_CARD_ASPECT_RATIO } from "../../config/Constants";
-import { SPACING } from "../../resources";
+import { ELEVATION, SPACING } from "../../resources";
 
 export interface PlayingCardProps {
   image?: ImageSourcePropType;
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.37,
     shadowRadius: 7.49,
-    elevation: 12,
+    elevation: ELEVATION.elevation12,
   },
 });
