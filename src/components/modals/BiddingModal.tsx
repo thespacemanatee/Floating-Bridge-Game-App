@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Platform, StyleSheet, View } from "react-native";
 
-import { SPACING } from "../../../resources";
-import { useAppSelector } from "../../../store";
+import { SPACING } from "../../resources";
+import { useAppSelector } from "../../store";
 
 import { ChoosePartnerPage, BiddingPage } from "./bidding_pages";
 

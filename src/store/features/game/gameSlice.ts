@@ -100,17 +100,8 @@ const gameSlice = createSlice({
     setGamePlayedCards(state: GameState, action: PayloadAction<PlayedCard[]>) {
       state.playedCards = action.payload;
     },
-    resetGame(state: GameState) {
-      state.gameId = null;
-      state.userPosition = 0;
-      state.currentPosition = 0;
-      state.latestBid = null;
-      state.bidSequence = [];
-      state.isBidding = false;
-      state.partner = null;
-      state.isTrumpBroken = false;
-      state.players = [];
-      state.playedCards = [];
+    resetGame() {
+      return initialState;
     },
   },
 });

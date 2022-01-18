@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
-import { FONT_SIZE, SPACING } from "../../../resources";
-import { useAppSelector } from "../../../store/hooks";
-import { getWinners } from "../../../utils";
-import { ThemedText } from "../../elements";
+import { FONT_SIZE, SPACING } from "../../resources";
+import { useAppSelector } from "../../store/hooks";
+import { getWinners } from "../../utils";
+import { ThemedText } from "../elements";
 
 export const GameOverModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -23,7 +23,7 @@ export const GameOverModal = () => {
 
   return (
     <Modal animationType="fade" transparent visible={modalVisible}>
-      <View style={styles.biddingModalContainer}>
+      <View style={styles.modalContainer}>
         <View style={styles.modalView}>
           <View style={styles.contentContainer}>
             <ThemedText style={styles.titleText}>Game Over!</ThemedText>
@@ -48,7 +48,7 @@ export const GameOverModal = () => {
 };
 
 const styles = StyleSheet.create({
-  biddingModalContainer: {
+  modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

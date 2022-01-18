@@ -1,1 +1,0 @@
-export { BiddingModal } from "./BiddingModal";

@@ -52,13 +52,8 @@ const roomSlice = createSlice({
     setGameStatus(state: RoomState, action: PayloadAction<GameStatus>) {
       state.gameStatus = action.payload;
     },
-    resetRoom(state: RoomState) {
-      state.isConnected = false;
-      state.username = null;
-      state.roomId = null;
-      state.players = [];
-      state.gameExists = false;
-      state.gameStatus = "stopped";
+    resetRoom() {
+      return initialState;
     },
   },
 });
