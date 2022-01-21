@@ -42,10 +42,7 @@ export const RoomIdGenerateButton = ({
         {generated && (
           <LottieView
             ref={animationRef}
-            style={{
-              width: 25,
-              height: 25,
-            }}
+            style={styles.lottieView}
             source={require("../../../assets/lottie/tick.json")}
           />
         )}
@@ -70,5 +67,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "semiBold",
     fontSize: FONT_SIZE.tiny,
+  },
+  lottieView: {
+    width: 25,
+    height: 25,
   },
 });

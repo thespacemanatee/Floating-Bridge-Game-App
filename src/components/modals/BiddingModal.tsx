@@ -13,10 +13,10 @@ export const BiddingModal = () => {
   const partner = useAppSelector((state) => state.game.partner);
 
   useEffect(() => {
-    if (gameStatus !== "started" || (!isBidding && partner)) {
-      setBiddingModalVisible(false);
-    } else {
+    if (gameStatus === "started" && (isBidding || !partner)) {
       setBiddingModalVisible(true);
+    } else {
+      setBiddingModalVisible(false);
     }
   }, [gameStatus, isBidding, partner]);
 

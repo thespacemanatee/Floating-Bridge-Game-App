@@ -1,45 +1,93 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
+import LottieView from "react-native-web-lottie";
 
 import { ELEVATION, FONT_SIZE, SPACING } from "../../resources";
 import { useAppSelector } from "../../store/hooks";
 import { getWinners } from "../../utils";
 import { ThemedText } from "../elements";
+import { StartGameButton } from "../molecules/StartGameButton";
+import { TitleCloseButton } from "../molecules/TitleCloseButton";
 
 export const GameOverModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
+  const animationRef = useRef<LottieView>(null);
+  const userId = useAppSelector((state) => state.auth.userId);
+  const roomId = useAppSelector((state) => state.room.roomId);
+  const players = useAppSelector((state) => state.room.players);
+  const gameStatus = useAppSelector((state) => state.room.gameStatus);
+  const gameExists = useAppSelector((state) => state.room.gameExists);
+  const gameId = useAppSelector((state) => state.game.gameId);
+  const roomReady = useMemo(
+    () => (players.length === 4 ? true : false),
+    [players]
+  );
   const roundNo = useAppSelector((state) => state.game.roundNo);
-  const players = useAppSelector((state) => state.game.players);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const partner = useAppSelector((state) => state.game.partner);
+  const gamePlayers = useAppSelector((state) => state.game.players);
+  const winners = useMemo(
+    () =>
+      latestBid &&
+      partner &&
+      getWinners(
+        latestBid?.level,
+        gamePlayers,
+        latestBid?.userId,
+        partner?.userId
+      ),
+    [gamePlayers, latestBid, partner]
+  );
+  const isWinner = useMemo(
+    () => winners?.find((player) => player.id === userId),
+    [userId, winners]
+  );
 
   useEffect(() => {
-    if (roundNo >= 13) {
+    if (roundNo >= 13 && roomId) {
       setModalVisible(true);
     } else {
       setModalVisible(false);
     }
-  }, [roundNo]);
+  }, [roomId, roundNo]);
 
   return (
     <Modal animationType="fade" transparent visible={modalVisible}>
-      <View style={styles.modalContainer}>
+      <View style={styles.container}>
         <View style={styles.modalView}>
           <View style={styles.contentContainer}>
-            <ThemedText style={styles.titleText}>Game Over!</ThemedText>
-            <ThemedText>Winners</ThemedText>
-            {latestBid &&
-              partner &&
-              getWinners(
-                latestBid?.level,
-                players,
-                latestBid?.userId,
-                partner?.userId
-              ).map((player) => (
+            <TitleCloseButton title="Game Over!" roomId={roomId} />
+            <LottieView
+              ref={animationRef}
+              loop
+              autoPlay
+              source={
+                isWinner
+                  ? require("../../../assets/lottie/confetti.json")
+                  : require("../../../assets/lottie/lose.json")
+              }
+              style={styles.lottieView}
+            />
+            <View style={styles.winnerContainer}>
+              <ThemedText style={styles.winnerText}>Winners</ThemedText>
+              {winners?.map((player) => (
                 <ThemedText
                   key={player.id}
-                >{`${player.info.username}`}</ThemedText>
+                  style={[{ color: player.info.color }, styles.winnerNameText]}
+                >{`${player.info.username} ${
+                  player.id === userId ? " (You)" : ""
+                }`}</ThemedText>
               ))}
+            </View>
+            <StartGameButton
+              userId={userId}
+              roomId={roomId}
+              gameStatus={gameStatus}
+              gameExists={gameExists}
+              gameId={gameId}
+              players={players}
+              roomReady={roomReady}
+            />
           </View>
         </View>
       </View>
@@ -48,16 +96,14 @@ export const GameOverModal = () => {
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
+    backgroundColor: "#00000099",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#00000099",
   },
   modalView: {
     backgroundColor: "white",
-    alignItems: "center",
-    margin: SPACING.spacing48,
     borderRadius: SPACING.spacing12,
     shadowColor: "#000",
     shadowOffset: {
@@ -72,8 +118,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: SPACING.spacing32,
   },
-  titleText: {
-    fontFamily: "bold",
+  lottieView: {
+    width: 200,
+    height: 200,
+    margin: SPACING.spacing32,
+  },
+  winnerContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: SPACING.spacing16,
+  },
+  winnerText: {
+    fontFamily: "semiBold",
     fontSize: FONT_SIZE.title2,
+  },
+  winnerNameText: {
+    fontFamily: "semiBold",
+    fontSize: FONT_SIZE.title3,
   },
 });

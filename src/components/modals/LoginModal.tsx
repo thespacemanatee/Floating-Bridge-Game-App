@@ -14,7 +14,6 @@ export const LoginModal = () => {
   const isConnected = useAppSelector((state) => state.room.isConnected);
   const username = useAppSelector((state) => state.room.username);
   const roomId = useAppSelector((state) => state.room.roomId);
-  const players = useAppSelector((state) => state.room.players);
   const gameStatus = useAppSelector((state) => state.room.gameStatus);
 
   const dispatch = useAppDispatch();
@@ -43,7 +42,7 @@ export const LoginModal = () => {
       <View style={styles.container}>
         <View style={styles.modalView}>
           {isConnected && userId && username && roomId ? (
-            <WaitingRoomPage players={players} />
+            <WaitingRoomPage />
           ) : (
             <LobbyPage />
           )}

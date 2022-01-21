@@ -1,35 +1,18 @@
 import React, { useMemo } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { batch } from "react-redux";
+import { StyleSheet, View } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../../resources";
-import { TextButton, RoomIdClipboard } from "../../molecules";
+import { RoomIdClipboard } from "../../molecules";
 import { UserEntry, ThemedText, UserEntryContentLoader } from "../../elements";
-import { useAppDispatch, useAppSelector } from "../../../store";
-import {
-  initialiseGame,
-  resumeGame,
-  triggerGameStartedLoading,
-  unsubscribeToChannel,
-} from "../../../utils";
-import { resetRoom, setGameStatus } from "../../../store/features/room";
-import type { Player } from "../../../store/features/game";
-import { resetGame } from "../../../store/features/game";
+import { useAppSelector } from "../../../store";
+import { StartGameButton } from "../../molecules/StartGameButton";
+import { TitleCloseButton } from "../../molecules/TitleCloseButton";
 
-type WaitingRoomPageProps = {
-  players: Player[];
-};
-
-export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
+export const WaitingRoomPage = () => {
   const userId = useAppSelector((state) => state.auth.userId);
   const roomId = useAppSelector((state) => state.room.roomId);
   const username = useAppSelector((state) => state.room.username);
+  const players = useAppSelector((state) => state.room.players);
   const gameStatus = useAppSelector((state) => state.room.gameStatus);
   const gameExists = useAppSelector((state) => state.room.gameExists);
   const gameId = useAppSelector((state) => state.game.gameId);
@@ -38,57 +21,11 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
     [players]
   );
 
-  const dispatch = useAppDispatch();
-
-  const onStartOrResumeGame = async () => {
-    if (!userId || !roomId) {
-      console.error("Missing userId or roomId for some reason...");
-      return;
-    }
-    try {
-      triggerGameStartedLoading();
-      batch(() => {
-        dispatch(resetGame());
-        dispatch(setGameStatus("loading"));
-      });
-      if (gameExists && gameId) {
-        await resumeGame(roomId, gameId);
-      } else {
-        await initialiseGame(userId, roomId, players);
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch(setGameStatus("stopped"));
-    }
-  };
-
-  const leaveRoom = () => {
-    if (!roomId) {
-      return;
-    }
-    try {
-      unsubscribeToChannel(roomId);
-    } catch (err) {
-      console.error(err);
-    }
-    batch(() => {
-      dispatch(resetRoom());
-      dispatch(resetGame());
-    });
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
-        <View style={styles.titleContainer}>
-          <TouchableOpacity onPress={leaveRoom} style={styles.closeButton}>
-            <Ionicons name="close-outline" size={32} color="black" />
-          </TouchableOpacity>
-          <ThemedText style={styles.titleText}>Waiting Room</ThemedText>
-        </View>
-        {roomId && (
-          <RoomIdClipboard roomId={roomId} style={styles.idClipboard} />
-        )}
+        <TitleCloseButton title="Waiting Room" roomId={roomId} />
+        <RoomIdClipboard roomId={roomId} style={styles.idClipboard} />
       </View>
       <ThemedText
         style={styles.welcomeText}
@@ -113,20 +50,14 @@ export const WaitingRoomPage = ({ players }: WaitingRoomPageProps) => {
           Need exactly 4 players to start the game!
         </ThemedText>
       )}
-      <TextButton
-        text={
-          // eslint-disable-next-line no-nested-ternary
-          gameStatus === "loading"
-            ? "Starting..."
-            : gameExists
-            ? "Resume!"
-            : "Start!"
-        }
-        onPress={onStartOrResumeGame}
-        disabled={!roomReady || gameStatus === "loading"}
-        rightComponent={() =>
-          gameStatus === "loading" && <ActivityIndicator color="white" />
-        }
+      <StartGameButton
+        userId={userId}
+        roomId={roomId}
+        gameStatus={gameStatus}
+        gameExists={gameExists}
+        gameId={gameId}
+        players={players}
+        roomReady={roomReady}
       />
     </View>
   );
@@ -137,9 +68,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: SPACING.spacing32,
   },
-  closeButton: {
-    marginRight: SPACING.spacing8,
-  },
   idClipboard: {
     marginLeft: SPACING.spacing16,
   },
@@ -147,16 +75,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  titleText: {
-    fontFamily: "bold",
-    fontSize: FONT_SIZE.title2,
-    paddingVertical: SPACING.spacing8,
   },
   welcomeText: {
     fontFamily: "semiBold",

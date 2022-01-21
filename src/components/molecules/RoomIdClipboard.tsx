@@ -8,12 +8,15 @@ import { ThemedText } from "../elements";
 import { SPACING } from "../../resources";
 
 type RoomIdClipboardProps = {
-  roomId: string;
+  roomId: string | null;
   style?: StyleProp<ViewStyle>;
 };
 
 export const RoomIdClipboard = ({ roomId, style }: RoomIdClipboardProps) => {
   const copyRoomIdToClipboard = () => {
+    if (!roomId) {
+      return;
+    }
     Clipboard.setString(roomId);
   };
 

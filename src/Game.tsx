@@ -45,7 +45,7 @@ export const Game = () => {
   }, [dispatch, userPosition]);
 
   const playCard = async (card: Card, callback: () => void) => {
-    if (!latestBid || !currentPlayerData?.playerData || !userId) {
+    if (!latestBid || !currentPlayerData?.playerData || !userId || !gameId) {
       alert("There was a problem with the game!");
       leaveRoom();
       return;
@@ -69,9 +69,7 @@ export const Game = () => {
       card,
     };
     try {
-      if (gameId) {
-        await triggerNextTurnEvent(gameId, payload);
-      }
+      await triggerNextTurnEvent(gameId, payload);
     } catch (err) {
       console.error(err);
     }

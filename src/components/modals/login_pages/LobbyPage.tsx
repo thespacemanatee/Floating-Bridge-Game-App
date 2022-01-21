@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { batch } from "react-redux";
 import { nanoid } from "nanoid/non-secure";
 import Clipboard from "@react-native-clipboard/clipboard";
 
@@ -14,6 +15,7 @@ import {
   initPusherClient,
   subscribeToChannel,
 } from "../../../utils";
+import { setGameRoundNo } from "../../../store/features/game";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
@@ -38,8 +40,11 @@ export const LobbyPage = () => {
       subscribeToChannel(roomId);
       bindPusherChannelEvents();
       bindGameEvents();
-      dispatch(setGameUsername(username));
-      dispatch(setGameRoomId(roomId));
+      batch(() => {
+        dispatch(setGameRoundNo(0));
+        dispatch(setGameUsername(username));
+        dispatch(setGameRoomId(roomId));
+      });
     } catch (err) {
       console.error(err);
     }
