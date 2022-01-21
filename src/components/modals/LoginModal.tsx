@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
 
-import { SPACING } from "../../../resources/dimens";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { setUserId } from "../../../store/features/auth";
+import { ELEVATION, SPACING } from "../../resources";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { setUserId } from "../../store/features/auth";
 
 import { LobbyPage, WaitingRoomPage } from "./login_pages";
 
@@ -14,7 +14,6 @@ export const LoginModal = () => {
   const isConnected = useAppSelector((state) => state.room.isConnected);
   const username = useAppSelector((state) => state.room.username);
   const roomId = useAppSelector((state) => state.room.roomId);
-  const players = useAppSelector((state) => state.room.players);
   const gameStatus = useAppSelector((state) => state.room.gameStatus);
 
   const dispatch = useAppDispatch();
@@ -43,7 +42,7 @@ export const LoginModal = () => {
       <View style={styles.container}>
         <View style={styles.modalView}>
           {isConnected && userId && username && roomId ? (
-            <WaitingRoomPage players={players} />
+            <WaitingRoomPage />
           ) : (
             <LobbyPage />
           )}
@@ -66,12 +65,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    width: "50%",
-    minWidth: 750,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: ELEVATION.elevation6,
   },
 });

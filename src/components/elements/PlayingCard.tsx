@@ -2,9 +2,8 @@ import React, { useMemo } from "react";
 import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
 import { useWindowDimensions, View, StyleSheet, Image } from "react-native";
 
-import { SPACING } from "../../resources/dimens";
-
-export const FACE_CARD_ASPECT_RATIO = 1.4;
+import { FACE_CARD_ASPECT_RATIO } from "../../config/Constants";
+import { ELEVATION, SPACING } from "../../resources";
 
 export interface PlayingCardProps {
   image?: ImageSourcePropType;
@@ -53,6 +52,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.37,
     shadowRadius: 7.49,
-    elevation: 12,
+    elevation: ELEVATION.elevation12,
   },
 });

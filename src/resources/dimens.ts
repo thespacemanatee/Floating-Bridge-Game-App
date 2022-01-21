@@ -37,6 +37,12 @@ export const ELEVATION = {
   elevation8: 8,
   elevation10: 10,
   elevation12: 12,
+  elevation14: 14,
+  elevation16: 16,
+  elevation18: 18,
+  elevation20: 20,
+  elevation22: 22,
+  elevation24: 24,
 };
 
 export const ICON_SIZE = {

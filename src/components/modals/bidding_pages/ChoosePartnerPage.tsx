@@ -1,14 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 
-import type { Card, CardSuit, CardValue } from "../../../../models";
-import { DECK, SUITS } from "../../../../models";
-import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
-import type { Trump } from "../../../../store/features/game";
-import { useAppSelector } from "../../../../store/hooks";
-import { triggerSetPartnerEvent } from "../../../../utils";
-import { PlayingCard, SuitButton, ThemedText } from "../../../elements";
-import { TextButton } from "../../../molecules";
+import type { Card, CardSuit, CardValue } from "../../../models";
+import { DECK, SUITS } from "../../../models";
+import { ELEVATION, FONT_SIZE, SPACING } from "../../../resources";
+import type { Trump } from "../../../store/features/game";
+import { useAppSelector } from "../../../store";
+import { triggerSetPartnerEvent } from "../../../utils";
+import { PlayingCard, SuitButton, ThemedText } from "../../elements";
+import { TextButton } from "../../molecules";
 
 type PartnerPayload = {
   suit: CardSuit;
@@ -185,11 +185,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: ELEVATION.elevation6,
   },
   loadingContainer: {
     flexDirection: "row",

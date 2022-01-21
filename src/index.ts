@@ -1,2 +1,2 @@
-export { default as LottieView } from "lottie-react-native";
-export { default as ContentLoader } from "react-content-loader/native";
+export { Main } from "./Main";
+export { Game } from "./Game";

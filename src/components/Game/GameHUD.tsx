@@ -3,8 +3,8 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
 import { ThemedText } from "../elements";
-import { FONT_SIZE, SPACING } from "../../resources/dimens";
-import { useAppSelector } from "../../store/hooks";
+import { ELEVATION, FONT_SIZE, SPACING } from "../../resources";
+import { useAppSelector } from "../../store";
 import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../../utils";
 
 type GameHUDProps = {
@@ -82,11 +82,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 7,
+      height: 8,
     },
-    shadowOpacity: 0.43,
-    shadowRadius: 9.51,
-    elevation: 15,
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+    elevation: ELEVATION.elevation16,
   },
   entryContainer: {
     flexDirection: "row",

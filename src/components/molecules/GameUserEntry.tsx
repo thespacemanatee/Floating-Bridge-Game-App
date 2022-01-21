@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { SPACING } from "../../resources/dimens";
+import { ELEVATION, SPACING } from "../../resources";
 import type { PlayerData } from "../../store/features/game";
 import { UserEntry } from "../elements";
 
@@ -69,10 +69,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 7,
+      height: 8,
     },
-    shadowOpacity: 0.43,
-    shadowRadius: 9.51,
-    elevation: 15,
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+    elevation: ELEVATION.elevation16,
   },
 });

@@ -1,7 +1,5 @@
 import React from "react";
-import { Rect, Circle } from "react-native-svg";
-
-import { ContentLoader } from "../../index";
+import ContentLoader from "react-content-loader";
 
 export const UserEntryContentLoader = () => (
   <ContentLoader
@@ -12,8 +10,8 @@ export const UserEntryContentLoader = () => (
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
   >
-    <Rect x="60" y="10" rx="3" ry="3" width="290" height="8" />
-    <Rect x="60" y="28" rx="3" ry="3" width="200" height="8" />
-    <Circle cx="24" cy="24" r="24" />
+    <rect x="60" y="10" rx="3" ry="3" width="290" height="8" />
+    <rect x="60" y="28" rx="3" ry="3" width="200" height="8" />
+    <circle cx="24" cy="24" r="24" />
   </ContentLoader>
 );

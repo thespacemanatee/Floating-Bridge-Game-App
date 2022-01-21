@@ -15,6 +15,7 @@ export {
   bindPusherChannelEvents,
   bindGameEvents,
   triggerGameStartedLoading,
+  leaveRoom,
 } from "./PusherHelper";
 
 export {

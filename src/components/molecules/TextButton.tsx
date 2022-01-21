@@ -1,10 +1,9 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { FONT_SIZE } from "../../resources/dimens";
-import type { ThemedButtonProps } from "../elements/ThemedButton";
-import { ThemedButton } from "../elements/ThemedButton";
-import { ThemedText } from "../elements/ThemedText";
+import { FONT_SIZE } from "../../resources";
+import type { ThemedButtonProps } from "../elements";
+import { ThemedButton, ThemedText } from "../elements";
 
 interface TextButtonProps extends ThemedButtonProps {
   text: string;

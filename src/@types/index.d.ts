@@ -22,11 +22,6 @@ declare module "react-native-web-lottie" {
     layers: never[];
   }
 
-  type ColorFilter = {
-    keypath: string;
-    color: string;
-  };
-
   /**
    * Properties of the AnimatedLottieView component
    */
@@ -72,49 +67,6 @@ declare module "react-native-web-lottie" {
     style?: StyleProp<ViewStyle>;
 
     /**
-     * [Android] Relative folder inside of assets containing image files to be animated.
-     * Make sure that the images that bodymovin export are in that folder with their names unchanged (should be img_#).
-     * Refer to https://github.com/airbnb/lottie-android#image-support for more details.
-     * @platform android
-     */
-    imageAssetsFolder?: string;
-
-    /**
-     * [Android]. Uses hardware acceleration to perform the animation. This should only
-     * be used for animations where your width and height are equal to the composition width
-     * and height, e.g. you are not scaling the animation.
-     * @platform android
-     */
-    hardwareAccelerationAndroid?: boolean;
-
-    /**
-     * Determines how to resize the animated view when the frame doesn't match the raw image
-     * dimensions.
-     * Refer to https://facebook.github.io/react-native/docs/image.html#resizemode
-     */
-    resizeMode?: "cover" | "contain" | "center";
-
-    /**
-     * Determines how Lottie should render
-     * Refer to LottieAnimationView#setRenderMode(RenderMode) for more information.
-     */
-    renderMode?: "AUTOMATIC" | "HARDWARE" | "SOFTWARE";
-
-    /**
-     * [Android]. A boolean flag indicating whether or not the animation should caching. Defaults to true.
-     * Refer to LottieAnimationView#setCacheComposition(boolean) for more information.
-     */
-    cacheComposition?: boolean;
-
-    /**
-     * [Android]. Allows to specify kind of cache used for animation. Default value weak.
-     * strong - cached forever
-     * weak   - cached as long it is in active use
-     * none   - not cached
-     */
-    cacheStrategy?: "strong" | "weak" | "none";
-
-    /**
      * A boolean flag indicating whether or not the animation should start automatically when
      * mounted. This only affects the imperative API.
      */
@@ -126,32 +78,6 @@ declare module "react-native-web-lottie" {
      * JS object of an animation.
      */
     autoSize?: boolean;
-
-    /**
-     * A boolean flag to enable merge patching in android.
-     */
-    enableMergePathsAndroidForKitKatAndAbove?: boolean;
-
-    /**
-     * A callback function which will be called when animation is finished. Note that this
-     * callback will be called only when `loop` is set to false.
-     */
-    onAnimationFinish?: (isCancelled: boolean) => void;
-
-    /**
-     * A callback function which will be called when the view has been laid out.
-     */
-    onLayout?: (event: LayoutChangeEvent) => void;
-
-    /**
-     * An array of layers you want to override its color filter.
-     */
-    colorFilters?: Array<ColorFilter>;
-
-    /**
-     * A string to identify the component during testing
-     */
-    testID?: string;
   }
 
   /**

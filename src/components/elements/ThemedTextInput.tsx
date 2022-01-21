@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TextInput } from "react-native";
 import type { StyleProp, TextStyle } from "react-native";
 
-import { SPACING } from "../../resources/dimens";
+import { SPACING } from "../../resources";
 
 type ThemedTextInputProps = {
   placeholder?: string;
