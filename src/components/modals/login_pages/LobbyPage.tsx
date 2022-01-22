@@ -1,25 +1,21 @@
 import React, { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { batch } from "react-redux";
 import { nanoid } from "nanoid/non-secure";
 import Clipboard from "@react-native-clipboard/clipboard";
 
-import { FONT_SIZE, SPACING } from "../../../../resources/dimens";
-import { TextButton } from "../../../molecules/TextButton";
-import { HeroImage } from "../../../elements/HeroImage";
-import { ThemedText } from "../../../elements/ThemedText";
-import { ThemedTextInput } from "../../../elements/ThemedTextInput";
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import {
-  setGameRoomId,
-  setGameUsername,
-} from "../../../../store/features/room/roomSlice";
-import { RoomIdGenerateButton } from "../../../molecules/RoomIdGenerateButton";
+import { FONT_SIZE, SPACING } from "../../../resources";
+import { TextButton, RoomIdGenerateButton } from "../../molecules";
+import { HeroImage, ThemedText, ThemedTextInput } from "../../elements";
+import { useAppDispatch, useAppSelector } from "../../../store";
+import { setGameRoomId, setGameUsername } from "../../../store/features/room";
 import {
   bindGameEvents,
   bindPusherChannelEvents,
   initPusherClient,
   subscribeToChannel,
-} from "../../../../utils";
+} from "../../../utils";
+import { setGameRoundNo } from "../../../store/features/game";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
@@ -35,13 +31,20 @@ export const LobbyPage = () => {
   };
 
   const enterRoom = useCallback(() => {
+    if (!userId) {
+      console.error("Missing userId for some reason...");
+      return;
+    }
     try {
       initPusherClient(userId, username);
       subscribeToChannel(roomId);
       bindPusherChannelEvents();
       bindGameEvents();
-      dispatch(setGameUsername(username));
-      dispatch(setGameRoomId(roomId));
+      batch(() => {
+        dispatch(setGameRoundNo(0));
+        dispatch(setGameUsername(username));
+        dispatch(setGameRoomId(roomId));
+      });
     } catch (err) {
       console.error(err);
     }

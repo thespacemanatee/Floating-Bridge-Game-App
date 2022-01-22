@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
+import { Modal, Platform, StyleSheet, View } from "react-native";
 
-import { SPACING } from "../../../resources/dimens";
-import { useAppSelector } from "../../../store/hooks";
+import { ELEVATION, SPACING } from "../../resources";
+import { useAppSelector } from "../../store";
 
-import { ChoosePartnerPage } from "./bidding_pages";
-import { BiddingPage } from "./bidding_pages/BiddingPage";
+import { ChoosePartnerPage, BiddingPage } from "./bidding_pages";
 
 export const BiddingModal = () => {
   const [biddingModalVisible, setBiddingModalVisible] = useState(true);
@@ -14,10 +13,10 @@ export const BiddingModal = () => {
   const partner = useAppSelector((state) => state.game.partner);
 
   useEffect(() => {
-    if (gameStatus !== "started" || (!isBidding && partner)) {
-      setBiddingModalVisible(false);
-    } else {
+    if (gameStatus === "started" && (isBidding || !partner)) {
       setBiddingModalVisible(true);
+    } else {
+      setBiddingModalVisible(false);
     }
   }, [gameStatus, isBidding, partner]);
 
@@ -54,13 +53,13 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 3,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    width: "50%",
-    minWidth: 750,
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: ELEVATION.elevation6,
+
+    maxWidth: Platform.select({ web: "60%" }),
   },
   contentContainer: {
     justifyContent: "center",

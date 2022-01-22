@@ -15,10 +15,7 @@ export const initialiseGame = async (
     players,
   });
 
-export const getExistingGameExists = async (
-  roomId: string,
-  gameId: string | null
-) => {
+export const getExistingGameExists = async (roomId: string, gameId: string) => {
   let res;
   try {
     res = await axios.post(`${HOST}/games/${gameId}`, {

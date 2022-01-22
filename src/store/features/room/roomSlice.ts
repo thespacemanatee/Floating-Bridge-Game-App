@@ -6,8 +6,8 @@ import type { Player } from "../game";
 export type GameStatus = "loading" | "started" | "stopped";
 interface RoomState {
   isConnected: boolean;
-  username: string;
-  roomId: string;
+  username: string | null;
+  roomId: string | null;
   players: Player[];
   gameExists: boolean;
   gameStatus: GameStatus;
@@ -15,8 +15,8 @@ interface RoomState {
 
 const initialState: RoomState = {
   isConnected: false,
-  username: "",
-  roomId: "",
+  username: null,
+  roomId: null,
   players: [],
   gameExists: false,
   gameStatus: "stopped",
@@ -52,13 +52,8 @@ const roomSlice = createSlice({
     setGameStatus(state: RoomState, action: PayloadAction<GameStatus>) {
       state.gameStatus = action.payload;
     },
-    resetRoom(state: RoomState) {
-      state.isConnected = false;
-      state.username = "";
-      state.roomId = "";
-      state.players = [];
-      state.gameExists = false;
-      state.gameStatus = "stopped";
+    resetRoom() {
+      return initialState;
     },
   },
 });
