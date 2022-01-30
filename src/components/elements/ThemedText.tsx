@@ -1,19 +1,19 @@
 import React from "react";
-import type { StyleProp, TextProps, TextStyle } from "react-native";
+import type { TextProps } from "react-native";
 import { StyleSheet, Text } from "react-native";
 
 interface ThemedTextProps extends TextProps {
   selectable?: boolean;
-  style?: StyleProp<TextStyle>;
 }
 
 export const ThemedText = ({
   children,
   selectable,
   style,
+  ...props
 }: ThemedTextProps) => {
   return (
-    <Text selectable={selectable} style={[styles.text, style]}>
+    <Text selectable={selectable} style={[styles.text, style]} {...props}>
       {children}
     </Text>
   );

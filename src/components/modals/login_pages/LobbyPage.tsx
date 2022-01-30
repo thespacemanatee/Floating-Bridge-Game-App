@@ -16,6 +16,7 @@ import {
   subscribeToChannel,
 } from "../../../utils";
 import { setGameRoundNo } from "../../../store/features/game";
+import { Branding } from "../../molecules/Branding";
 
 export const LobbyPage = () => {
   const [username, setUsername] = useState("");
@@ -75,16 +76,14 @@ export const LobbyPage = () => {
         text="Enter Room"
         onPress={enterRoom}
         disabled={!username || !roomId}
-        style={styles.loginButton}
       />
+      <Branding />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
     padding: SPACING.spacing32,
   },
   titleText: {
@@ -98,11 +97,6 @@ const styles = StyleSheet.create({
   gameIdInputContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "100%",
     marginVertical: SPACING.spacing12,
-  },
-  loginButton: {
-    margin: SPACING.spacing4,
-    width: "100%",
   },
 });
