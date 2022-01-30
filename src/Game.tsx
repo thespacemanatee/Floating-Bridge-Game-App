@@ -13,15 +13,14 @@ import { BiddingModal, GameOverModal } from "./components/modals";
 import type { Card } from "./models";
 import { GameBackground, CloseButton } from "./components/elements";
 import type { PlayCardPayload } from "./store/features/game";
-import { setGameUserPosition } from "./store/features/game";
+import { setGamePlayedCards, setGameUserPosition } from "./store/features/game";
 import {
-  WonSets,
   TopOpponentGroup,
   GameHUD,
   Floor,
-  CurrentPlayerHand,
   HorizontalOpponentGroup,
 } from "./components/game";
+import { CurrentPlayerGroup } from "./components/game/CurrentPlayerGroup";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.auth.userId);
@@ -43,6 +42,14 @@ export const Game = () => {
       dispatch(setGameUserPosition(userPosition));
     }
   }, [dispatch, userPosition]);
+
+  useEffect(() => {
+    if (playedCards.length === 4) {
+      setTimeout(() => {
+        dispatch(setGamePlayedCards([]));
+      }, 1000);
+    }
+  }, [dispatch, playedCards.length]);
 
   const playCard = async (card: Card, callback: () => void) => {
     if (!latestBid || !currentPlayerData?.playerData || !userId || !gameId) {
@@ -104,14 +111,11 @@ export const Game = () => {
         )}
       </View>
       {currentPlayerData?.playerData && (
-        <View style={styles.bottom}>
-          <WonSets sets={currentPlayerData.playerData.sets} current />
-          <CurrentPlayerHand
-            hand={currentPlayerData.playerData.hand}
-            isActive={userPosition === currentPosition}
-            onPlayCard={playCard}
-          />
-        </View>
+        <CurrentPlayerGroup
+          playerData={currentPlayerData.playerData}
+          active={userPosition === currentPosition}
+          onPlayCard={playCard}
+        />
       )}
     </GameBackground>
   );
@@ -128,10 +132,5 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-  },
-  bottom: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
   },
 });
