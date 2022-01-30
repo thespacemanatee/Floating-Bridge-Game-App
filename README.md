@@ -82,7 +82,7 @@ Please adhere to this project's `code of conduct`.
 
 [license-shield]: https://img.shields.io/github/license/thespacemanatee/Floating-Bridge-Game-App?style=for-the-badge
 
-[license-url]: https://github.com/thespacemanatee/Floating-Bridge-Game-App/blob/master/LICENSE.txt
+[license-url]: https://github.com/thespacemanatee/Floating-Bridge-Game-App/blob/main/LICENSE.txt
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 
