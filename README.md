@@ -39,18 +39,41 @@
 
 http://gambiter.com/bridge/Singaporean_bridge.html
 
-## Demo
-
-https://game.floatingbridge.me/
-
 ## Tech Stack
 
 <div>
   <img src="https://cdn.svgporn.com/logos/react.svg" width="50" height="50">
+  <img src="https://cdn.svgporn.com/logos/expo.svg" width="150" height="50">
   <img src="https://cdn.svgporn.com/logos/nodejs.svg" width="100" height="50">
-  <img src="https://cdn.svgporn.com/logos/express.svg" width="100" height="50">
-  <img src="https://cdn.svgporn.com/logos/mongodb.svg" width="150" height="50">
-  <img src="https://pusher.com/static/pusher-logo-6caad9362077d81cad1cdd631996b73a.svg" width="100" height="50">
+  <img src="https://cdn.svgporn.com/logos/express.svg" width="175" height="50">
+  <img src="https://cdn.svgporn.com/logos/mongodb.svg" width="175" height="50">
+  <img src="https://pusher.com/static/pusher-logo-6caad9362077d81cad1cdd631996b73a.svg" width="150" height="50">
+</div>
+
+### Frontend
+
+- [React Native](https://reactnative.dev)
+- [Redux](https://redux.js.org)
+- [Expo](https://expo.dev)
+- [Reanimated 2](https://docs.swmansion.com/react-native-reanimated)
+- [Pusher.js Client](https://pusher.com)
+
+### Backend
+
+- [Node.js](https://nodejs.org/en)
+- [Express](https://expressjs.com)
+- [Pusher.js Server](https://pusher.com)
+
+### Database
+
+- [MongoDB](https://www.mongodb.com)
+
+## Hosted On
+
+<div>
+  <img src="https://cdn.svgporn.com/logos/aws-amplify.svg" width="50" height="50">
+  <img src="./assets/powered_by_do.svg" width="250" height="50">
+  <img src="https://cdn.optimizely.com/img/15508090763/66920c1d14ff4a9c84abf89961675fdb.png" width="140" height="50">
 </div>
 
 ## Contributing
@@ -62,7 +85,6 @@ See `contributing.md` for ways to get started.
 Please adhere to this project's `code of conduct`.
 
 <!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/thespacemanatee/Floating-Bridge-Game-App?style=for-the-badge
 
