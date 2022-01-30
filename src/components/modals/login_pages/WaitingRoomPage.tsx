@@ -16,10 +16,7 @@ export const WaitingRoomPage = () => {
   const gameStatus = useAppSelector((state) => state.room.gameStatus);
   const gameExists = useAppSelector((state) => state.room.gameExists);
   const gameId = useAppSelector((state) => state.game.gameId);
-  const roomReady = useMemo(
-    () => (players.length === 4 ? true : false),
-    [players]
-  );
+  const roomReady = useMemo(() => players.length === 4, [players]);
 
   return (
     <View style={styles.container}>
@@ -65,7 +62,6 @@ export const WaitingRoomPage = () => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
     padding: SPACING.spacing32,
   },
   idClipboard: {

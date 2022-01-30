@@ -1,14 +1,11 @@
 import React, { useMemo } from "react";
-import type { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
+import type { PressableProps } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
 import { SPACING } from "../../resources";
-export interface ThemedButtonProps {
-  children?: React.ReactNode;
-  onPress?: ((event: GestureResponderEvent) => void) | null;
-  disabled?: boolean | null;
+
+export interface ThemedButtonProps extends PressableProps {
   type?: "outlined" | "default";
-  style?: StyleProp<ViewStyle>;
 }
 
 type ButtonColors = {
@@ -28,10 +25,10 @@ const defaultColors: ButtonColors = {
 
 export const ThemedButton = ({
   children,
-  onPress,
   disabled,
   type,
   style,
+  ...props
 }: ThemedButtonProps) => {
   const buttonColors = useMemo(() => {
     switch (type) {
@@ -46,8 +43,8 @@ export const ThemedButton = ({
 
   return (
     <Pressable
-      onPress={onPress}
-      disabled={disabled}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       style={({ pressed }) => [
         {
           // eslint-disable-next-line no-nested-ternary
@@ -61,6 +58,7 @@ export const ThemedButton = ({
         styles.button,
         style,
       ]}
+      {...props}
     >
       {children}
     </Pressable>

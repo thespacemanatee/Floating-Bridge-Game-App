@@ -1,30 +1,11 @@
 import React from "react";
+import type { TextInputProps } from "react-native";
 import { StyleSheet, TextInput } from "react-native";
-import type { StyleProp, TextStyle } from "react-native";
 
 import { SPACING } from "../../resources";
 
-type ThemedTextInputProps = {
-  placeholder?: string;
-  onChangeText?: (text: string) => void;
-  value?: string;
-  style?: StyleProp<TextStyle>;
-};
-
-export const ThemedTextInput = ({
-  placeholder,
-  onChangeText,
-  value,
-  style,
-}: ThemedTextInputProps) => {
-  return (
-    <TextInput
-      placeholder={placeholder}
-      onChangeText={onChangeText}
-      value={value}
-      style={[styles.input, style]}
-    />
-  );
+export const ThemedTextInput = ({ style, ...props }: TextInputProps) => {
+  return <TextInput style={[styles.input, style]} {...props} />;
 };
 
 const styles = StyleSheet.create({
