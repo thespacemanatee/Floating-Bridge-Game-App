@@ -23,8 +23,8 @@ const areEqual = (prev: TopOpponentGroupProps, next: TopOpponentGroupProps) => {
 export const TopOpponentGroup = memo(
   ({ playerData, active, style }: TopOpponentGroupProps) => {
     return (
-      <View style={[styles.topContainer, style]}>
-        <View style={styles.topHand}>
+      <View style={[styles.container, style]}>
+        <View style={styles.hand}>
           <WonSets sets={playerData.sets} />
           <OpponentHand hand={playerData.hand} />
         </View>
@@ -36,11 +36,11 @@ export const TopOpponentGroup = memo(
 );
 
 const styles = StyleSheet.create({
-  topContainer: {
+  container: {
     flex: 1,
     alignItems: "center",
   },
-  topHand: {
+  hand: {
     flex: 1,
     alignItems: "center",
   },
