@@ -31,7 +31,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://media.giphy.com/media/fzEUiJb6PZW8AB6URf/giphy-downsized-large.gif)
+[![Product Name Screen Shot][product-screenshot]](https://game.floatingbridge.me)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -86,4 +86,4 @@ Please adhere to this project's `code of conduct`.
 
 [linkedin-url]: https://linkedin.com/in/chee-kit
 
-[product-screenshot]: https://media.giphy.com/media/fzEUiJb6PZW8AB6URf/giphy-downsized-large.gif
+[product-screenshot]: assets/art/hero-demo.gif
