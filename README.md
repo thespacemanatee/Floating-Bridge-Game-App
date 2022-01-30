@@ -35,6 +35,31 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+### Installation
+
+1. Get a free API Key at [https://pusher.com](https://pusher.com)
+2. Clone the repo
+   ```sh
+   git clone https://github.com/thespacemanatee/Floating-Bridge-Game-App.git
+   ```
+3. Install packages
+   ```sh
+   yarn
+   ```
+4. Enter your API keys in `.env`
+   ```
+   HOST=...
+   AUTH_ENDPOINT=...
+   PUSHER_KEY=...
+   PUSHER_CLUSTER=...
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Game Rules
 
 http://gambiter.com/bridge/Singaporean_bridge.html
@@ -49,6 +74,8 @@ http://gambiter.com/bridge/Singaporean_bridge.html
   <img src="https://cdn.svgporn.com/logos/mongodb.svg" width="175" height="50">
   <img src="https://pusher.com/static/pusher-logo-6caad9362077d81cad1cdd631996b73a.svg" width="150" height="50">
 </div>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Frontend
 
@@ -68,6 +95,8 @@ http://gambiter.com/bridge/Singaporean_bridge.html
 
 - [MongoDB](https://www.mongodb.com)
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Hosted On
 
 <div>
@@ -76,13 +105,33 @@ http://gambiter.com/bridge/Singaporean_bridge.html
   <img src="https://cdn.optimizely.com/img/15508090763/66920c1d14ff4a9c84abf89961675fdb.png" width="140" height="50">
 </div>
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- CONTRIBUTING -->
+
 ## Contributing
 
-Contributions are always welcome!
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
 
-See `contributing.md` for ways to get started.
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also
+simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
-Please adhere to this project's `code of conduct`.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 

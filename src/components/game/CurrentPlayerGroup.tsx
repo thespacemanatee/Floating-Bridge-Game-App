@@ -24,11 +24,6 @@ export const CurrentPlayerGroup = ({
 }: CurrentPlayerGroupProps) => {
   return (
     <View style={[styles.container, style]}>
-      <GameUserEntry
-        playerData={playerData}
-        active={active}
-        style={styles.player}
-      />
       <View style={styles.hand}>
         <WonSets sets={playerData.sets} current />
         <CurrentPlayerHand
@@ -37,6 +32,7 @@ export const CurrentPlayerGroup = ({
           onPlayCard={onPlayCard}
         />
       </View>
+      <GameUserEntry playerData={playerData} active={active} />
     </View>
   );
 };
@@ -44,14 +40,12 @@ export const CurrentPlayerGroup = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column-reverse",
     alignItems: "center",
   },
   hand: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-  },
-  player: {
-    zIndex: 10,
   },
 });
