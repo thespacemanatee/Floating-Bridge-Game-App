@@ -45,11 +45,13 @@ https://game.floatingbridge.me/
 
 ## Tech Stack
 
-<img src="https://cdn.svgporn.com/logos/react.svg" width="50" height="50">
-<img src="https://cdn.svgporn.com/logos/nodejs.svg" width="100" height="50">
-<img src="https://cdn.svgporn.com/logos/express.svg" width="100" height="50">
-<img src="https://cdn.svgporn.com/logos/mongodb.svg" width="150" height="50">
-<img src="https://pusher.com/static/pusher-logo-6caad9362077d81cad1cdd631996b73a.svg" width="100" height="50">
+<div>
+  <img src="https://cdn.svgporn.com/logos/react.svg" width="50" height="50">
+  <img src="https://cdn.svgporn.com/logos/nodejs.svg" width="100" height="50">
+  <img src="https://cdn.svgporn.com/logos/express.svg" width="100" height="50">
+  <img src="https://cdn.svgporn.com/logos/mongodb.svg" width="150" height="50">
+  <img src="https://pusher.com/static/pusher-logo-6caad9362077d81cad1cdd631996b73a.svg" width="100" height="50">
+</div>
 
 ## Contributing
 
