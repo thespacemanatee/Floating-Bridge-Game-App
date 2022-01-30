@@ -31,7 +31,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://media.giphy.com/media/fzEUiJb6PZW8AB6URf/giphy-downsized-large.gif)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
