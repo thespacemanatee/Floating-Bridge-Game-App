@@ -4,6 +4,7 @@ import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -93,7 +94,7 @@ export const AnimatedFaceCard = ({
       if (destY === midY) {
         translateX.value = withSpring(0, { velocity: velocityX });
         rotate.value = withTiming(-1 + Math.random() * 2);
-        onSnapToMiddle(() => {
+        runOnJS(onSnapToMiddle)(() => {
           setTimeout(() => {
             translateX.value = withSpring(offsetX, { velocity: velocityX });
             translateY.value = withSpring(offsetY, { velocity: velocityY });

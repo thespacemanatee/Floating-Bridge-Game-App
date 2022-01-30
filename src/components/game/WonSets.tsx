@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
+import Animated, { Layout, ZoomIn } from "react-native-reanimated";
 
 import { PlayingCard } from "../elements";
 import type { PlayedCard } from "../../models";
@@ -30,8 +31,10 @@ export const WonSets = memo(
     return (
       <View style={styles.container}>
         {sets.map((set, setIdx) => (
-          <View
+          <Animated.View
             key={setIdx}
+            entering={ZoomIn}
+            layout={Layout}
             style={{
               height: cardHeight,
               width: cardWidth,
@@ -58,7 +61,7 @@ export const WonSets = memo(
                 ]}
               />
             ))}
-          </View>
+          </Animated.View>
         ))}
       </View>
     );

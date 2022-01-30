@@ -1,6 +1,7 @@
 import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
+import Animated, { Layout, ZoomIn, ZoomOut } from "react-native-reanimated";
 
 import { PlayingCard, ThemedText } from "../elements";
 import type { PlayedCard } from "../../models";
@@ -25,8 +26,11 @@ export const Floor = ({ playedCards, style }: FloorProps) => {
 
         return (
           currPlayer && (
-            <View
+            <Animated.View
               key={`${card.suit}${card.value}`}
+              entering={ZoomIn}
+              exiting={ZoomOut}
+              layout={Layout}
               style={styles.playedCardContainer}
             >
               <View style={styles.cardContainer}>
@@ -44,7 +48,7 @@ export const Floor = ({ playedCards, style }: FloorProps) => {
                   {currPlayer.info.username}
                 </ThemedText>
               </View>
-            </View>
+            </Animated.View>
           )
         );
       })}
