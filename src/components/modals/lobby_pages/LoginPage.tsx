@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { batch } from "react-redux";
 import { nanoid } from "nanoid/non-secure";
 import Clipboard from "@react-native-clipboard/clipboard";
@@ -8,17 +8,25 @@ import { FONT_SIZE, SPACING } from "../../../resources";
 import { TextButton, RoomIdGenerateButton } from "../../molecules";
 import { HeroImage, ThemedText, ThemedTextInput } from "../../elements";
 import { useAppDispatch, useAppSelector } from "../../../store";
-import { setGameRoomId, setGameUsername } from "../../../store/features/room";
+import {
+  setGameRoomId,
+  setGameStatus,
+  setGameUsername,
+} from "../../../store/features/room";
 import {
   bindGameEvents,
   bindPusherChannelEvents,
+  getSandboxPlayerData,
   initPusherClient,
   subscribeToChannel,
 } from "../../../utils";
-import { setGameRoundNo } from "../../../store/features/game";
+import {
+  setGamePlayerData,
+  setGameRoundNo,
+} from "../../../store/features/game";
 import { Branding } from "../../molecules/Branding";
 
-export const LobbyPage = () => {
+export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [roomId, setRoomId] = useState("");
   const userId = useAppSelector((state) => state.auth.userId);
@@ -29,6 +37,14 @@ export const LobbyPage = () => {
     const id = nanoid(8);
     setRoomId(id);
     Clipboard.setString(id);
+  };
+
+  const launchSandboxMode = async () => {
+    const { data } = await getSandboxPlayerData();
+    batch(() => {
+      dispatch(setGamePlayerData(data));
+      dispatch(setGameStatus("sandbox"));
+    });
   };
 
   const enterRoom = useCallback(() => {
@@ -53,7 +69,13 @@ export const LobbyPage = () => {
 
   return (
     <View style={styles.container}>
-      <HeroImage />
+      <TouchableOpacity
+        style={styles.sandboxContainer}
+        onPress={launchSandboxMode}
+      >
+        <ThemedText style={styles.sandboxText}>Try in Sandbox mode!</ThemedText>
+      </TouchableOpacity>
+      <HeroImage style={styles.heroImage} />
       <ThemedText style={styles.titleText}>
         Welcome to Floating Bridge!
       </ThemedText>
@@ -86,10 +108,22 @@ const styles = StyleSheet.create({
   container: {
     padding: SPACING.spacing32,
   },
+  sandboxContainer: {
+    alignSelf: "flex-end",
+    marginBottom: SPACING.spacing16,
+  },
+  sandboxText: {
+    color: "#0080FF",
+    fontFamily: "semiBold",
+  },
+  heroImage: {
+    marginHorizontal: SPACING.spacing64,
+  },
   titleText: {
     fontFamily: "bold",
     fontSize: FONT_SIZE.title3,
-    margin: SPACING.spacing12,
+    margin: SPACING.spacing16,
+    alignSelf: "center",
   },
   input: {
     width: "100%",

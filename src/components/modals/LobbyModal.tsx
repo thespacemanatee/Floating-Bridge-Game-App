@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
@@ -6,15 +7,16 @@ import { ELEVATION, SPACING } from "../../resources";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { setUserId } from "../../store/features/auth";
 
-import { LobbyPage, WaitingRoomPage } from "./login_pages";
+import { LoginPage, WaitingRoomPage, GameOverPage } from "./lobby_pages";
 
-export const LoginModal = () => {
+export const LobbyModal = () => {
   const [modalVisible, setModalVisible] = useState(true);
   const userId = useAppSelector((state) => state.auth.userId);
   const isConnected = useAppSelector((state) => state.room.isConnected);
   const username = useAppSelector((state) => state.room.username);
   const roomId = useAppSelector((state) => state.room.roomId);
   const gameStatus = useAppSelector((state) => state.room.gameStatus);
+  const roundNo = useAppSelector((state) => state.game.roundNo);
 
   const dispatch = useAppDispatch();
 
@@ -30,7 +32,15 @@ export const LoginModal = () => {
         setModalVisible(false);
         break;
       }
+      case "sandbox": {
+        setModalVisible(false);
+        break;
+      }
       case "stopped": {
+        setModalVisible(true);
+        break;
+      }
+      case "ended": {
         setModalVisible(true);
         break;
       }
@@ -41,10 +51,12 @@ export const LoginModal = () => {
     <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.container}>
         <View style={styles.modalView}>
-          {isConnected && userId && username && roomId ? (
+          {gameStatus === "ended" && roomId ? (
+            <GameOverPage />
+          ) : isConnected && userId && username && roomId ? (
             <WaitingRoomPage />
           ) : (
-            <LobbyPage />
+            <LoginPage />
           )}
         </View>
       </View>

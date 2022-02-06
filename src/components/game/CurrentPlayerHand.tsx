@@ -12,7 +12,7 @@ import { DECK } from "../../models";
 type CurrentPlayerHandProps = {
   hand: Card[];
   scaleSize?: number;
-  isActive: boolean;
+  isActive?: boolean;
   onPlayCard: (card: Card, callback: () => void) => void;
 };
 

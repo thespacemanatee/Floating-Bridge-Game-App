@@ -56,3 +56,6 @@ export const triggerNextTurnEvent = async (
   await axios.post(`${HOST}/games/turn/${gameId}`, {
     playCardPayload,
   });
+
+export const getSandboxPlayerData = async () =>
+  await axios.get(`${HOST}/games/sandbox`);
