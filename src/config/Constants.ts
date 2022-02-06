@@ -1,4 +1,4 @@
-const CARD_OFFSET_X = 75;
+const CARD_OFFSET_X = 60;
 const BACK_CARD_OFFSET_X = 50;
 const CARD_OFFSET_Y = 2.5;
 const CARD_ROTATION = 0.75;

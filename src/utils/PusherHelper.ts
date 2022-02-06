@@ -164,6 +164,9 @@ export const bindGameEvents = () => {
       "game-turn-event",
       (data: { gameData: GameData }) => {
         dispatchGameData(data.gameData);
+        if (data.gameData.roundNo >= 13) {
+          store.dispatch(setGameStatus("ended"));
+        }
       }
     );
   } else {
@@ -183,11 +186,10 @@ export const triggerGameStartedLoading = () => {
 
 export const leaveRoom = () => {
   const { roomId } = store.getState().room;
-  if (!roomId) {
-    return;
-  }
   try {
-    unsubscribeToChannel(roomId);
+    if (roomId) {
+      unsubscribeToChannel(roomId);
+    }
   } catch (err) {
     console.error(err);
   }

@@ -10,7 +10,7 @@ import { OpponentHand, WonSets } from ".";
 
 type HorizontalOpponentGroupProps = {
   playerData: PlayerData;
-  active: boolean;
+  active?: boolean;
   mirrored?: boolean;
   style?: StyleProp<ViewStyle>;
 };
@@ -30,11 +30,13 @@ export const HorizontalOpponentGroup = memo(
 
     return (
       <View style={[styles.container, style]}>
-        <GameUserEntry
-          playerData={playerData}
-          active={active}
-          style={styles.player}
-        />
+        {active !== undefined && (
+          <GameUserEntry
+            playerData={playerData}
+            active={active}
+            style={styles.player}
+          />
+        )}
         <View
           style={[
             {

@@ -1,2 +1,2 @@
 export { Main } from "./Main";
-export { Game } from "./Game";
+export { GameContainer } from "./game/GameContainer";
