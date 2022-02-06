@@ -13,7 +13,7 @@ type CurrentPlayerHandProps = {
   hand: Card[];
   scaleSize?: number;
   isActive?: boolean;
-  onPlayCard: (card: Card, callback: () => void) => void;
+  onPlayCard?: (card: Card, callback: () => void) => void;
 };
 
 export const CurrentPlayerHand = ({
@@ -39,7 +39,9 @@ export const CurrentPlayerHand = ({
             offsetY={translateY}
             offsetRotate={rotate}
             enabled={isActive}
-            onSnapToMiddle={(callback) => onPlayCard(card, callback)}
+            onSnapToMiddle={(callback) =>
+              onPlayCard && onPlayCard(card, callback)
+            }
           />
         );
       })}

@@ -3,13 +3,10 @@ import { StyleSheet, View } from "react-native";
 
 import { HorizontalOpponentGroup, TopOpponentGroup } from "../components/game";
 import { CurrentPlayerGroup } from "../components/game/CurrentPlayerGroup";
-import type { Card } from "../models";
 import { useAppSelector } from "../store";
 
 export const SandboxGame = () => {
   const players = useAppSelector((state) => state.game.players);
-
-  const playCard = async (card: Card) => {};
 
   return (
     <>
@@ -20,9 +17,7 @@ export const SandboxGame = () => {
           <HorizontalOpponentGroup playerData={players[2]} mirrored />
         )}
       </View>
-      {players[3] && (
-        <CurrentPlayerGroup playerData={players[3]} onPlayCard={playCard} />
-      )}
+      {players[3] && <CurrentPlayerGroup playerData={players[3]} />}
     </>
   );
 };
