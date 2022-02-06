@@ -3,7 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import type { Player } from "../game";
 
-export type GameStatus = "loading" | "started" | "stopped";
+export type GameStatus =
+  | "loading"
+  | "started"
+  | "stopped"
+  | "ended"
+  | "sandbox";
 interface RoomState {
   isConnected: boolean;
   username: string | null;

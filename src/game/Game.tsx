@@ -1,26 +1,27 @@
 import React, { useEffect, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { useAppDispatch, useAppSelector } from "./store";
+import {
+  Floor,
+  GameHUD,
+  HorizontalOpponentGroup,
+  TopOpponentGroup,
+} from "../components/game";
+import { CurrentPlayerGroup } from "../components/game/CurrentPlayerGroup";
+import type { Card } from "../models";
+import { SPACING } from "../resources";
+import { useAppDispatch, useAppSelector } from "../store";
+import type { PlayCardPayload } from "../store/features/game";
+import {
+  setGamePlayedCards,
+  setGameUserPosition,
+} from "../store/features/game";
 import {
   getHandPositions,
   isInvalidPlayCard,
-  triggerNextTurnEvent,
   leaveRoom,
-} from "./utils";
-import { SPACING } from "./resources";
-import { BiddingModal, GameOverModal } from "./components/modals";
-import type { Card } from "./models";
-import { GameBackground, CloseButton } from "./components/elements";
-import type { PlayCardPayload } from "./store/features/game";
-import { setGamePlayedCards, setGameUserPosition } from "./store/features/game";
-import {
-  TopOpponentGroup,
-  GameHUD,
-  Floor,
-  HorizontalOpponentGroup,
-} from "./components/game";
-import { CurrentPlayerGroup } from "./components/game/CurrentPlayerGroup";
+  triggerNextTurnEvent,
+} from "../utils";
 
 export const Game = () => {
   const userId = useAppSelector((state) => state.auth.userId);
@@ -83,10 +84,7 @@ export const Game = () => {
   };
 
   return (
-    <GameBackground>
-      <BiddingModal />
-      <GameOverModal />
-      <CloseButton onPress={leaveRoom} />
+    <>
       {gameId && <GameHUD style={styles.gameHud} />}
       {top?.playerData && (
         <TopOpponentGroup
@@ -117,7 +115,7 @@ export const Game = () => {
           onPlayCard={playCard}
         />
       )}
-    </GameBackground>
+    </>
   );
 };
 

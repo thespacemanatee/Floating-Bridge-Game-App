@@ -11,7 +11,7 @@ import { CurrentPlayerHand } from "./CurrentPlayerHand";
 
 type CurrentPlayerGroupProps = {
   playerData: PlayerData;
-  active: boolean;
+  active?: boolean;
   onPlayCard: (card: Card, callback: () => void) => void;
   style?: StyleProp<ViewStyle>;
 };
@@ -32,7 +32,9 @@ export const CurrentPlayerGroup = ({
           onPlayCard={onPlayCard}
         />
       </View>
-      <GameUserEntry playerData={playerData} active={active} />
+      {active !== undefined && (
+        <GameUserEntry playerData={playerData} active={active} />
+      )}
     </View>
   );
 };

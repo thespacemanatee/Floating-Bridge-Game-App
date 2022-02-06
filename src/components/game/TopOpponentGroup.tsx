@@ -10,7 +10,7 @@ import { OpponentHand, WonSets } from ".";
 
 type TopOpponentGroupProps = {
   playerData: PlayerData;
-  active: boolean;
+  active?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -28,7 +28,9 @@ export const TopOpponentGroup = memo(
           <WonSets sets={playerData.sets} />
           <OpponentHand hand={playerData.hand} />
         </View>
-        <GameUserEntry playerData={playerData} active={active} />
+        {active !== undefined && (
+          <GameUserEntry playerData={playerData} active={active} />
+        )}
       </View>
     );
   },

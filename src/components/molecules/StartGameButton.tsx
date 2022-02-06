@@ -3,7 +3,7 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { ActivityIndicator } from "react-native";
 import { batch } from "react-redux";
 
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   initialiseGame,
   resumeGame,
@@ -36,6 +36,8 @@ export const StartGameButton = ({
   roomReady,
   style,
 }: StartGameButtonProps) => {
+  const roundNo = useAppSelector((state) => state.game.roundNo);
+
   const dispatch = useAppDispatch();
 
   const onStartOrResumeGame = async () => {
@@ -49,7 +51,7 @@ export const StartGameButton = ({
         dispatch(resetGame());
         dispatch(setGameStatus("loading"));
       });
-      if (gameExists && gameId) {
+      if (gameExists && gameId && roundNo < 13) {
         await resumeGame(roomId, gameId);
       } else {
         await initialiseGame(userId, roomId, players);

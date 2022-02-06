@@ -14,10 +14,7 @@ export const Branding = () => {
       <View style={styles.divider} />
       <ThemedText style={styles.copyrightText}>
         © 2022 -{" "}
-        <ThemedText
-          onPress={() => Linking.openURL("https://cheekit.tech/")}
-          style={styles.linkButton}
-        >
+        <ThemedText onPress={() => Linking.openURL("https://cheekit.tech/")}>
           Chee Kit
         </ThemedText>
       </ThemedText>
@@ -37,7 +34,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    width: "80%",
+    width: "90%",
     backgroundColor: "lightgray",
     margin: SPACING.spacing16,
   },
@@ -45,8 +42,5 @@ const styles = StyleSheet.create({
     fontFamily: "light",
     fontSize: FONT_SIZE.small,
     color: "gray",
-  },
-  linkButton: {
-    color: "#0080FF",
   },
 });
