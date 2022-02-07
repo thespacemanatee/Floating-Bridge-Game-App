@@ -1,5 +1,11 @@
 import type { Card, PlayedCard } from "../models";
-import type { Bid, BidLevel, PlayerData, Trump } from "../store/features/game";
+import type {
+  Bid,
+  BidLevel,
+  Player,
+  PlayerData,
+  Trump,
+} from "../store/features/game";
 
 export const getUnicodeCharacter = (trump?: Trump) => {
   switch (trump) {
@@ -110,3 +116,6 @@ export const getWinners = (
     (player) => player.id !== bidWinnerId && player.id !== partnerId
   );
 };
+
+export const findPlayerData = (userId: string, players: Player[]) =>
+  players.find((player) => player.id === userId);

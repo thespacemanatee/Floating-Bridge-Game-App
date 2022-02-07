@@ -16,7 +16,6 @@ export const LobbyModal = () => {
   const username = useAppSelector((state) => state.room.username);
   const roomId = useAppSelector((state) => state.room.roomId);
   const gameStatus = useAppSelector((state) => state.room.gameStatus);
-  const roundNo = useAppSelector((state) => state.game.roundNo);
 
   const dispatch = useAppDispatch();
 
