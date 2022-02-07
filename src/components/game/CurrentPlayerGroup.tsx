@@ -12,7 +12,7 @@ import { CurrentPlayerHand } from "./CurrentPlayerHand";
 type CurrentPlayerGroupProps = {
   playerData: PlayerData;
   active?: boolean;
-  onPlayCard: (card: Card, callback: () => void) => void;
+  onPlayCard?: (card: Card, callback: () => void) => void;
   style?: StyleProp<ViewStyle>;
 };
 
