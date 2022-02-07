@@ -4,6 +4,7 @@ export {
   getWinners,
   isInvalidPlayCard,
   getHandPositions,
+  findPlayerData,
 } from "./utils";
 
 export {
