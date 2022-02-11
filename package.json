@@ -29,7 +29,7 @@
     "react-native": "0.64.3",
     "react-native-dotenv": "^3.3.1",
     "react-native-gesture-handler": "~2.2.0",
-    "react-native-reanimated": "~2.3.1",
+    "react-native-reanimated": "~2.4.1",
     "react-native-redash": "^16.2.3",
     "react-native-web": "0.17.5",
     "react-native-web-lottie": "^1.4.4",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
-    "@expo/webpack-config": "^0.16.16",
+    "@expo/webpack-config": "^0.16.18",
     "@types/lodash.isequal": "^4.5.5",
     "@types/react": "~17.0.39",
     "@types/react-native": "~0.64.12",
