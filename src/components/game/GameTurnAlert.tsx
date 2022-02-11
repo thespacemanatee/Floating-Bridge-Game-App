@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import Animated, {
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -113,7 +112,7 @@ export const GameTurnAlert = ({ style }: GameTurnAlertProps) => {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: interpolate(progress.value, [0, 1], [0, 1]),
+        scale: progress.value,
       },
     ],
   }));
