@@ -21,14 +21,7 @@ export const BiddingModal = () => {
   }, [gameStatus, isBidding, partner]);
 
   return (
-    <Modal
-      animationType="fade"
-      transparent
-      visible={biddingModalVisible}
-      onRequestClose={() => {
-        setBiddingModalVisible(!biddingModalVisible);
-      }}
-    >
+    <Modal animationType="fade" transparent visible={biddingModalVisible}>
       <View style={styles.biddingModalContainer}>
         <View style={styles.modalView}>
           <View style={styles.contentContainer}>
