@@ -5,7 +5,7 @@ import Animated, { Layout, ZoomIn } from "react-native-reanimated";
 import { PlayingCard } from "../elements";
 import type { PlayedCard } from "../../models";
 import { SPACING } from "../../resources";
-import { FACE_CARD_ASPECT_RATIO } from "../../config/Constants";
+import { CARD_ASPECT_RATIO } from "../../config/Constants";
 
 type WonSetsProps = {
   sets: PlayedCard[][];
@@ -14,7 +14,7 @@ type WonSetsProps = {
 };
 
 const areEqual = (prev: WonSetsProps, next: WonSetsProps) => {
-  return prev.sets === next.sets;
+  return prev.sets.length === next.sets.length;
 };
 
 export const WonSets = memo(
@@ -23,7 +23,7 @@ export const WonSets = memo(
     const { cardHeight, cardWidth } = useMemo(() => {
       const cWidth = wWidth * 0.06 * scaleSize;
       return {
-        cardHeight: cWidth * FACE_CARD_ASPECT_RATIO,
+        cardHeight: cWidth * CARD_ASPECT_RATIO,
         cardWidth: cWidth,
       };
     }, [wWidth, scaleSize]);
