@@ -3,7 +3,7 @@ import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 
-import { PlayingCard, ThemedText } from "../elements";
+import { ThemedText } from "../elements";
 import type { PlayedCard } from "../../models";
 import { DECK } from "../../models";
 import { ELEVATION, SPACING } from "../../resources";
