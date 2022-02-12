@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://game.floatingbridge.me">
     <img src="assets/images/cards.png" alt="Logo" width="251" height="200">
   </a>
 
@@ -31,7 +31,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://game.floatingbridge.me)
+https://user-images.githubusercontent.com/6837599/153715249-dc3f7c2d-1f88-4435-bca0-6b78b0d73a92.mp4
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
