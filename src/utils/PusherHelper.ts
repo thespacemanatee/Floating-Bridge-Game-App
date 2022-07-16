@@ -45,6 +45,8 @@ type PusherStates =
   | "failed"
   | "disconnected";
 
+console.log(HOST);
+
 export const initPusherClient = (userId: string, username: string) => {
   pusherRef.current = new Pusher(PUSHER_KEY, {
     auth: {

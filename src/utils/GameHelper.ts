@@ -4,6 +4,8 @@ import { HOST } from "@env";
 import type { Bid, PlayCardPayload, Player } from "../store/features/game";
 import type { CardSuit, CardValue } from "../models";
 
+console.log(HOST);
+
 export const initialiseGame = async (
   userId: string,
   roomId: string,
