@@ -1,13 +1,12 @@
-import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-import type { PlayerData } from "../../store/features/game";
 import type { Card } from "../../models";
+import type { PlayerData } from "../../store/features/game";
 import { GameUserEntry } from "../molecules";
 
-import { WonSets } from "./WonSets";
 import { CurrentPlayerHand } from "./CurrentPlayerHand";
+import { WonSets } from "./WonSets";
 
 type CurrentPlayerGroupProps = {
   playerData: PlayerData;

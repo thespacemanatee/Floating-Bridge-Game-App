@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 
 import type { Card, CardSuit, CardValue } from "../../../models";
 import { DECK, SUITS } from "../../../models";
 import { ELEVATION, FONT_SIZE, SPACING } from "../../../resources";
-import type { Trump } from "../../../store/features/game";
 import { useAppSelector } from "../../../store";
+import type { Trump } from "../../../store/features/game";
 import { triggerSetPartnerEvent } from "../../../utils";
 import { PlayingCard, SuitButton, ThemedText } from "../../elements";
 import { TextButton } from "../../molecules";
@@ -21,17 +21,17 @@ export const ChoosePartnerPage = () => {
   const gameId = useAppSelector((state) => state.game.gameId);
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const currentHand = useAppSelector((state) =>
-    state.game.players.find((hand) => hand.id === userId)
+    state.game.players.find((hand) => hand.id === userId),
   );
   const [selectedSuit, setSelectedTrump] = useState<Trump>("c");
   const [selectedPartner, setSelectedPartner] = useState<PartnerPayload>();
   const isBidWinner = useMemo(
     () => userId === latestBid?.userId,
-    [latestBid?.userId, userId]
+    [latestBid?.userId, userId],
   );
   const bidWinner = useMemo(
     () => players.find((player) => player.id === latestBid?.userId),
-    [latestBid?.userId, players]
+    [latestBid?.userId, players],
   );
 
   const selectTrump = (trump: Trump) => {
@@ -87,7 +87,7 @@ export const ChoosePartnerPage = () => {
                 !currentHand?.hand.some(
                   (otherCard) =>
                     otherCard.suit === thisCard.suit &&
-                    otherCard.value === thisCard.value
+                    otherCard.value === thisCard.value,
                 )
               );
             })
@@ -104,8 +104,8 @@ export const ChoosePartnerPage = () => {
                         selectedPartner?.value === card[1].value
                           ? "#21b9ff"
                           : pressed
-                          ? "#47c5ff"
-                          : "white",
+                            ? "#47c5ff"
+                            : "white",
                     },
                     styles.playingCardContainer,
                   ]}

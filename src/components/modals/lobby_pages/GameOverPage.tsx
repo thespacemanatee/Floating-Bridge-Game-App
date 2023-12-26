@@ -1,13 +1,13 @@
-import React, { useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import LottieView from "react-native-web-lottie";
 
-import { TitleCloseButton } from "../../molecules/TitleCloseButton";
-import { ThemedText } from "../../elements";
-import { StartGameButton } from "../../molecules/StartGameButton";
+import { FONT_SIZE, SPACING } from "../../../resources";
 import { useAppSelector } from "../../../store";
 import { getWinners } from "../../../utils";
-import { FONT_SIZE, SPACING } from "../../../resources";
+import { ThemedText } from "../../elements";
+import { StartGameButton } from "../../molecules/StartGameButton";
+import { TitleCloseButton } from "../../molecules/TitleCloseButton";
 
 export const GameOverPage = () => {
   const animationRef = useRef<LottieView>(null);
@@ -19,7 +19,7 @@ export const GameOverPage = () => {
   const gameId = useAppSelector((state) => state.game.gameId);
   const roomReady = useMemo(
     () => (players.length === 4 ? true : false),
-    [players]
+    [players],
   );
   const latestBid = useAppSelector((state) => state.game.latestBid);
   const partner = useAppSelector((state) => state.game.partner);
@@ -32,13 +32,13 @@ export const GameOverPage = () => {
         latestBid?.level,
         gamePlayers,
         latestBid?.userId,
-        partner?.userId
+        partner?.userId,
       ),
-    [gamePlayers, latestBid, partner]
+    [gamePlayers, latestBid, partner],
   );
   const isWinner = useMemo(
     () => winners?.find((player) => player.id === userId),
-    [userId, winners]
+    [userId, winners],
   );
 
   return (

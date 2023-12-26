@@ -1,4 +1,3 @@
-import React from "react";
 import type { ImageStyle, StyleProp } from "react-native";
 import { Image } from "react-native";
 

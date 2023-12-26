@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import Animated, {
@@ -86,8 +86,8 @@ export const GameTurnAlert = ({ style }: GameTurnAlertProps) => {
     }
     setAlertText(
       `Partner is the ${partner.value.toUpperCase()} of ${getUnicodeCharacter(
-        partner.suit
-      )}!`
+        partner.suit,
+      )}!`,
     );
     showGameAlert();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,8 +102,8 @@ export const GameTurnAlert = ({ style }: GameTurnAlertProps) => {
       `${
         turnPlayer.info.username
       } played ${playedCard.value.toUpperCase()} of ${getUnicodeCharacter(
-        playedCard.suit
-      )}!`
+        playedCard.suit,
+      )}!`,
     );
     showGameAlert();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,17 +1,15 @@
-import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { ActivityIndicator } from "react-native";
-import { batch } from "react-redux";
 
 import { useAppDispatch, useAppSelector } from "../../store";
+import type { Player } from "../../store/features/game";
+import { resetGame } from "../../store/features/game";
+import { setGameStatus } from "../../store/features/room";
 import {
   initialiseGame,
   resumeGame,
   triggerGameStartedLoading,
 } from "../../utils";
-import type { Player } from "../../store/features/game";
-import { resetGame } from "../../store/features/game";
-import { setGameStatus } from "../../store/features/room";
 
 import { TextButton } from ".";
 
@@ -47,10 +45,8 @@ export const StartGameButton = ({
     }
     try {
       triggerGameStartedLoading();
-      batch(() => {
-        dispatch(resetGame());
-        dispatch(setGameStatus("loading"));
-      });
+      dispatch(resetGame());
+      dispatch(setGameStatus("loading"));
       if (gameExists && gameId && roundNo < 13) {
         await resumeGame(roomId, gameId);
       } else {
@@ -68,8 +64,8 @@ export const StartGameButton = ({
         gameStatus === "loading"
           ? "Starting..."
           : gameExists
-          ? "Resume!"
-          : "Start!"
+            ? "Resume!"
+            : "Start!"
       }
       onPress={onStartOrResumeGame}
       disabled={!roomReady || gameStatus === "loading"}

@@ -1,4 +1,3 @@
-import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
@@ -37,11 +36,11 @@ export const LevelButton = ({
             disabled
               ? "grey"
               : // eslint-disable-next-line no-nested-ternary
-              level === selectedLevel
-              ? "#21b9ff"
-              : pressed
-              ? "#47c5ff"
-              : "#80d7ff",
+                level === selectedLevel
+                ? "#21b9ff"
+                : pressed
+                  ? "#47c5ff"
+                  : "#80d7ff",
         },
         styles.container,
         style,

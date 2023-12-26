@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
-import { ThemedText } from "../elements";
 import { ELEVATION, FONT_SIZE, SPACING } from "../../resources";
 import { useAppSelector } from "../../store";
 import { getColorFromUnicodeCharacter, getUnicodeCharacter } from "../../utils";
+import { ThemedText } from "../elements";
 
 type GameHUDProps = {
   style?: StyleProp<ViewStyle>;
@@ -18,7 +18,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
   const partner = useAppSelector((state) => state.game.partner);
   const bidder = useMemo(
     () => players.find((player) => player.id === latestBid?.userId),
-    [latestBid?.userId, players]
+    [latestBid?.userId, players],
   );
 
   return (
@@ -38,7 +38,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
               styles.valueText,
             ]}
           >{`${latestBid?.level}${getUnicodeCharacter(
-            latestBid?.trump
+            latestBid?.trump,
           )}`}</ThemedText>
         ) : (
           <ThemedText style={styles.valueText}>N/A</ThemedText>
@@ -53,7 +53,7 @@ export const GameHUD = ({ style }: GameHUDProps) => {
               styles.valueText,
             ]}
           >{`${partner.value.toUpperCase()}${getUnicodeCharacter(
-            partner.suit
+            partner.suit,
           )}`}</ThemedText>
         ) : (
           <ThemedText style={styles.valueText}>N/A</ThemedText>

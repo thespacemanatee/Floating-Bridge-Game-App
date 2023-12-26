@@ -1,7 +1,7 @@
-import React, { memo } from "react";
+import isEqual from "lodash.isequal";
+import { memo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
-import isEqual from "lodash.isequal";
 
 import type { PlayerData } from "../../store/features/game";
 import { GameUserEntry } from "../molecules";
@@ -34,7 +34,7 @@ export const TopOpponentGroup = memo(
       </View>
     );
   },
-  areEqual
+  areEqual,
 );
 
 const styles = StyleSheet.create({

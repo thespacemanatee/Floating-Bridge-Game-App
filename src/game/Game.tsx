@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
 import {
@@ -33,7 +33,7 @@ export const Game = () => {
   const playedCards = useAppSelector((state) => state.game.playedCards);
   const { userPosition, top, left, right, currentPlayerData } = useMemo(
     () => (userId ? getHandPositions(userId, players) : {}),
-    [players, userId]
+    [players, userId],
   );
 
   const dispatch = useAppDispatch();
@@ -65,7 +65,7 @@ export const Game = () => {
         isTrumpBroken,
         playedCards,
         latestBid,
-        currentPlayerData.playerData.hand
+        currentPlayerData.playerData.hand,
       )
     ) {
       callback();

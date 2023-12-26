@@ -1,4 +1,3 @@
-import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { ImageBackground, StyleSheet } from "react-native";
 

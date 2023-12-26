@@ -1,4 +1,3 @@
-import React from "react";
 import { Image, Linking, StyleSheet, View } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../resources";
