@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
 import Animated, {
   useAnimatedStyle,

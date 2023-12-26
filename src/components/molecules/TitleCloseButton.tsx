@@ -1,8 +1,6 @@
-import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { batch } from "react-redux";
-import { Ionicons } from "@expo/vector-icons";
 
 import { FONT_SIZE, SPACING } from "../../resources";
 import { useAppDispatch } from "../../store";
@@ -32,10 +30,8 @@ export const TitleCloseButton = ({
     } catch (err) {
       console.error(err);
     }
-    batch(() => {
-      dispatch(resetRoom());
-      dispatch(resetGame());
-    });
+    dispatch(resetRoom());
+    dispatch(resetGame());
   };
 
   return (

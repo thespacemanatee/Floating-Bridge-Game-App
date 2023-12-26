@@ -1,12 +1,11 @@
-import React from "react";
 import { StyleSheet } from "react-native";
 
-import { leaveRoom } from "../utils";
-import { BiddingModal } from "../components/modals";
-import { GameBackground, CloseButton } from "../components/elements";
+import { CloseButton, GameBackground } from "../components/elements";
 import { Alert } from "../components/elements/Alert";
-import { useAppSelector } from "../store";
 import { GameTurnAlert } from "../components/game/GameTurnAlert";
+import { BiddingModal } from "../components/modals";
+import { useAppSelector } from "../store";
+import { leaveRoom } from "../utils";
 
 import { Game, SandboxGame } from ".";
 

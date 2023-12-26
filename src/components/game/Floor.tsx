@@ -1,13 +1,12 @@
-import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 
-import { ThemedText } from "../elements";
 import type { PlayedCard } from "../../models";
 import { DECK } from "../../models";
 import { ELEVATION, SPACING } from "../../resources";
 import { useAppSelector } from "../../store";
+import { ThemedText } from "../elements";
 import { AnimatedFloorCard } from "../molecules/AnimatedFloorCard";
 
 type FloorProps = {
@@ -22,7 +21,7 @@ export const Floor = ({ playedCards, style }: FloorProps) => {
     <View style={[styles.container, style]}>
       {playedCards.map((card) => {
         const currPlayer = players.find(
-          (player) => player.id === card.playedBy
+          (player) => player.id === card.playedBy,
         );
 
         return (

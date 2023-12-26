@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { FONT_SIZE } from "../../resources";
@@ -34,7 +33,7 @@ export const TextButton = ({
       onPress={onPress}
       disabled={disabled}
       type={type}
-      style={[styles.button, style]}
+      style={typeof style === "function" ? style : [styles.button, style]}
     >
       <View style={styles.contentContainer}>
         <ThemedText
