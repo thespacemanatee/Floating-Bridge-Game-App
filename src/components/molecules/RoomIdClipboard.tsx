@@ -1,11 +1,10 @@
-import React from "react";
-import type { StyleProp, ViewStyle } from "react-native";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Clipboard from "@react-native-clipboard/clipboard";
+import type { StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
-import { ThemedText } from "../elements";
 import { SPACING } from "../../resources";
+import { ThemedText } from "../elements";
 
 type RoomIdClipboardProps = {
   roomId: string | null;

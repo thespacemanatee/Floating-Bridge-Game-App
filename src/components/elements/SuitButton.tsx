@@ -1,4 +1,3 @@
-import React from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
@@ -38,11 +37,11 @@ export const SuitButton = ({
             disabled
               ? "grey"
               : // eslint-disable-next-line no-nested-ternary
-              suit === selectedSuit
-              ? "#d66eff"
-              : pressed
-              ? "#db80ff"
-              : "#e8b0ff",
+                suit === selectedSuit
+                ? "#d66eff"
+                : pressed
+                  ? "#db80ff"
+                  : "#e8b0ff",
         },
         styles.container,
         style,

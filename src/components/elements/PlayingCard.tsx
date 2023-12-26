@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { ImageSourcePropType, StyleProp, ViewStyle } from "react-native";
-import { useWindowDimensions, View, StyleSheet, Image } from "react-native";
+import { Image, StyleSheet, View, useWindowDimensions } from "react-native";
 
 import { CARD_ASPECT_RATIO } from "../../config/Constants";
 import { ELEVATION, SPACING } from "../../resources";

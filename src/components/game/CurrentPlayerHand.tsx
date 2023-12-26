@@ -1,6 +1,3 @@
-import React from "react";
-
-import { AnimatedFaceCard } from "../molecules/AnimatedFaceCard";
 import {
   CARD_OFFSET_X,
   CARD_OFFSET_Y,
@@ -8,6 +5,7 @@ import {
 } from "../../config/Constants";
 import type { Card } from "../../models";
 import { DECK } from "../../models";
+import { AnimatedFaceCard } from "../molecules/AnimatedFaceCard";
 
 type CurrentPlayerHandProps = {
   hand: Card[];

@@ -1,7 +1,7 @@
-import React, { memo } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
 import isEqual from "lodash.isequal";
+import { memo } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 
 import type { PlayerData } from "../../store/features/game";
 import { GameUserEntry } from "../molecules";
@@ -17,7 +17,7 @@ type HorizontalOpponentGroupProps = {
 
 const areEqual = (
   prev: HorizontalOpponentGroupProps,
-  next: HorizontalOpponentGroupProps
+  next: HorizontalOpponentGroupProps,
 ) => {
   return (
     prev.active === next.active && isEqual(prev.playerData, next.playerData)
@@ -54,7 +54,7 @@ export const HorizontalOpponentGroup = memo(
       </View>
     );
   },
-  areEqual
+  areEqual,
 );
 
 const styles = StyleSheet.create({

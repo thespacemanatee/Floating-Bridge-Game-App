@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { PressableProps } from "react-native";
 import { Pressable, StyleSheet } from "react-native";
 
@@ -52,8 +52,8 @@ export const ThemedButton = ({
           backgroundColor: disabled
             ? "grey"
             : pressed
-            ? buttonColors.pressed
-            : buttonColors.default,
+              ? buttonColors.pressed
+              : buttonColors.default,
           borderWidth: type === "outlined" ? 1 : 0,
         },
         styles.button,

@@ -1,13 +1,13 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState } from "react";
-import { Modal, StyleSheet, View } from "react-native";
 import { nanoid } from "nanoid/non-secure";
+import { useEffect, useState } from "react";
+import { Modal, StyleSheet, View } from "react-native";
 
 import { ELEVATION, SPACING } from "../../resources";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { setUserId } from "../../store/features/auth";
 
-import { LoginPage, WaitingRoomPage, GameOverPage } from "./lobby_pages";
+import { GameOverPage, LoginPage, WaitingRoomPage } from "./lobby_pages";
 
 export const LobbyModal = () => {
   const [modalVisible, setModalVisible] = useState(true);

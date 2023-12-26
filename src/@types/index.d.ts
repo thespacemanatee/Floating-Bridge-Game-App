@@ -1,11 +1,5 @@
 declare module "react-native-web-lottie" {
-  import React from "react";
-  import type {
-    Animated,
-    StyleProp,
-    ViewStyle,
-    LayoutChangeEvent,
-  } from "react-native";
+  import type { Animated, StyleProp, ViewStyle } from "react-native";
   /**
    * Serialized animation as generated from After Effects
    */
