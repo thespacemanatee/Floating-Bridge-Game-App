@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo } from "react";
-import { useWindowDimensions, StyleSheet } from "react-native";
-import type { PanGestureHandlerGestureEvent } from "react-native-gesture-handler";
-import { PanGestureHandler } from "react-native-gesture-handler";
+import { useEffect, useMemo } from "react";
+import { StyleSheet, useWindowDimensions } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -40,6 +38,7 @@ export const AnimatedFaceCard = ({
   const { height } = useWindowDimensions();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(-height);
+  const ctx = useSharedValue({ x: 0, y: 0 });
   const scale = useSharedValue(1);
   const rotate = useSharedValue(0);
   const zIndex = useSharedValue(0);
@@ -53,14 +52,14 @@ export const AnimatedFaceCard = ({
       withTiming(offsetX, {
         duration: DURATION,
         easing: Easing.inOut(Easing.ease),
-      })
+      }),
     );
     translateY.value = withDelay(
       delay,
       withTiming(offsetY, {
         duration: DURATION,
         easing: Easing.inOut(Easing.ease),
-      })
+      }),
     );
     rotate.value = withDelay(delay - 100, withTiming(offsetRotate));
   }, [
@@ -74,42 +73,49 @@ export const AnimatedFaceCard = ({
     translateY,
   ]);
 
-  const onGestureEvent = useAnimatedGestureHandler<
-    PanGestureHandlerGestureEvent,
-    { x: number; y: number }
-  >({
-    onStart: (_, ctx) => {
-      ctx.x = translateX.value;
-      ctx.y = translateY.value;
+  const panGesture = Gesture.Pan()
+    .onStart((_event) => {
+      console.log("onStart", _event);
+
+      ctx.value.x = translateX.value;
+      ctx.value.y = translateY.value;
       scale.value = withTiming(1.25);
       rotate.value = withTiming(0);
       zIndex.value = 1;
-    },
-    onActive: ({ translationX, translationY }, ctx) => {
-      translateX.value = ctx.x + translationX;
-      translateY.value = ctx.y + translationY;
-    },
-    onEnd: ({ velocityX, velocityY }) => {
-      const destY = snapPoint(translateY.value, velocityY, snapPointsY);
+    })
+    .onUpdate((event) => {
+      console.log("onUpdate", event);
+
+      translateX.value = ctx.value.x + event.translationX;
+      translateY.value = ctx.value.y + event.translationY;
+    })
+    .onEnd((event) => {
+      console.log("onEnd", event);
+
+      const destY = snapPoint(translateY.value, event.velocityY, snapPointsY);
       if (destY === midY) {
-        translateX.value = withSpring(0, { velocity: velocityX });
+        translateX.value = withSpring(0, { velocity: event.velocityX });
         rotate.value = withTiming(-1 + Math.random() * 2);
         runOnJS(onSnapToMiddle)(() => {
           setTimeout(() => {
-            translateX.value = withSpring(offsetX, { velocity: velocityX });
-            translateY.value = withSpring(offsetY, { velocity: velocityY });
+            translateX.value = withSpring(offsetX, {
+              velocity: event.velocityX,
+            });
+            translateY.value = withSpring(offsetY, {
+              velocity: event.velocityY,
+            });
             rotate.value = withTiming(offsetRotate);
           }, 100);
         });
       } else {
-        translateX.value = withSpring(offsetX, { velocity: velocityX });
+        translateX.value = withSpring(offsetX, { velocity: event.velocityX });
         rotate.value = withTiming(offsetRotate);
       }
-      translateY.value = withSpring(destY, { velocity: velocityY });
+      translateY.value = withSpring(destY, { velocity: event.velocityY });
       scale.value = withTiming(1);
       zIndex.value = 0;
-    },
-  });
+    })
+    .enabled(enabled);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -123,19 +129,16 @@ export const AnimatedFaceCard = ({
       zIndex: zIndex.value,
     };
   });
+
   return (
-    <PanGestureHandler
-      onGestureEvent={onGestureEvent}
-      minDist={0}
-      enabled={enabled}
-    >
+    <GestureDetector gesture={panGesture}>
       <Animated.View
         style={[styles.card, animatedStyle]}
         pointerEvents="box-none"
       >
         <PlayingCard image={image} />
       </Animated.View>
-    </PanGestureHandler>
+    </GestureDetector>
   );
 };
 
