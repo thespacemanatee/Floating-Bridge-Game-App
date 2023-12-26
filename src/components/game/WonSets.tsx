@@ -1,11 +1,11 @@
-import React, { memo, useMemo } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { memo, useMemo } from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, { Layout, ZoomIn } from "react-native-reanimated";
 
-import { PlayingCard } from "../elements";
+import { CARD_ASPECT_RATIO } from "../../config/Constants";
 import type { PlayedCard } from "../../models";
 import { SPACING } from "../../resources";
-import { CARD_ASPECT_RATIO } from "../../config/Constants";
+import { PlayingCard } from "../elements";
 
 type WonSetsProps = {
   sets: PlayedCard[][];
@@ -66,7 +66,7 @@ export const WonSets = memo(
       </View>
     );
   },
-  areEqual
+  areEqual,
 );
 
 const styles = StyleSheet.create({

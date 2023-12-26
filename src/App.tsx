@@ -1,10 +1,9 @@
-import React from "react";
-import { Provider } from "react-redux";
 import { registerRootComponent } from "expo";
 import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { store, persistor } from "./store";
+import { persistor, store } from "./store";
 
 import { Main } from ".";
 

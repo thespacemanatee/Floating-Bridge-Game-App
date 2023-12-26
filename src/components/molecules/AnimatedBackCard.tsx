@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from "react";
-import { useWindowDimensions, StyleSheet } from "react-native";
+import { useEffect, useMemo } from "react";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -42,14 +42,14 @@ export const AnimatedBackCard = ({
       withTiming(offsetX, {
         duration: DURATION,
         easing: Easing.inOut(Easing.ease),
-      })
+      }),
     );
     translateY.value = withDelay(
       delay,
       withTiming(offsetY, {
         duration: DURATION,
         easing: Easing.inOut(Easing.ease),
-      })
+      }),
     );
     rotate.value = withDelay(delay - 100, withTiming(offsetRotate));
   }, [

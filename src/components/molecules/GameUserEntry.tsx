@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import Animated, {
@@ -42,7 +42,7 @@ export const GameUserEntry = ({
         translateY: interpolate(
           progress.value,
           [0, 1],
-          [-BOB_OFFSET, BOB_OFFSET]
+          [-BOB_OFFSET, BOB_OFFSET],
         ),
       },
     ],
@@ -50,7 +50,7 @@ export const GameUserEntry = ({
     borderColor: interpolateColor(
       progress.value,
       [0, 1],
-      ["#ff4242", "#ff80cc"]
+      ["#ff4242", "#ff80cc"],
     ),
   }));
 

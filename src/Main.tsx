@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import { LobbyModal } from "./components/modals/LobbyModal";

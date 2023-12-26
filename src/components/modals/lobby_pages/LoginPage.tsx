@@ -1,13 +1,15 @@
-import React, { useCallback, useState } from "react";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { nanoid } from "nanoid/non-secure";
+import { useCallback, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { batch } from "react-redux";
-import { nanoid } from "nanoid/non-secure";
-import Clipboard from "@react-native-clipboard/clipboard";
 
 import { FONT_SIZE, SPACING } from "../../../resources";
-import { TextButton, RoomIdGenerateButton } from "../../molecules";
-import { HeroImage, ThemedText, ThemedTextInput } from "../../elements";
 import { useAppDispatch, useAppSelector } from "../../../store";
+import {
+  setGamePlayerData,
+  setGameRoundNo,
+} from "../../../store/features/game";
 import {
   setGameRoomId,
   setGameStatus,
@@ -20,10 +22,8 @@ import {
   initPusherClient,
   subscribeToChannel,
 } from "../../../utils";
-import {
-  setGamePlayerData,
-  setGameRoundNo,
-} from "../../../store/features/game";
+import { HeroImage, ThemedText, ThemedTextInput } from "../../elements";
+import { RoomIdGenerateButton, TextButton } from "../../molecules";
 import { Branding } from "../../molecules/Branding";
 
 export const LoginPage = () => {

@@ -1,10 +1,10 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { FONT_SIZE, SPACING } from "../../../resources";
-import { RoomIdClipboard } from "../../molecules";
-import { UserEntry, ThemedText, UserEntryContentLoader } from "../../elements";
 import { useAppSelector } from "../../../store";
+import { ThemedText, UserEntry, UserEntryContentLoader } from "../../elements";
+import { RoomIdClipboard } from "../../molecules";
 import { StartGameButton } from "../../molecules/StartGameButton";
 import { TitleCloseButton } from "../../molecules/TitleCloseButton";
 
